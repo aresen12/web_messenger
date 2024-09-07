@@ -96,7 +96,7 @@ def m_st():
                                email_recipient="")
     elif request.method == "POST":
         f = request.files["img"]
-        if request.form["about"].strip() == "" and f.filename != "":
+        if request.form["about"].strip() == "" and f.filename == "":
             return redirect('/m')
         db_sess = db_session.create_session()
         mess = Message()
@@ -105,14 +105,15 @@ def m_st():
         mess.email_sender = current_user.email
         mess.message = request.form["about"]
         if f.filename != "":
+            ex = f.filename.split(".")[-1]
             os.chdir('static/img')
             dd = len(os.listdir())
             os.chdir("..")
             os.chdir("..")
-            file = open(f"static/img/{dd}.jpg", mode="wb")
-            file.write(request.files["img"].read())
+            file = open(f"static/img/{dd}.{ex}", mode="wb")
+            file.write(f.read())
             file.close()
-            mess.img = f"{dd}.jpg"
+            mess.img = f"{dd}.{ex}"
         mess.email_recipient = request.form["email_recipient"]
         print(request.form["email_recipient"])
         db_sess.add(mess)

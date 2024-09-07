@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<script>function showDiv(Div) {
+    var x = document.getElementById(Div);
+    if(x.style.display=="none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+</script>
+<h1 class="hello">добро пожаловать в web_mess!</h1>
+<div>
+<h2>Новая публикация</h2>
+
+</div>
+{% endblock %}
