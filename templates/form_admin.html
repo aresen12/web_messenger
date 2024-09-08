@@ -39,7 +39,7 @@
 </fieldset>
 </div>
 
-    <img src="/static/img/font.jpg" class="background-img">
+    <img src="/static/img/font2.jpg" class="background-img" id="background-img">
     <div class="mess-admin" id="container-mess">
         <div id="content"></div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
@@ -51,8 +51,8 @@ set_recipient("{{email_recipient}}");</script>
     </div>
 </div>
 
-<a href="/forms">
-            <button class="chat-btn">к чатам</button>
+<a href="/m">
+            <button class="chat-btn" onclick="showDiv()">к чатам</button>
         </a>
 <form method="post" class="form2" enctype="multipart/form-data">
     <div class="form-container">
