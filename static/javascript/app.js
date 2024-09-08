@@ -37,12 +37,18 @@ function set_recipient(email) {
     globalThis.email_recipient = email;
     var x = document.getElementById("background-img");
     var y = document.getElementById("email");
+    var button = document.getElementById("button");
     show();
     document.getElementById('email_recipient').innerText = email;
     document.getElementById('name_chat').innerText = email;
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
     x.style.display = "block";
+    x.src = "/static/img/mob_font2.jpg"
+    var button = document.getElementById("button").style.visibility = 'visible';
+    var cont = document.getElementById("container-mess");
+    cont.style.display = "block";
     y.style.display = "none";
+
     }
 
 }
@@ -55,6 +61,7 @@ document.addEventListener('keydown', function(event) {
         if (event.keyCode == 13) {
         event.preventDefault();
         x.submit();
+        show();
         }
     }else {
         if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
@@ -90,10 +97,12 @@ setInterval(show, 10000);
 const form = document.querySelector('form');
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent))
 { var x = document.getElementById("background-img");
-var y = document.getElementById("mess-admin");
+var y = document.getElementById("container-mess");
+
 x.style.display = "none";
+console.log(button);
+var button = document.getElementById("button").style.visibility = 'hidden';
 y.style.display = "none";
-alert("Вы используете мобильное устройство (телефон или планшет).")
 }
 
 function delete_mess(id_mess)

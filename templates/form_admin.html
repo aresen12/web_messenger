@@ -9,6 +9,7 @@
         cursor:pointer;
       }
 </style>
+
 <div style="display:flex;">
 <div id="email" class="content-email">
         {% for email in emails %}
@@ -42,19 +43,19 @@
     <img src="/static/img/font2.jpg" class="background-img" id="background-img">
     <div class="mess-admin" id="container-mess">
         <div id="content"></div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
-        </script>
-    <script src="/static/javascript/app.js"></script>
-<script>var email_recipient = "{{email_recipient}}";
-set_recipient("{{email_recipient}}");</script>
+
 
     </div>
 </div>
+            <input type="button" class="chat-btn" id="button"  value="к чатам" onclick="showDiv()"></input>
 
-<a href="/m">
-            <button class="chat-btn" onclick="showDiv()">к чатам</button>
-        </a>
-<form method="post" class="form2" enctype="multipart/form-data">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+        </script>
+        <script>var email_recipient = "{{email_recipient}}";
+set_recipient("{{email_recipient}}");</script>
+    <script src="/static/javascript/app.js"></script>
+<iframe name="votar" style="display:none;"></iframe>
+<form method="post" class="form2" enctype="multipart/form-data" target="votar">
     <div class="form-container">
         <textarea class="form-control text" id="about" rows="1" name="about"></textarea>
         <button type="submit" class="btn btn-primary submit_btn">

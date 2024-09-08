@@ -112,6 +112,7 @@
     text-decoration:none;
     padding:10px;
     border-radius:5px;
+    width: 200px;
     }
 
  .a-email { color:black;
@@ -179,14 +180,14 @@
     .my-message {
         font-size: 25pt;
         width:60vw;
-        left:10vw;
+        left:15vw;
         }
 
 
      .mess-admin {
         position:relative;
-        left:5vw;
-        width:95vw;
+        left:10vw;
+        width:90vw;
         height:90vh;
      }
 
@@ -194,7 +195,8 @@
         position:fixed;
         left:0vw;
         width:100vw;
-        height:87vh;
+        height:100vh;
+
     }
 }
 
