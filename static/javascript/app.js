@@ -40,8 +40,10 @@ function set_recipient(email) {
     show();
     document.getElementById('email_recipient').innerText = email;
     document.getElementById('name_chat').innerText = email;
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
     x.style.display = "block";
     y.style.display = "none";
+    }
 
 }
 
@@ -92,7 +94,7 @@ var y = document.getElementById("mess-admin");
 x.style.display = "none";
 y.style.display = "none";
 alert("Вы используете мобильное устройство (телефон или планшет).")
-} else alert("Вы используете ПК.")
+}
 
 function delete_mess(id_mess)
     {
