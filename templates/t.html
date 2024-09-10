@@ -8,7 +8,7 @@ mess.email_recipient and email_recipient == mess.email_sender%}
 <div class="date">{{ date[-1] }}</div>
 {% endif %}
 {% if current_user.email == mess.email_sender%}
-<div class="alert alert-success my-message" role="alert">
+<div class="alert alert-success my-message" role="alert" onclick="show_menu('{{mess.id}}')">
     {% if none != mess.img %}
     {% if ".jpeg" in mess.img or ".png" in mess.img  or ".bmp" in mess.img %}
         <a href="/m/watch/{{mess.img}}/{{email_recipient}}">
@@ -32,9 +32,16 @@ mess.email_recipient and email_recipient == mess.email_sender%}
         </button>
         {% endif %}
     </p>
+    <div class="context-menu-open" id="{{mess.id}}">
+	<ul>
+		<li onclick="delete_mess({{mess.id}})">Delete</li>
+		<li onclick="answer({{mess.id}})">Answer</li>
+		<li onclick="edit({{mess.id}})">edit</li>
+	</ul>
+</div>
 </div>
 {% else %}
-<div class="alert alert-info message-other" role="alert">
+<div class="alert alert-info message-other" role="alert" onclick="show_menu('{{mess.id}}')">
     {% if none != mess.img %}
 {% if ".jpg" in mess.img  or ".png" in mess.img  or ".bmp" in mess.img  %}
     <a href="/m/watch/{{mess.img}}/{{email_recipient}}">
@@ -48,6 +55,13 @@ mess.email_recipient and email_recipient == mess.email_sender%}
     </p>
 
     <p class="time-mess">{{mess.get_time()}}</p>
+    <div class="context-menu-open" id="{{mess.id}}">
+	<ul>
+		<li onclick="delete_mess({{mess.id}})">Delete</li>
+		<li onclick="answer({{mess.id}})">Answer</li>
+		<li onclick="edit({{mess.id}})">edit</li>
+	</ul>
+</div>
 </div>
 {% endif %}
 {% endif %}

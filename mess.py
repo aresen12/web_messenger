@@ -139,3 +139,16 @@ def m_st():
 @mg.route("/watch/<name>/<em_r>")
 def watch(name, em_r=""):
     return render_template("watch.html", name=name, em_r=em_r)
+
+
+@mg.route("/delete", methods=["DELETE"])
+def delete_mess():
+    data = request.get_json()
+    print(data["id"])
+    db_sess = db_session.create_session()
+    mes = db_sess.query(Message).filter(Message.id == data["id"]).first()
+    db_sess.delete(mes)
+    db_sess.commit()
+    db_sess.close()
+
+    return {"log": "True"}

@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Flask, request, render_template, redirect
 from ip import get_ip
 from forms.login_form import LoginForm
@@ -39,8 +41,8 @@ def login():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
-            return redirect("/")
+            login_user(user, remember=form.remember_me.data, duration=datetime.timedelta(hours=24*90))
+            return redirect("/m")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
                                form=form)
