@@ -9,12 +9,12 @@ class Message(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'message'
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
-    name_sender = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    name_sender = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     email_sender = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     message = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     read = sqlalchemy.Column(sqlalchemy.Boolean, default=False,)
     time = sqlalchemy.Column(sqlalchemy.String, nullable=True, default=datetime.datetime.now)
-    email_recipient = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    chat_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     img = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     def __repr__(self):

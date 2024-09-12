@@ -1,8 +1,6 @@
 {% set date = [] %}
 {%for mess in message %}
-{% if (current_user.email == mess.email_sender and email_recipient == mess.email_recipient) or
-current_user.email ==
-mess.email_recipient and email_recipient == mess.email_sender%}
+
 {% if date == [] or (date != [] and mess.get_date() != date[-1]) %}
 {% if date.append(mess.get_date()) %}{% endif %}
 <div class="date">{{ date[-1] }}</div>
@@ -63,7 +61,6 @@ mess.email_recipient and email_recipient == mess.email_sender%}
 	</ul>
 </div>
 </div>
-{% endif %}
 {% endif %}
 
 {% endfor %}

@@ -1,4 +1,7 @@
+import json
 import os
+import sqlite3
+
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
@@ -6,6 +9,7 @@ from data import db_session
 from data.user import User
 from flask_login import current_user
 from data.message import Message
+from data.chat import Chat
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
@@ -60,16 +64,15 @@ def m(email_recipient):
         return redirect(f'/m/{email_recipient}')
 
 
-@mg.route("/update/<re>", methods=["GET", "POST"])
-def m_update(re):
+@mg.route("/update/<int:chat_id>", methods=["GET", "POST"])
+def m_update(chat_id):
     if current_user.is_authenticated:
         db_sess = db_session.create_session()
-        message = db_sess.query(Message).filter(Message.email_recipient == current_user.email).all()
-        mes2 = db_sess.query(Message).filter(Message.email_sender == current_user.email).all()
-        message = message + mes2
+        message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
         message.sort(key=lambda x: x.time)
         db_sess.close()
-        return render_template("t.html", message=message, email_recipient=re)
+        print(message)
+        return render_template("t.html", message=message, email_recipient=chat_id)
     return render_template("t.html")
 
 
@@ -79,20 +82,21 @@ def m_st():
         if not current_user.is_authenticated:
             return render_template("forms.html", title='Заказать')
         if current_user.is_authenticated:
+            print(os.curdir, os.getcwd())
             db_sess = db_session.create_session()
-            emails = db_sess.query(User.email).all()
-            print(emails)
-            return render_template("form_admin.html", title='ответить', emails=emails, email_recipient="")
-        db_sess = db_session.create_session()
-        message = db_sess.query(Message).filter(Message.email_recipient == current_user.email).all()
-        mes2 = db_sess.query(Message).filter(Message.email_sender == current_user.email).all()
-        message = message + mes2
-        message.sort(key=lambda x: x.time)
-        for mess in message:
-            if mess.email_recipient == current_user.email:
-                mess.read = True
-        db_sess.commit()
-        return render_template("forms.html", title='Заказать', date="no date", message=message,
+            chats = db_sess.query(Chat).all()
+            db_sess.close()
+            new = []
+            print(chats)
+
+            for i in chats:
+                print(i.members)
+                if str(current_user.id) in i.members:
+                    new.append(i)
+            chats = new
+            print(chats)
+            return render_template("form_admin.html", title='ответить', chats=chats, email_recipient="")
+        return render_template("forms.html", title='Заказать', date="no date", message="",
                                email_recipient="")
     elif request.method == "POST":
         f = request.files["img"]
@@ -104,6 +108,7 @@ def m_st():
         mess.name_sender = current_user.name
         mess.email_sender = current_user.email
         mess.message = request.form["about"]
+        chat_id = request.form["email_recipient"]
         if f.filename != "":
             ex = f.filename.split(".")[-1]
             os.chdir('static/img')
@@ -114,21 +119,17 @@ def m_st():
             file.write(f.read())
             file.close()
             mess.img = f"{dd}.{ex}"
-        mess.email_recipient = request.form["email_recipient"]
+        mess.chat_id = chat_id
         print(request.form["email_recipient"])
         db_sess.add(mess)
         db_sess.commit()
         emails = db_sess.query(User.email).all()
         print(emails)
-        message = db_sess.query(Message).filter(Message.email_recipient == current_user.email).all()
-        mes2 = db_sess.query(Message).filter(Message.email_sender == current_user.email).all()
-        message = message + mes2
-        # print(request.form["about"])
+        message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
         print(message)
         message.sort(key=lambda x: x.time)
         for mess in message:
-            if mess.email_recipient == current_user.email:
-                mess.read = True
+            mess.read = True
         db_sess.commit()
         db_sess.close()
         return render_template("form_admin.html", title='ответить', emails=emails, message=message,
@@ -139,6 +140,39 @@ def m_st():
 @mg.route("/watch/<name>/<em_r>")
 def watch(name, em_r=""):
     return render_template("watch.html", name=name, em_r=em_r)
+
+
+@mg.route("/create_chat")
+def create_chat():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    chat = Chat()
+    chat.name = data["name"]
+    chat.members = data["list_members"]  # list of id users
+    db_sess.add(chat)
+    db_sess.commit()
+    db_sess.close()
+    return {"log": True}
+
+
+@mg.route("/sing_out_chat")
+def sing_out_chat():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
+    db_sess.delete(chat)
+    db_sess.commit()
+    db_sess.close()
+    return {"log": True}
+
+
+@mg.route("/get_users")
+def get_users():
+    db_sess = db_session.create_session()
+    users = db_sess.query(User.email, User.name).all()
+    db_sess.close()
+    n = [list(_) for _ in users]
+    return {"users": n}
 
 
 @mg.route("/delete", methods=["DELETE"])
@@ -152,3 +186,12 @@ def delete_mess():
     db_sess.close()
 
     return {"log": "True"}
+
+
+# db_sess = db_session.create_session()
+# chat = Chat()
+# chat.name = "name"
+# chat.members = "test"  # list of id users
+# db_sess.add(chat)
+# db_sess.commit()
+# db_sess.close()

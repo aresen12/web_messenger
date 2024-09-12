@@ -116,7 +116,23 @@ function show()
     }
 });}
     }
-
+function create_chat(list_members, name)
+    {
+    if (email_recipient != "") {
+      $.ajax({
+    url: '/m/create_chat',
+    type: 'GET',
+    dataType: 'json',
+    contentType:'application/json',
+    data: JSON.stringify({"name":name, "list_members": list_members}),
+    success: function(json){
+          // update chats list
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});}
+    }
 
 show();
 
@@ -179,3 +195,36 @@ if(x.style.display=="none") {
         x.style.display = "none";
     }
 }
+
+
+function show_global_menu(id_div){
+var x = document.getElementById(id_div);
+if(x.style.display=="none") {
+        x.style.display = "block";
+        get_users();
+    } else {
+        x.style.display = "none";
+    }
+}
+
+
+function get_users (){
+$.ajax({
+    url: '/m/get_users',
+    type: 'GET',
+    dataType: 'json',
+    contentType:'application/json',
+    success: function(json){
+    console.log(json);
+        var menu = getElementById("global-menu");
+       for (let i = 0; i < json["users"]; i++){
+       var menu = getElementById("global-menu");
+       menu.innerHTML("<div>"+json["users"][i][0 + "</div>"])
+       }
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
+

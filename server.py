@@ -7,9 +7,8 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from data import db_session
 from data.user import User
 from forms.register_form import RegisterForm
-from data.paste import Paste
-import sqlite3
 from data.message import Message
+from data.chat import Chat
 
 app = Flask(__name__)
 
