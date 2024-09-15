@@ -1,12 +1,11 @@
 {% set date = [] %}
 {%for mess in message %}
-
 {% if date == [] or (date != [] and mess.get_date() != date[-1]) %}
 {% if date.append(mess.get_date()) %}{% endif %}
 <div class="date">{{ date[-1] }}</div>
 {% endif %}
 {% if current_user.email == mess.email_sender%}
-<div class="alert alert-success my-message" role="alert" onclick="show_menu('{{mess.id}}')">
+<div class="alert alert-success my-message" id="m{{mess.id}}" role="alert" onclick="show_menu('{{mess.id}}')">
     {% if none != mess.img %}
     {% if ".jpeg" in mess.img or ".png" in mess.img  or ".bmp" in mess.img %}
         <a href="/m/watch/{{mess.img}}/{{email_recipient}}">
@@ -15,7 +14,7 @@
     <a class="my-a" href="/static/img/{{mess.img}}">fail({{mess.img}})</a>
     {% endif %}
     {% endif %}
-    <p>
+    <p id="text{{mess.id}}">
         {{mess.message}}
     </p>
     <p class="time-mess">{{mess.get_time()}} {% if mess.read %}
@@ -39,7 +38,7 @@
 </div>
 </div>
 {% else %}
-<div class="alert alert-info message-other" role="alert" onclick="show_menu('{{mess.id}}')">
+<div class="alert alert-info message-other" role="alert" onclick="show_menu('{{mess.id}}')" id="m{{mess.id}}">
     {% if none != mess.img %}
 {% if ".jpg" in mess.img  or ".png" in mess.img  or ".bmp" in mess.img  %}
     <a href="/m/watch/{{mess.img}}/{{email_recipient}}">
@@ -48,16 +47,14 @@
     <a class="my-a" href="/static/img/{{mess.img}}">fail({{mess.img}})</a>
     {% endif %}
     {% endif %}
-    <p>
+    <p id="text{{mess.id}}">
         {{mess.message}}
     </p>
-
     <p class="time-mess">{{mess.get_time()}}</p>
     <div class="context-menu-open" id="{{mess.id}}" style="display:none;">
 	<ul>
 		<li onclick="delete_mess({{mess.id}})">Delete</li>
 		<li onclick="answer({{mess.id}})">Answer</li>
-		<li onclick="edit({{mess.id}})">edit</li>
 	</ul>
 </div>
 </div>

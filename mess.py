@@ -83,7 +83,6 @@ def m_update(chat_id):
         message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
         message.sort(key=lambda x: x.time)
         db_sess.close()
-        print(message)
         return render_template("t.html", message=message, email_recipient=chat_id)
     return render_template("t.html")
 
@@ -121,7 +120,6 @@ def m_st():
             file.close()
             mess.img = f"{dd}.{ex}"
         mess.chat_id = chat_id
-        print(request.form["email_recipient"])
         db_sess.add(mess)
         db_sess.commit()
         message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
@@ -154,6 +152,18 @@ def create_chat():
     db_sess.close()
     return {"log": True}
 
+
+
+@mg.route("/edit_message", methods=["POST"])
+def edit_mess():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    mess = db_sess.query(Message).filter(Message.id == data["id"]).first()
+    if mess.email_sender == current_user.email:
+        mess.message = data["new_text"]
+    db_sess.commit()
+    db_sess.close()
+    return {"log": True}
 
 @mg.route("/sing_out_chat")
 def sing_out_chat():

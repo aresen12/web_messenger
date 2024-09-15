@@ -17,8 +17,9 @@ var enter_flag = true;
 var email_recipient = "";
 var answer_flag = false;
 var edit_flag = false;
+var edit_id = 0;
 var global_distans = 0;
-
+var number_bg = 2;
 function set_enter() {
     if(enter_flag) {
         globalThis.enter_flag = false;
@@ -27,6 +28,36 @@ function set_enter() {
         console.log(enter_flag)
     }
 }
+
+function edit (id_mess){
+globalThis.edit_flag = true;
+globalThis.edit_id = id_mess;
+document.getElementById("about").value = document.getElementById("text" + id_mess).textContent;
+
+}
+function edit_post(id_mess, text){
+    $.ajax({
+    url: '/m/edit_message',
+    type: 'POST',
+    dataType: 'json',
+    contentType:'application/json',
+    data: JSON.stringify({"id":id_mess, "new_text": text}),
+    success: function(json){
+    show();
+    },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
+function set_bg(num) {
+        number_bg = num;
+        document.getElementById("background-img").src = "/static/img/bg/bg" + number_bg + ".jpg";
+
+}
+
+
+
 function showdiv1(Div){
 var x = document.getElementById(Div);
     if(x.style.display=="none") {
@@ -100,21 +131,34 @@ document.getElementById('name_chat').innerText = name;
 }
 
 
+function submit_form() {
+    var x = document.querySelector('form');
+    if (edit_flag){
+    edit_flag = false;
+    var about = document.getElementById("about");
+    console.log(about.value);
+    edit_post(edit_id, about.value);
+    about.value = "";
+    document.getElementById('img').value = "";
+    } else {
+    x.submit();
+    document.getElementById("about").value = "";
+    show();
+    document.getElementById('img').value = "";
+    }
+}
+
 document.addEventListener('keydown', function(event) {
     var x = document.querySelector('form');
-
     console.log(event.code);
     if (enter_flag) {
         if (event.keyCode == 13) {
-        event.preventDefault();
-        x.submit();
-        var about = document.getElementById("about").value = "";
-        show();
+
+        submit_form();
         }
     }else {
         if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
-        event.preventDefault();
-        x.submit();
+            submit_form();
   }
   }
 
@@ -253,7 +297,7 @@ $.ajax({
     success: function(json){
     document.getElementById("global_menu").innerHTML="foo";
     console.log(json["users"].length);
-    var html = "<h2>Chats</h2>";
+    var html = '<h2>Chats<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
        for (let i = 0; i < json["users"].length; i++){
        html = html +'<button onclick="create_chat(' + "'" + id + ' ' + json["users"][i][2]  + "', 'primary'" + ', 1)"' + '" class="add-menu">' + json["users"][i][0]+ "</button>";
        }document.getElementById("global_menu").innerHTML = html;

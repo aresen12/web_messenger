@@ -109,7 +109,7 @@
  .text {font-size:50pt;}
 
  .btn_down {position:fixed;
- bottom:10vh; right:2vw;background-color:gray; border-radius:60px;}
+ bottom:10vh; right:2vw;background-color:#c0c0c0; border-radius:60px;}
 @media screen and (width < 981px) {
     .container-mess {position:relative;left:5vw; width:100vw;}
     .form2 {font-size:50pt;}

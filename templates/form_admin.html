@@ -32,10 +32,27 @@
   </div>
 
   <div>
-    <input type="radio" onclick="set_enter()" id="dewey" name="drone" value="dewey" />
+    <input type="radio" onclick="set_enter()" id="dewey" name="drone" value="1" />
     <label for="dewey">Send by Ctrl + Enter</label>
   </div>
 
+</fieldset>
+    <fieldset>
+    <legend>Фон</legend>
+
+  <div>
+    <input onclick="set_bg(1)" type="radio" id="bg1" name="bg" value="2" checked />
+    <label for="bg1">Фон №1</label>
+  </div>
+
+  <div>
+    <input type="radio" onclick="set_bg(2)" id="bg2" name="bg" value="3" />
+    <label for="bg2">Фон №2</label>
+  </div>
+<div>
+    <input type="radio" onclick="set_bg(3)" id="bg3" name="bg" value="dewey" />
+    <label for="bg3">Фон №3</label>
+  </div>
 </fieldset>
     <h4>Друзья</h4>
     <div class="friends">
@@ -64,7 +81,7 @@
 <form method="post" class="form2" enctype="multipart/form-data" target="votar">
     <div class="form-container">
         <textarea class="form-control text" id="about" rows="1" name="about"></textarea>
-        <button type="submit" class="btn btn-primary submit_btn">
+        <button onclick="" class="btn btn-primary submit_btn">
             <svg width="30px" height="29px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 466.897 466.897"
                  style="enable-background:new 0 0 466.897 466.897;" xml:space="preserve"><g><g><polygon style="fill:#010002;" points="374.105,73.807 203.974,318.03 203.974,432.042 259.801,358.275 410.505,466.897 441.012,0 25.885,189.672 143.823,274.681 "/></g></g></svg>
