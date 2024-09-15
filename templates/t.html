@@ -30,7 +30,7 @@
         </button>
         {% endif %}
     </p>
-    <div class="context-menu-open" id="{{mess.id}}">
+    <div class="context-menu-open" id="{{mess.id}}" style="display:none;">
 	<ul>
 		<li onclick="delete_mess({{mess.id}})">Delete</li>
 		<li onclick="answer({{mess.id}})">Answer</li>
@@ -53,7 +53,7 @@
     </p>
 
     <p class="time-mess">{{mess.get_time()}}</p>
-    <div class="context-menu-open" id="{{mess.id}}">
+    <div class="context-menu-open" id="{{mess.id}}" style="display:none;">
 	<ul>
 		<li onclick="delete_mess({{mess.id}})">Delete</li>
 		<li onclick="answer({{mess.id}})">Answer</li>

@@ -36,8 +36,45 @@ var x = document.getElementById(Div);
     }
 }
 
-function set_recipient(email) {
-    globalThis.email_recipient = email;
+function set_recipient(id_chat, is_primary, name) {
+    globalThis.email_recipient = id_chat;
+    console.log(is_primary);
+    if (is_primary) {
+    $.ajax({
+    url: '/m/get_chat_user/' + id_chat,
+    type: 'GET',
+    dataType: 'json',
+    contentType:'application/json',
+    success: function(json){
+    t_id = 0;
+    if (json["user"][0] != id){
+        t_id = json["user"][0]
+    } else{
+        t_id = json["user"][1]
+    }
+    console.log(json["user"]);
+    if (email_recipient != "") {
+      $.ajax({
+    url: '/m/get_user/' + t_id,
+    type: 'GET',
+    dataType: 'json',
+    success: function(json){
+    document.getElementById('name_chat').innerText = json["user"];
+    },
+    error: function(err) {
+        console.error(err);
+    }
+    });
+    }
+
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}else {
+document.getElementById('name_chat').innerText = name;
+}
     var x = document.getElementById("background-img");
     var y = document.getElementById("email");
     var button = document.getElementById("button");
@@ -47,10 +84,9 @@ function set_recipient(email) {
     elementOffset = $('#content').offset().top,
     distance      = (elementOffset - scrollTop);
           console.log(distance, $('#content').offset(), 1);
-
     globalThis.global_distans = distance;
-    document.getElementById('email_recipient').innerText = email;
-    document.getElementById('name_chat').innerText = email;
+    document.getElementById('email_recipient').innerText = id_chat;
+
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
     x.style.display = "block";
     x.src = "/static/img/bg/mob_bg2.jpg"
@@ -116,22 +152,22 @@ function show()
     }
 });}
     }
-function create_chat(list_members, name)
+function create_chat(list_members, name, is_primary)
     {
-    if (email_recipient != "") {
+
       $.ajax({
     url: '/m/create_chat',
-    type: 'GET',
+    type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"name":name, "list_members": list_members}),
+    data: JSON.stringify({"name":name, "list_members": list_members, "primary":is_primary}),
     success: function(json){
           // update chats list
         },
     error: function(err) {
         console.error(err);
     }
-});}
+});
     }
 
 show();
@@ -150,7 +186,7 @@ y.style.display = "none";
 
 function delete_mess(id_mess)
     {
-    if (email_recipient != "") {
+
       $.ajax({
     url: '/m/delete',
     type: 'DELETE',
@@ -163,7 +199,7 @@ function delete_mess(id_mess)
     error: function(err) {
         console.error(err);
     }
-});}
+});
     }
 
 
@@ -171,8 +207,8 @@ function answer(id_mess)
     {
     if (email_recipient != "") {
       $.ajax({
-    url: '/m/delete',
-    type: 'DELETE',
+    url: '/m/answer',
+    type: 'POST',
     dataType: 'json',
     contentType:'application/json',
     data: JSON.stringify({"id":id_mess}),
@@ -197,30 +233,107 @@ if(x.style.display=="none") {
 }
 
 
-function show_global_menu(id_div){
+function show_global_menu(id_div, id){
 var x = document.getElementById(id_div);
 if(x.style.display=="none") {
         x.style.display = "block";
-        get_users();
+        get_users(id);
     } else {
         x.style.display = "none";
     }
 }
 
 
-function get_users (){
+function get_users (id){
 $.ajax({
     url: '/m/get_users',
     type: 'GET',
     dataType: 'json',
     contentType:'application/json',
     success: function(json){
-    console.log(json);
-        var menu = getElementById("global-menu");
-       for (let i = 0; i < json["users"]; i++){
-       var menu = getElementById("global-menu");
-       menu.innerHTML("<div>"+json["users"][i][0 + "</div>"])
+    document.getElementById("global_menu").innerHTML="foo";
+    console.log(json["users"].length);
+    var html = "<h2>Chats</h2>";
+       for (let i = 0; i < json["users"].length; i++){
+       html = html +'<button onclick="create_chat(' + "'" + id + ' ' + json["users"][i][2]  + "', 'primary'" + ', 1)"' + '" class="add-menu">' + json["users"][i][0]+ "</button>";
+       }document.getElementById("global_menu").innerHTML = html;
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
+function get_user (id_user){
+$.ajax({
+    url: '/m/get_user/' + id_user,
+    type: 'GET',
+    dataType: 'json',
+    contentType:'application/json',
+    success: function(json){
+
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
+var name = "";
+var html_ = "";
+function get_chats (){
+$.ajax({
+    url: '/m/get_chats',
+    type: 'GET',
+    dataType: 'json',
+    contentType:'application/json',
+    success: function(json){
+    console.log(json["chats"].length);
+
+       for (let i = 0; i < json["chats"].length; i++){
+       if (json["chats"][i]["primary_chat"]){
+       console.log("test");
+        $.ajax({
+    url: '/m/get_chat_user/' + json["chats"][i]["id"],
+    type: 'GET',
+    dataType: 'json',
+    contentType:'application/json',
+    success: function(json2){
+    t_id = 0;
+    if (json2["user"][0] != id){
+        t_id = json2["user"][0]
+    } else{
+        t_id = json2["user"][1]
+    }
+    console.log(json2["user"]);
+      $.ajax({
+    url: '/m/get_user/' + t_id,
+    type: 'GET',
+    dataType: 'json',
+    success: function(json3){
+    globalThis.name = json3["user"];
+    globalThis.html_ = globalThis.html_ + '<button class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "')" + '"' + '">' + json3["user"] +'</button>';
+//    globalThis.html_ = globalThis.html_ + '<button class="info-btn" onclick="show_global_menu(' + "'global_menu', {{current_user.id}})"+  '"><svg style="position:absolute; bottom:100px; left: 25vw;" width="40px" viewBox="-3.2 -3.2 38.40 38.40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-3.2" y="-3.2" width="38.40" height="38.40" rx="19.2" fill="#086faf" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>добавить чат</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set" sketch:type="MSLayerGroup" transform="translate(-464.000000, -1087.000000)" fill="#ffffff"> <path d="M480,1117 C472.268,1117 466,1110.73 466,1103 C466,1095.27 472.268,1089 480,1089 C487.732,1089 494,1095.27 494,1103 C494,1110.73 487.732,1117 480,1117 L480,1117 Z M480,1087 C471.163,1087 464,1094.16 464,1103 C464,1111.84 471.163,1119 480,1119 C488.837,1119 496,1111.84 496,1103 C496,1094.16 488.837,1087 480,1087 L480,1087 Z M486,1102 L481,1102 L481,1097 C481,1096.45 480.553,1096 480,1096 C479.447,1096 479,1096.45 479,1097 L479,1102 L474,1102 C473.447,1102 473,1102.45 473,1103 C473,1103.55 473.447,1104 474,1104 L479,1104 L479,1109 C479,1109.55 479.447,1110 480,1110 C480.553,1110 481,1109.55 481,1109 L481,1104 L486,1104 C486.553,1104 487,1103.55 487,1103 C487,1102.45 486.553,1102 486,1102 L486,1102 Z" id="plus-circle" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg></button>'
+    document.getElementById("email").innerHTML = globalThis.html_;
+
+    console.log(globalThis.name);
+    },
+    error: function(err) {
+        console.error(err);
+    }
+    });
+
+
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});
+       }else{name = json["chats"][i]["name"];
+       console.log(globalThis.name, "bu");
+       globalThis.html_ = globalThis.html_ + '<button class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + globalThis.name + "')" + '"' + '">' + json["chats"][i]["name"] +'</button>';
+document.getElementById("email").innerHTML = globalThis.html_;
        }
+       }console.log(html_);
+       document.getElementById("email").innerHTML = globalThis.html_;
         },
     error: function(err) {
         console.error(err);
@@ -228,3 +341,4 @@ $.ajax({
 });
 }
 
+get_chats();
