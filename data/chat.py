@@ -11,5 +11,7 @@ class Chat(SqlAlchemyBase, UserMixin, SerializerMixin):
     members = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     primary_chat = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)
+    status = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=1)  # 1 - current 2 - deleted 3 - blocked
+
     def __repr__(self):
         return f"{self.members} {self.name}"

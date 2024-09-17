@@ -22,7 +22,7 @@ def get_chats():
     print(chats)
     for i in chats:
         print(i.members)
-        if str(current_user.id) in i.members.split():
+        if i.status == 1 and str(current_user.id) in i.members.split():
             new.append({"id": i.id, "name": i.name, "primary_chat": i.primary_chat})
     return new
 
@@ -133,12 +133,6 @@ def m_st():
                                email_recipient=request.form["email_recipient"])
 
 
-@mg.route("/watch/<name>")
-@mg.route("/watch/<name>/<em_r>")
-def watch(name, em_r=""):
-    return render_template("watch.html", name=name, em_r=em_r)
-
-
 @mg.route("/create_chat", methods=["POST"])
 def create_chat():
     data = request.get_json()
@@ -153,7 +147,6 @@ def create_chat():
     return {"log": True}
 
 
-
 @mg.route("/edit_message", methods=["POST"])
 def edit_mess():
     data = request.get_json()
@@ -165,12 +158,16 @@ def edit_mess():
     db_sess.close()
     return {"log": True}
 
+
 @mg.route("/sing_out_chat")
 def sing_out_chat():
     data = request.get_json()
     db_sess = db_session.create_session()
     chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
-    db_sess.delete(chat)
+    ch_mem = chat.members.split()
+    if current_user.id in ch_mem:
+        del ch_mem[ch_mem.index(str(current_user.id))]
+    chat.members = " ".join(ch_mem)
     db_sess.commit()
     db_sess.close()
     return {"log": True}
@@ -219,3 +216,18 @@ def delete_mess():
 @mg.route("/get_chats")
 def mg_get_chats():
     return {"chats": get_chats()}
+
+
+@mg.route("/delete_chat", methods=["DELETE"])
+def del_chat():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+
+    print(data["id_chat"])
+    chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
+    if str(current_user.id) in chat.members.split():
+        chat.status = 2
+    print(chat.status)
+    db_sess.commit()
+    db_sess.close()
+    return {"log": True}

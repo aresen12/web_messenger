@@ -27,7 +27,7 @@
 
 .mess-img {
     width:18vw;
-    margin-right:0.5vw;
+    left:1vw;
 }
 
 
@@ -216,4 +216,12 @@ left:2vw;
 border:1px solid gray;
 width: 30vw;
 background:#f1f1f1;
+}
+.close-btn {background:black;}
+.watch-img {
+position:fixed;
+height:100vh;
+background:black;
+top:0px;
+width:100vw;
 }

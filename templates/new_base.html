@@ -15,9 +15,10 @@
         <button onclick="showDiv('settings', 'email')" class="info-btn">
             <svg width="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 6H12H19M5 12H19M5 18H19" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path> </g></svg></button>
         <p id="name_chat"></p>
-        <div><div class="context-menu-open" id="menu-chat">
+        <div><div class="context-menu-open" id="menu-chat" style="position:absolute;right:10px; top:30px; display:none;">
         <ul style="color:black;">
-            <li>Заблокировать</li>
+            <li onclick="block_user()">Заблокировать</li>
+            <li onclick="delete_chat()">Удалить чат</li>
         </ul></div>
         <button class="info-btn" onclick="show_menu('menu-chat')"><svg width="68px" height="50px" viewBox="0 0 24 24" id="three-dots" xmlns="http://www.w3.org/2000/svg" fill="#ffff" stroke="#ffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.192"></g><g id="SVGRepo_iconCarrier"> <g id="_20x20_three-dots--grey" data-name="20x20/three-dots--grey" transform="translate(24) rotate(90)">  <circle id="Oval" cx="1" cy="1" r="1" transform="translate(5 11)" stroke="#ffff" stroke-miterlimit="10" stroke-width="0.5"></circle> <circle id="Oval-2" data-name="Oval" cx="1" cy="1" r="1" transform="translate(11 11)" stroke="#ffff" stroke-miterlimit="10" stroke-width="0.5"></circle> <circle id="Oval-3" data-name="Oval" cx="1" cy="1" r="1" transform="translate(17 11)" stroke="#ffff" stroke-miterlimit="10" stroke-width="0.5"></circle> </g> </g></svg></button>
 
