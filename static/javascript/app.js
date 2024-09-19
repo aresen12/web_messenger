@@ -205,13 +205,17 @@ document.addEventListener('keydown', function(event) {
     console.log(event.code);
     if (enter_flag) {
         if (event.keyCode == 13) {
-
+         event.preventDefault();
         submit_form();
+        show();
         }
     }else {
-        if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
+        if ( !(enter_flag) & (event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
+         event.preventDefault();
             submit_form();
+            show();
   }
+
   }
 
 
