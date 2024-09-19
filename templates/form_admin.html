@@ -78,9 +78,9 @@
 </script>
     <script src="/static/javascript/app.js"></script>
 <iframe name="votar" style="display:none;"></iframe>
-<form method="post" class="form2" enctype="multipart/form-data" target="votar">
+<form method="post" class="form2" enctype="multipart/form-data" target="votar" contenteditable="true" >
     <div class="form-container">
-        <textarea class="form-control text" id="about" rows="1" name="about"></textarea>
+        <textarea class="form-control text" id="about" rows="1" name="about"  contenteditable="true"></textarea>
         <button onclick="" class="btn btn-primary submit_btn">
             <svg width="30px" height="29px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 466.897 466.897"
@@ -124,6 +124,7 @@
             <img  src="" id="watch_img" class="car-img" style="">
     </div>
 </div>
+
 {% else %}
 <div style="display:block;" class="answer_list">
     <div class="alert alert-danger d-flex align-items-center" role="alert">

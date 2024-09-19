@@ -346,9 +346,7 @@ background-color: #3e8e41;
     margin:3vw
     }
 
-.car-img {
-width:60vw;
-}
+
 
 
 
@@ -413,11 +411,6 @@ margin-top: 10vh;
 
         }
 
-    .car-img {
-        max-width:90vw;
-        width:85vw;
-        position: relative;
-        top:20vh;
 
 
         }

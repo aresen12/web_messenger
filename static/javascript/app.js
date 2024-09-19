@@ -165,7 +165,23 @@ document.getElementById('name_chat').innerText = name;
 
 }
 
-
+setSelectionRange = function(input, selectionStart, selectionEnd) {
+    if (input.setSelectionRange) {
+      input.focus();
+      input.setSelectionRange(selectionStart, selectionEnd);
+    }
+    else if (input.createTextRange) {
+      var range = input.createTextRange();
+      range.collapse(true);
+      range.moveEnd('character', selectionEnd);
+      range.moveStart('character', selectionStart);
+      range.select();
+    }
+};
+function go(){
+console.log(document.getElementById("about"))
+setSelectionRange(document.getElementById("about"), globalThis.position, globalThis.position);
+}
 function submit_form() {
     var x = document.querySelector('form');
     if (edit_flag){
@@ -179,7 +195,8 @@ function submit_form() {
     x.submit();
     document.getElementById("about").value = "";
     show();
-    document.getElementById('inputTag').value = "";
+    var f =document.getElementById('inputTag').value = "";
+    document.getElementById("imageName").value = "";
     }
 }
 
@@ -217,14 +234,15 @@ function show()
           console.log(distance, globalThis.global_distans, globalThis.global_distans - distance);
           if (distance < globalThis.global_distans)
           {globalThis.global_distans = distance}
-
+globalThis.position = document.getElementById("about").selectionStart;
           if (-400 < globalThis.global_distans - distance){
           window.location.hash = "#";
+
           }
 
-//
-          window.location.hash = "#pos";
 
+          window.location.hash = "#pos";
+go()
         },
     error: function(err) {
         console.error(err);
@@ -263,6 +281,7 @@ console.log(button);
 var button = document.getElementById("button").style.visibility = 'hidden';
 y.style.display = "none";
 }
+var position = 0;
 
 function delete_mess(id_mess)
     {

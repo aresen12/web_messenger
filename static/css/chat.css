@@ -217,7 +217,7 @@ border:1px solid gray;
 width: 30vw;
 background:#f1f1f1;
 }
-.close-btn {background:black;}
+.close-btn {background:none;border:none;}
 .watch-img {
 position:fixed;
 height:100vh;
@@ -225,3 +225,4 @@ background:black;
 top:0px;
 width:100vw;
 }
+.car-img {height:90vh;}
