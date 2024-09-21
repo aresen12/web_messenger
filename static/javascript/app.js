@@ -102,6 +102,7 @@ function showImg(Div, name_img){
     }
 }
 
+
 function set_recipient(id_chat, is_primary, name) {
     globalThis.email_recipient = id_chat;
     console.log(is_primary);
@@ -165,6 +166,16 @@ document.getElementById('name_chat').innerText = name;
 
 }
 
+
+function exit_chat(){
+globalThis.email_recipient = "";
+document.getElementById("content").innerHTML = "";
+document.getElementById('name_chat').innerText = "";
+document.getElementById('email_recipient').innerText = "";
+
+}
+
+
 setSelectionRange = function(input, selectionStart, selectionEnd) {
     if (input.setSelectionRange) {
       input.focus();
@@ -178,25 +189,28 @@ setSelectionRange = function(input, selectionStart, selectionEnd) {
       range.select();
     }
 };
+
+
 function go(){
 console.log(document.getElementById("about"))
 setSelectionRange(document.getElementById("about"), globalThis.position, globalThis.position);
 }
+
+
 function submit_form() {
     var x = document.querySelector('form');
     if (edit_flag){
-    edit_flag = false;
+    globalThis.edit_flag = false;
     var about = document.getElementById("about");
-    console.log(about.value);
     edit_post(edit_id, about.value);
     about.value = "";
     document.getElementById('inputTag').value = "";
     } else {
-    x.submit();
+    let b = x.submit();
     document.getElementById("about").value = "";
     show();
-    var f =document.getElementById('inputTag').value = "";
-    document.getElementById("imageName").value = "";
+//    var f =document.getElementById('inputTag').value = "";
+//    document.getElementById("imageName").value = "";
     }
 }
 
@@ -204,13 +218,21 @@ document.addEventListener('keydown', function(event) {
     var x = document.querySelector('form');
     console.log(event.code);
     if (enter_flag) {
-        if (event.keyCode == 13) {
+        if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
+        var about = document.getElementById("about");
+        var test_in_about = about.value;
+        globalThis.position = about.selectionStart + 1;
+        about.value = test_in_about + "\n";
+        go();
+        // add len text
+        }
+        if (event.keyCode == 13 && !(event.ctrlKey)) {
          event.preventDefault();
         submit_form();
         show();
         }
     }else {
-        if ( !(enter_flag) & (event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
+        if ( (event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
          event.preventDefault();
             submit_form();
             show();
@@ -241,21 +263,41 @@ function show()
 globalThis.position = document.getElementById("about").selectionStart;
           if (-400 < globalThis.global_distans - distance){
           window.location.hash = "#";
-
           }
-
-
           window.location.hash = "#pos";
-go()
+        go()
         },
     error: function(err) {
         console.error(err);
     }
 });}
     }
+
+
+function get_new_m (){
+console.log(email_recipient);
+$.ajax({
+    url: '/m/get_new',
+    type: 'POST',
+    dataType: 'json',
+    contentType:'application/json',
+    data: JSON.stringify({"id": email_recipient}),
+    success: function(json){
+        console.log(json["message"].length)
+          if (json["message"].length > 0){
+            show();
+          }
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
+
+
+
 function create_chat(list_members, name, is_primary)
     {
-
       $.ajax({
     url: '/m/create_chat',
     type: 'POST',
@@ -274,7 +316,7 @@ function create_chat(list_members, name, is_primary)
 
 show();
 
-setInterval(show, 10000);
+setInterval(get_new_m, 10000);
 const form = document.querySelector('form');
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent))
 { var x = document.getElementById("background-img");
@@ -287,9 +329,28 @@ y.style.display = "none";
 }
 var position = 0;
 
+
+
+function edit_prof_html(){
+
+$.ajax({
+    url: '/m/get_user/' + id_user,
+    type: 'GET',
+    dataType: 'json',
+    contentType:'application/json',
+    success: function(json){
+        console.log(id_user);
+        console.log(json)
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
+
+
 function delete_mess(id_mess)
     {
-
       $.ajax({
     url: '/m/delete',
     type: 'DELETE',
@@ -308,6 +369,9 @@ function delete_mess(id_mess)
 
 
 function delete_chat() {
+show_menu('menu-chat');
+let is_del = confirm("Вы действительно хотите удалить этот чат?");
+if (is_del){
 $.ajax({
     url: '/m/delete_chat',
     type: 'DELETE',
@@ -322,14 +386,31 @@ $.ajax({
     }
 });
 }
+}
 
 
 function block_user() {
-alert("Функция в разрабоке");
+show_menu('menu-chat');
+let is_block = confirm("Вы действительно хотите заблокировать чат?");
+if (is_block){
+$.ajax({
+    url: '/m/delete_chat',
+    type: 'POST',
+    dataType: 'json',
+    contentType:'application/json',
+    data: JSON.stringify({"id_chat":email_recipient}),
+    success: function(html){
+          get_chats();
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
 }
 
 function answer(id_mess)
-    { alert("Функция в разрабоке");
+    { alert("Функция в разработке");
     if (email_recipient != "") {
       $.ajax({
     url: '/m/answer',

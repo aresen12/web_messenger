@@ -26,6 +26,7 @@ def get_chats():
             new.append({"id": i.id, "name": i.name, "primary_chat": i.primary_chat})
     return new
 
+
 # @mg.route("/<email_recipient>", methods=["GET", "POST"])
 # def m(email_recipient):
 #     if request.method == 'GET':
@@ -89,6 +90,8 @@ def m_update(chat_id):
 
 @mg.route("/", methods=["GET", "POST"])
 def m_st():
+    print("test")
+    print(request.method)
     if request.method == 'GET':
         if not current_user.is_authenticated:
             return render_template("forms.html", title='Заказать')
@@ -98,8 +101,10 @@ def m_st():
             return render_template("form_admin.html", title='ответить', chats=chats, email_recipient="")
         return render_template("forms.html", title='Заказать', date="no date", message="",
                                email_recipient="")
-    elif request.method == "POST":
+    else:
+
         f = request.files["img"]
+        print(f.filename)
         if request.form["about"].strip() == "" and f.filename == "":
             return redirect('/m')
         db_sess = db_session.create_session()
@@ -109,6 +114,7 @@ def m_st():
         mess.email_sender = current_user.email
         mess.message = request.form["about"]
         chat_id = request.form["email_recipient"]
+        print(f.filename)
         if f.filename != "":
             ex = f.filename.split(".")[-1]
             os.chdir('static/img')
@@ -123,7 +129,6 @@ def m_st():
         db_sess.add(mess)
         db_sess.commit()
         message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
-        print(message)
         message.sort(key=lambda x: x.time)
         for mess in message:
             mess.read = True
@@ -191,7 +196,7 @@ def get_user(id_):
     return {"user": n}
 
 
-@mg.route("/get_chat_user/<int:id_>") # chat id
+@mg.route("/get_chat_user/<int:id_>")  # chat id
 def get_chat_user(id_):
     db_sess = db_session.create_session()
     chat = db_sess.query(Chat).filter(Chat.id == id_).first()
@@ -222,12 +227,63 @@ def mg_get_chats():
 def del_chat():
     data = request.get_json()
     db_sess = db_session.create_session()
-
     print(data["id_chat"])
     chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
     if str(current_user.id) in chat.members.split():
         chat.status = 2
     print(chat.status)
+    db_sess.commit()
+    db_sess.close()
+    return {"log": True}
+
+
+@mg.route("/block_chat", methods=["POST"])
+def block_chat():
+    data = request.get_json()  # нужно добавить в чёрный список у пользователя
+    db_sess = db_session.create_session()
+    print(data["id_chat"])
+    chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
+    if str(current_user.id) in chat.members.split():
+        chat.status = 3
+    print(chat.status)
+    db_sess.commit()
+    db_sess.close()
+    return {"log": True}
+
+
+@mg.route("/html_new", methods=["POST"])
+def html_new():
+    data = request.get_json()
+    if current_user.is_authenticated:
+        chat_id = data["id"]
+        db_sess = db_session.create_session()
+        message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
+        message.sort(key=lambda x: x.time)
+        db_sess.close()
+        return render_template("t.html", message=message, email_recipient=chat_id)
+    return render_template("t.html")
+
+
+@mg.route("/get_new", methods=["POST"])
+def get_new():
+    data = request.get_json()
+    print(data)
+    if current_user.is_authenticated:
+        chat_id = data["id"]
+        db_sess = db_session.create_session()
+        message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
+        db_sess.close()
+        if message != list():
+            return {"message": [1]}
+    return {"message": []}
+
+
+@mg.route("/v")
+def v():
+    db_sess = db_session.create_session()
+    c = db_sess.query(Chat).all()
+    for i in c:
+        i.status = 1
     db_sess.commit()
     db_sess.close()
     return {"log": True}
