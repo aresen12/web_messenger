@@ -27,6 +27,14 @@ def get_chats():
     return new
 
 
+def get_new_not_read_m(chat_id):
+    conn = sqlite3.connect("db/master_paste.db")
+    curr = conn.cursor()
+    res = curr.execute(f"""SELECT * FROM message
+                        WHERE chat_id = {chat_id} AND read = 0 AND email_sender != '{current_user.email}'""").fetchall()
+    conn.close()
+    return res
+
 # @mg.route("/<email_recipient>", methods=["GET", "POST"])
 # def m(email_recipient):
 #     if request.method == 'GET':
@@ -270,9 +278,8 @@ def get_new():
     print(data)
     if current_user.is_authenticated:
         chat_id = data["id"]
-        db_sess = db_session.create_session()
-        message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
-        db_sess.close()
+
+        message = get_new_not_read_m(chat_id)
         if message != list():
             return {"message": [1]}
     return {"message": []}
@@ -287,3 +294,4 @@ def v():
     db_sess.commit()
     db_sess.close()
     return {"log": True}
+
