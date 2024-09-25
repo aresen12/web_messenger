@@ -192,7 +192,6 @@ setSelectionRange = function(input, selectionStart, selectionEnd) {
 
 
 function go(){
-console.log(document.getElementById("about"))
 setSelectionRange(document.getElementById("about"), globalThis.position, globalThis.position);
 }
 
@@ -281,7 +280,7 @@ $.ajax({
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"id": email_recipient}),
+    data: JSON.stringify({"id": document.getElementById("email_recipient").value}),
     success: function(json){
         console.log(json["message"].length)
           if (json["message"].length > 0){

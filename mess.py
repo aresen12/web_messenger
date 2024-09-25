@@ -28,11 +28,14 @@ def get_chats():
 
 
 def get_new_not_read_m(chat_id):
-    conn = sqlite3.connect("db/master_paste.db")
-    curr = conn.cursor()
-    res = curr.execute(f"""SELECT * FROM message
-                        WHERE chat_id = {chat_id} AND read = 0 AND email_sender != '{current_user.email}'""").fetchall()
-    conn.close()
+    try:
+        conn = sqlite3.connect("db/master_paste.db")
+        curr = conn.cursor()
+        res = curr.execute(f"""SELECT * FROM message
+                        WHERE chat_id = {int(chat_id)} AND read = 0 AND email_sender != '{current_user.email}'""").fetchall()
+        conn.close()
+    except Exception as e:
+        return []
     return res
 
 # @mg.route("/<email_recipient>", methods=["GET", "POST"])
@@ -98,8 +101,6 @@ def m_update(chat_id):
 
 @mg.route("/", methods=["GET", "POST"])
 def m_st():
-    print("test")
-    print(request.method)
     if request.method == 'GET':
         if not current_user.is_authenticated:
             return render_template("forms.html", title='Заказать')
@@ -112,7 +113,6 @@ def m_st():
     else:
 
         f = request.files["img"]
-        print(f.filename)
         if request.form["about"].strip() == "" and f.filename == "":
             return redirect('/m')
         db_sess = db_session.create_session()
@@ -122,7 +122,6 @@ def m_st():
         mess.email_sender = current_user.email
         mess.message = request.form["about"]
         chat_id = request.form["email_recipient"]
-        print(f.filename)
         if f.filename != "":
             ex = f.filename.split(".")[-1]
             os.chdir('static/img')
@@ -136,14 +135,8 @@ def m_st():
         mess.chat_id = chat_id
         db_sess.add(mess)
         db_sess.commit()
-        message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
-        message.sort(key=lambda x: x.time)
-        for mess in message:
-            mess.read = True
-        db_sess.commit()
         db_sess.close()
-        return render_template("form_admin.html", title='ответить', message=message,
-                               email_recipient=request.form["email_recipient"])
+        return {"log":True}
 
 
 @mg.route("/create_chat", methods=["POST"])
@@ -216,7 +209,6 @@ def get_chat_user(id_):
 @mg.route("/delete", methods=["DELETE"])
 def delete_mess():
     data = request.get_json()
-    print(data["id"])
     db_sess = db_session.create_session()
     mes = db_sess.query(Message).filter(Message.id == data["id"]).first()
     db_sess.delete(mes)
@@ -278,8 +270,8 @@ def get_new():
     print(data)
     if current_user.is_authenticated:
         chat_id = data["id"]
-
         message = get_new_not_read_m(chat_id)
+        print(message)
         if message != list():
             return {"message": [1]}
     return {"message": []}
