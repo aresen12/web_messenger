@@ -39,9 +39,10 @@ function getCookie(name) {
   return cookie ? cookie.split('=')[1] : null;
 }
 
+// 1 - send by enter 2 - send by ctrl + enter
 
-function set_enter() {
-    if(enter_flag) {
+function set_enter(key) {
+    if(key == 2) {
         globalThis.enter_flag = false;
     } else {
         globalThis.enter_flag = true;
@@ -53,7 +54,7 @@ function set_enter() {
 function edit (id_mess){
 globalThis.edit_flag = true;
 globalThis.edit_id = id_mess;
-document.getElementById("about").value = document.getElementById("text" + id_mess).textContent;
+document.getElementById("about").value = document.getElementById("text" + id_mess).textContent.trim();
 
 }
 
@@ -331,15 +332,18 @@ var position = 0;
 
 
 function edit_prof_html(){
-
+document.getElementById("global_menu").style.display = "block";
 $.ajax({
-    url: '/m/get_user/' + id_user,
+    url: '/m/c_get_user',
     type: 'GET',
     dataType: 'json',
     contentType:'application/json',
     success: function(json){
-        console.log(id_user);
-        console.log(json)
+        console.log(json["user"]["name"] )
+        var html = '<h2>Редактировать профиль<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
+        html = html + '<label>Имя</label><br><input value="'+ json["user"]["name"] + '">'
+       document.getElementById("global_menu").innerHTML = html;
+
         },
     error: function(err) {
         console.error(err);

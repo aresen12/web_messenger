@@ -267,22 +267,30 @@ def html_new():
 @mg.route("/get_new", methods=["POST"])
 def get_new():
     data = request.get_json()
-    print(data)
     if current_user.is_authenticated:
         chat_id = data["id"]
         message = get_new_not_read_m(chat_id)
-        print(message)
         if message != list():
             return {"message": [1]}
     return {"message": []}
 
 
-@mg.route("/v")
-def v():
+@mg.route("/c_get_user")
+def c_get_user():
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
+        db_sess.close()
+        u = {"id": user.id, "name": user.name, "email": user.email}
+        return {"user": u}
+    return {"user": None}
+
+
+@mg.route("/v/<int:id_chat>")
+def v(id_chat):
     db_sess = db_session.create_session()
-    c = db_sess.query(Chat).all()
-    for i in c:
-        i.status = 1
+    c = db_sess.query(Chat).filter(Chat.id == id_chat).first()
+    c.status = 1
     db_sess.commit()
     db_sess.close()
     return {"log": True}
