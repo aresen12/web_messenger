@@ -4,7 +4,7 @@
 {% if date.append(mess.get_date()) %}{% endif %}
 <div class="date">{{ date[-1] }}</div>
 {% endif %}
-{% if current_user.email == mess.email_sender%}
+{% if current_user.id == mess.id_sender%}
 <div class="alert alert-success my-message" id="m{{mess.id}}" role="alert" onclick="show_menu('{{mess.id}}')">
     {% if none != mess.img %}
     {% if ".jpeg" in mess.img or ".png" in mess.img  or ".bmp" in mess.img or ".jpg" in mess.img %}

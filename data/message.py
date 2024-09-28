@@ -10,7 +10,7 @@ class Message(SqlAlchemyBase, UserMixin, SerializerMixin):
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
     name_sender = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    email_sender = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    id_sender = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     message = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     read = sqlalchemy.Column(sqlalchemy.Boolean, default=False,)
     time = sqlalchemy.Column(sqlalchemy.String, nullable=True, default=datetime.datetime.now)

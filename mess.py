@@ -32,9 +32,10 @@ def get_new_not_read_m(chat_id):
         conn = sqlite3.connect("db/master_paste.db")
         curr = conn.cursor()
         res = curr.execute(f"""SELECT * FROM message
-                        WHERE chat_id = {int(chat_id)} AND read = 0 AND email_sender != '{current_user.email}'""").fetchall()
+                        WHERE chat_id = {int(chat_id)} AND read = 0 AND id_sender != '{current_user.id}'""").fetchall()
         conn.close()
     except Exception as e:
+        print(e)
         return []
     return res
 
@@ -106,12 +107,10 @@ def m_st():
             return render_template("forms.html", title='Заказать')
         if current_user.is_authenticated:
             chats = get_chats()
-            # print(chats)
             return render_template("form_admin.html", title='ответить', chats=chats, email_recipient="")
         return render_template("forms.html", title='Заказать', date="no date", message="",
                                email_recipient="")
     else:
-
         f = request.files["img"]
         if request.form["about"].strip() == "" and f.filename == "":
             return redirect('/m')
@@ -119,9 +118,10 @@ def m_st():
         mess = Message()
         db_sess.query(User).filter(User.email == current_user.email)
         mess.name_sender = current_user.name
-        mess.email_sender = current_user.email
+        mess.id_sender = current_user.id
         mess.message = request.form["about"]
-        chat_id = request.form["email_recipient"]
+        chat_id = request.form["chat_id"]
+        mess.read = 0
         if f.filename != "":
             ex = f.filename.split(".")[-1]
             os.chdir('static/img')
@@ -136,7 +136,7 @@ def m_st():
         db_sess.add(mess)
         db_sess.commit()
         db_sess.close()
-        return {"log":True}
+        return {"log": True}
 
 
 @mg.route("/create_chat", methods=["POST"])
@@ -214,7 +214,6 @@ def delete_mess():
     db_sess.delete(mes)
     db_sess.commit()
     db_sess.close()
-
     return {"log": "True"}
 
 
@@ -227,11 +226,9 @@ def mg_get_chats():
 def del_chat():
     data = request.get_json()
     db_sess = db_session.create_session()
-    print(data["id_chat"])
     chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
     if str(current_user.id) in chat.members.split():
         chat.status = 2
-    print(chat.status)
     db_sess.commit()
     db_sess.close()
     return {"log": True}
@@ -270,6 +267,7 @@ def get_new():
     if current_user.is_authenticated:
         chat_id = data["id"]
         message = get_new_not_read_m(chat_id)
+        print(message)
         if message != list():
             return {"message": [1]}
     return {"message": []}
@@ -291,6 +289,20 @@ def v(id_chat):
     db_sess = db_session.create_session()
     c = db_sess.query(Chat).filter(Chat.id == id_chat).first()
     c.status = 1
+    db_sess.commit()
+    db_sess.close()
+    return {"log": True}
+
+
+@mg.route("/edit_prof", methods=["POST"])
+def edit_prof():
+    if current_user.id is None:
+        return {"log": False}
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
+    user.email = data["email"]
+    user.name = data["name"]
     db_sess.commit()
     db_sess.close()
     return {"log": True}

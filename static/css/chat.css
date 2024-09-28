@@ -50,6 +50,20 @@
 }
 
 
+.edit-btn {
+background:#199cff;
+border: none;
+border-radius: 10px;
+color:white;
+}
+
+
+.edit-cont {
+    position:relative;
+    left:40px;
+}
+
+
 .form2 {
     position:fixed;
     width:98vw;

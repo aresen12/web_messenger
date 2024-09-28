@@ -153,7 +153,7 @@ document.getElementById('name_chat').innerText = name;
     distance      = (elementOffset - scrollTop);
           console.log(distance, $('#content').offset(), 1);
     globalThis.global_distans = distance;
-    document.getElementById('email_recipient').innerText = id_chat;
+    document.getElementById('chat_id').innerText = id_chat;
 
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
     x.style.display = "block";
@@ -172,7 +172,7 @@ function exit_chat(){
 globalThis.email_recipient = "";
 document.getElementById("content").innerHTML = "";
 document.getElementById('name_chat').innerText = "";
-document.getElementById('email_recipient').innerText = "";
+document.getElementById('chat_id').innerText = "";
 
 }
 
@@ -281,7 +281,7 @@ $.ajax({
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"id": document.getElementById("email_recipient").value}),
+    data: JSON.stringify({"id": document.getElementById("chat_id").value}),
     success: function(json){
         console.log(json["message"].length)
           if (json["message"].length > 0){
@@ -341,7 +341,7 @@ $.ajax({
     success: function(json){
         console.log(json["user"]["name"] )
         var html = '<h2>Редактировать профиль<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
-        html = html + '<label>Имя</label><br><input value="'+ json["user"]["name"] + '">'
+        html = html + '<div class="edit-cont"><label>Имя</label><br><input value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br><input name="email_edit" value="'+ json["user"]["email"] + '"><br><button class="edit-btn">Сохранить</button></div>'
        document.getElementById("global_menu").innerHTML = html;
 
         },
