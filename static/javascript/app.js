@@ -207,10 +207,11 @@ function submit_form() {
     document.getElementById('inputTag').value = "";
     } else {
     let b = x.submit();
-    document.getElementById("about").value = "";
+    var rec = document.getElementById("chat_id").value;
+    x.reset();
+    document.getElementById("chat_id").value = rec;
+    document.getElementById("imageName").innerHTML = "";
     show();
-//    var f =document.getElementById('inputTag').value = "";
-//    document.getElementById("imageName").value = "";
     }
 }
 
