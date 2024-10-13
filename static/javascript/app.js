@@ -54,9 +54,23 @@ function set_enter(key) {
 function edit (id_mess){
 globalThis.edit_flag = true;
 globalThis.edit_id = id_mess;
-document.getElementById("about").value = document.getElementById("text" + id_mess).textContent.trim();
+var t = document.getElementById("text" + id_mess).textContent.trim();
+document.getElementById("about").value = t;
+var la = document.getElementById("edit-label");
+la.innerHTML = t;
+la.innerHTML += '<button type="button" onclick="close_edit()" class="btn-close edit-btn-close" aria-label="Close"></button>'
+la.style.display = "block";
 
 }
+
+
+function close_edit() {
+globalThis.edit_id = "";
+globalThis .edit_flag = false;
+var la = document.getElementById("edit-label");
+la.style.display = "none";
+}
+
 
 
 function edit_post(id_mess, text){
@@ -350,7 +364,8 @@ var position = 0;
 
 
 function edit_prof_html(){
-document.getElementById("global_menu").style.display = "block";
+var menu = document.getElementById("global_menu");
+menu.style.display = "block";
 $.ajax({
     url: '/m/c_get_user',
     type: 'GET',
@@ -358,10 +373,8 @@ $.ajax({
     contentType:'application/json',
     success: function(json){
         console.log(json["user"]["name"] )
-        var html = '<h2>Редактировать профиль<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
-        html = html + '<div class="edit-cont"><label>Имя</label><br><input id="name_edit" name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br><input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br><button class="edit-btn" onclick="edit_prof_post()">Сохранить</button></div>'
-       document.getElementById("global_menu").innerHTML = html;
-
+        menu.innerHTML = '<h2>Редактировать профиль<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
+        menu.innerHTML  += '<div class="edit-cont"><label>Имя</label><br><input id="name_edit" name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br><input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br>'+'Для смены пародя введите старый пароль<input name="password_old" id="password_old"><br><label for="password_new">Новый пароль</label><br><input name="password_new" id="password_new"><br><button class="edit-btn" onclick="edit_prof_post()">Сохранить</button></div>';
         },
     error: function(err) {
         console.error(err);
@@ -450,22 +463,13 @@ $.ajax({
 }
 }
 
-function answer(id_mess)
-    { alert("Функция в разработке");
-    if (email_recipient != "") {
-      $.ajax({
-    url: '/m/answer',
-    type: 'POST',
-    dataType: 'json',
-    contentType:'application/json',
-    data: JSON.stringify({"id":id_mess}),
-    success: function(html){
-          show();
-        },
-    error: function(err) {
-        console.error(err);
-    }
-});}
+function answer(id_mess){
+    var la = document.getElementById("edit-label");
+    var t = document.getElementById("text" + id_mess).textContent.trim();
+    la.innerHTML = t;
+    la.innerHTML += '<button type="button" onclick="close_edit()" class="btn-close edit-btn-close" aria-label="Close"></button>'
+    la.style.display = "block";
+    document.getElementById("html_m").value = '<a href="#m' + id_mess +'" class="answer-a">' + t + '</a>';
     }
 
 

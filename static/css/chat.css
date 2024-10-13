@@ -37,13 +37,13 @@
     position:relative;
     left:40vw;
 }
-
+.my-message:visited {background-color:blue;}
 
 .mess-admin {
     position:relative;
     width: 70vw;
     left:0vw;
-    height:80vh;
+    height:70vh;
     overflow-y: scroll;
     margin:0;
     -webkit-overflow-scrolling:touch;
@@ -62,18 +62,34 @@ color:white;
     position:relative;
     left:40px;
 }
-
+.form-group {
+margin:none;
+top:auto;
+position:fixed;bottom:0vh; padding-down:0;}
 
 .form2 {
-    position:fixed;
     width:98vw;
     bottom:0vh;
     background-color: #cfe2ff;
     border: 1px solid gray;
     border-radius: 5px;
     padding: 10px;
-    padding-down:0;
     font-size:15pt;
+
+}
+
+.label-edit {
+height:40px;
+margin:0px;
+padding-left:20px;
+background-color:# E2E3E5;
+}
+
+
+.edit-btn-close {
+    position:absolute;
+    left:auto;
+    right:0px;
 
 }
 

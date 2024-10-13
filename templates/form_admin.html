@@ -62,7 +62,7 @@
     </div>
     </div>
 
-    <img src="/static/img/bg/bg2.jpg" class="background-img" id="background-img">
+    <img src="" class="background-img" id="background-img">
     <div class="mess-admin" id="container-mess">
         <div id="content"></div>
 
@@ -78,6 +78,10 @@
 </script>
 
 <iframe name="votar" style="display:none;"></iframe>
+<div class="form-group">
+    <div id="edit-label" class="alert-secondary label-edit"  style="display:none;">
+
+    </div>
 <form method="post" class="form2" enctype="multipart/form-data" target="votar" contenteditable="false" >
     <div class="form-container">
         <textarea class="form-control text" id="about" rows="1" name="about"  contenteditable="true" style="resize: none;"></textarea>
@@ -99,9 +103,9 @@
             </label>
         </div>
         <div>
+            <textarea id="html_m" name="html_m" style="display:none;"></textarea>
             <textarea id="chat_id" name="chat_id" style="display:none;"></textarea>
         </div>
-
         <script>
         let input = document.getElementById("inputTag");
         let imageName = document.getElementById("imageName")
@@ -114,6 +118,7 @@
         </script>
     </div>
 </form>
+    </div>
 <div class="global-menu" id="global_menu" style="display:none;">
 
 </div>

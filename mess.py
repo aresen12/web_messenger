@@ -122,6 +122,9 @@ def m_st():
         mess.message = request.form["about"]
         chat_id = request.form["chat_id"]
         mess.read = 0
+        html_text = request.form["html_m"]
+        if html_text.strip() != "":
+            mess.html_m = html_text
         if f.filename != "":
             ex = f.filename.split(".")[-1]
             os.chdir('static/img')

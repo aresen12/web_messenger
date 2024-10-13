@@ -14,6 +14,11 @@
     <a class="my-a" href="/static/img/{{mess.img}}">fail({{mess.img}})</a>
     {% endif %}
     {% endif %}
+     {% if mess.html_m != "" %}
+    <p>
+       {{   mess.html_m | safe }}
+    </p>
+    {% endif %}
     <p id="text{{mess.id}}">
         {{mess.message}}
     </p>
@@ -46,6 +51,11 @@
     {% else %}
     <a class="my-a" href="/static/img/{{mess.img}}">fail({{mess.img}})</a>
     {% endif %}
+    {% endif %}
+    {% if mess.html_m != "" %}
+    <p>
+       {{   mess.html_m | safe }}
+    </p>
     {% endif %}
     <p id="text{{mess.id}}">
         {{mess.message}}

@@ -13,9 +13,10 @@ class Message(SqlAlchemyBase, UserMixin, SerializerMixin):
     id_sender = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     message = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     read = sqlalchemy.Column(sqlalchemy.Boolean, default=False,)
-    time = sqlalchemy.Column(sqlalchemy.String, nullable=True, default=datetime.datetime.now)
+    time = sqlalchemy.Column(sqlalchemy.String, default=datetime.datetime.now)
     chat_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     img = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    html_m = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="")
 
     def __repr__(self):
         return f"{self.message} {self.time}"

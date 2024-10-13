@@ -99,17 +99,6 @@ h2 {
 }
 
 
-.icon_container {
-position:relative;
-left:5vw;
-font-size: 2vw;
-}
-
-
-.block_img {
-    width: 25vw;
-    max-width:25vw;
-}
 .zak {
     background: #2b6cb0;
     border-radius: 5px;
@@ -143,10 +132,6 @@ font-size: 2vw;
       }
 
 
-.dop-black {
-    background: black;
-    height:100vh;
-}
 .okno {
     text-align: center;
         padding: 15px;
@@ -170,7 +155,6 @@ position:relative;
 
 
 .login-form {
-
     margin:auto;
     position:relative;
     top:5vh;
@@ -215,65 +199,16 @@ position: relative;
 }
 .my-a {text-decoration:none; color:black;}
 .btn2 {margin:10px;}
-.dir {
-    width:96vw;
-    border:2px solid gray;
-    margin-left:auto;
-    margin-right:auto;
-    }
-
-.dir-name {border:0px;
-    background-color:#d4d0d6;}
-.file-name {
-color:black;
-margin:0px;
-text-decoration:none;
-border:1px solid gray;
-background-color:#d4d0d6;
-    }
-.close:hover {
-    background: none;
-}
-
  .email {border-radius: 10px;height:7vh;margin:2px;}
 /* Ссылки внутри выпадающего списка */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
 .caption {display:flex;justify-content:center;}
 
 
-.pack {
-    position:relative;
-    margin-left:auto;
-    margin-right:auto;
-    width:80vw;
-    margin-top: 10vh;
-}
-
-.main-car {
-display: flex;
-    justify-content: center;}
 .zak-con {width:60vw;margin-right:auto;margin-left:auto;}
-.car-ogr {
-margin-top: 10vh;
-        overflow: hidden;
-    margin-right:5vw;
-    margin-left:5vw;
-    margin-bottom:10px;
-
-    }
 .info-btn {border:0;background:none;}
 @media (pointer:none), (pointer:coarse) {
     .car-ogr{width:40vw;}
     .carousel {
-        width:40vw;
-    }
-    .my_img {
         width:40vw;
     }
     .login-p {
@@ -282,22 +217,7 @@ margin-top: 10vh;
 }
 
 
-@media screen and (width > 981px) {
-     .main-car {height:120vh;}
-    .car-ogr {
-        width:25vw;
-        position:relative;
-        top:10vh;
-        }
-    #alert {
-        margin-top:25vh;
- }
-}
 .info-nav {position:relative;bottom:0px;}
 @media screen and (width < 981px) {
     .button {font-size:40pt;}
-
-
-    .block_img {width: 70vw;max-width:70vw;}
-
-}
+    }
