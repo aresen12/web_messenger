@@ -112,6 +112,7 @@ function showImg(Div, name_img){
     w_img.src = "/static/img/" + name_img;
     if(x.style.display=="none") {
         x.style.display = "block";
+
     } else {
         x.style.display = "none";
     }
@@ -165,10 +166,8 @@ document.getElementById('name_chat').innerText = name;
     var scrollTop     = $(window).scrollTop(),
     elementOffset = $('#content').offset().top,
     distance      = (elementOffset - scrollTop);
-          console.log(distance, $('#content').offset(), 1);
     globalThis.global_distans = distance;
     document.getElementById('chat_id').innerText = id_chat;
-
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
     x.style.display = "block";
     x.src = "/static/img/bg/mob_bg2.jpg"
@@ -305,7 +304,6 @@ $.ajax({
               try {
                 const permission = await Notification.requestPermission();
                 if (Notification.permission === 'denied') {
-        subscribe();
     }
                 console.log(permission);
                 const options = {
@@ -506,14 +504,56 @@ $.ajax({
     console.log(json["users"].length);
     var html = '<h2>Создать чаты<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
        for (let i = 0; i < json["users"].length; i++){
-       html = html +'<button onclick="create_chat(' + "'" + id + ' ' + json["users"][i][2]  + "', 'primary'" + ', 1)"' + '" class="add-menu">' + json["users"][i][0]+ "</button>";
-       }document.getElementById("global_menu").innerHTML = html;
+       html = html + '<label class="add-menu">' + '<input  type="checkbox" onclick="add_chat(' + json["users"][i][2] + ')"' + '" >' + json["users"][i][0] + '</label><br>';
+       }
+       document.getElementById("global_menu").innerHTML = html;
+       document.getElementById("global_menu").innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><label>Имя чата</label><br><input id="name_new_chat" style="display:none;"><input id="list_members" style="display:none;" value="">';
         },
     error: function(err) {
         console.error(err);
     }
 });
 }
+
+function add_chat(new_mem){
+    console.log(new_mem);
+    var list_mem = document.getElementById("list_members");
+    t_m = list_mem.value.split(" ")
+    if (new_mem + "" in t_m){
+            console.log("test");
+    } else {
+    list_mem.value += " " + new_mem;
+    console.log(t_m);
+    if (t_m.length > 2){
+        document.getElementById("name_new_chat").style.display = 'block';
+    }
+
+    }
+
+}
+function create_group (){
+    var list_members = document.getElementById("list_members").value;
+    var is_primary = 1;
+    if (list_members.length > 2){
+        is_primary = 0
+    }
+    name = document.getElementById("name_new_chat").value;
+      $.ajax({
+    url: '/m/create_chat',
+    type: 'POST',
+    dataType: 'json',
+    contentType:'application/json',
+    data: JSON.stringify({"name":name, "list_members": list_members, "primary":is_primary}),
+    success: function(json){
+          // update chats list
+          get_chats();
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
+
 function get_user (id_user){
 $.ajax({
     url: '/m/get_user/' + id_user,
@@ -592,5 +632,11 @@ function get_chats (){
         }
 });
 }
-
+// отрисовка интерфейса
 get_chats();
+var f = document.getElementById("form").offsetHeight;
+var nav = document.getElementById("nav").offsetHeight;
+var m_c =   document.getElementById("container-mess");
+m_c.style.height =  window.innerHeight - f - nav + "px";
+m_c.style.top = nav;
+document.getElementById("background-img").style.height =  window.innerHeight - f - nav + "px";

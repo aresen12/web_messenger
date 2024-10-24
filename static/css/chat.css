@@ -30,7 +30,13 @@
     left:1vw;
 }
 
+.answer-a {
+    border: 1px solid gray;
+    background-color: rgba(0, 0, 0, 0.2);
+    color:rgba(1,1,1,1);
+    text-decoration: none;
 
+}
 .my-message {
     position:relative;
     width:20vw;

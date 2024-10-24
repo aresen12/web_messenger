@@ -14,6 +14,8 @@
     <a class="my-a" href="/static/img/{{mess.img}}">fail({{mess.img}})</a>
     {% endif %}
     {% endif %}
+
+
      {% if mess.html_m != "" %}
     <p>
        {{   mess.html_m | safe }}
@@ -60,7 +62,7 @@
     <p id="text{{mess.id}}">
         {{mess.message}}
     </p>
-    <p class="time-mess">{{mess.get_time()}}</p>
+    <p class="time-mess">{{mess.get_time()}} {{mess.name_sender}}</p>
     <div class="context-menu-open" id="{{mess.id}}" style="display:none;">
 	<ul>
 		<li onclick="delete_mess({{mess.id}})">Delete</li>
