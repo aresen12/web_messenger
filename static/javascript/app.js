@@ -82,18 +82,12 @@ function edit_post(id_mess, text){
     data: JSON.stringify({"id":id_mess, "new_text": text}),
     success: function(json){
     show();
+    close_edit();
     },
     error: function(err) {
         console.error(err);
     }
 });
-}
-
-
-function set_bg(num) {
-        number_bg = num;
-        document.getElementById("background-img").src = "/static/img/bg/bg" + number_bg + ".jpg";
-    document.cookie = "bg="+ number_bg;
 }
 
 
@@ -106,13 +100,13 @@ var x = document.getElementById(Div);
     }
 }
 
+
 function showImg(Div, name_img){
     var x = document.getElementById(Div);
     var w_img = document.getElementById("watch_img");
     w_img.src = "/static/img/" + name_img;
     if(x.style.display=="none") {
         x.style.display = "block";
-
     } else {
         x.style.display = "none";
     }
@@ -251,16 +245,12 @@ document.addEventListener('keydown', function(event) {
             submit_form();
             show();
   }
-
   }
-
-
 });
 
 
 
-function show()
-    {
+function show(){
     if (document.getElementById("chat_id").value != "") {
       $.ajax({
     url: '/m/update/' + document.getElementById("chat_id").value,
@@ -579,7 +569,6 @@ function get_chats (){
         contentType:'application/json',
         success: function(json){
         console.log(json["chats"].length);
-
            for (let i = 0; i < json["chats"].length; i++){
            if (json["chats"][i]["primary_chat"]){
            console.log("test");
@@ -605,15 +594,11 @@ function get_chats (){
         globalThis.html_ = globalThis.html_ + '<button class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "')" + '"' + '">' + json3["user"] +'</button>';
     //    globalThis.html_ = globalThis.html_ + '<button class="info-btn" onclick="show_global_menu(' + "'global_menu', {{current_user.id}})"+  '"><svg style="position:absolute; bottom:100px; left: 25vw;" width="40px" viewBox="-3.2 -3.2 38.40 38.40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-3.2" y="-3.2" width="38.40" height="38.40" rx="19.2" fill="#086faf" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>добавить чат</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set" sketch:type="MSLayerGroup" transform="translate(-464.000000, -1087.000000)" fill="#ffffff"> <path d="M480,1117 C472.268,1117 466,1110.73 466,1103 C466,1095.27 472.268,1089 480,1089 C487.732,1089 494,1095.27 494,1103 C494,1110.73 487.732,1117 480,1117 L480,1117 Z M480,1087 C471.163,1087 464,1094.16 464,1103 C464,1111.84 471.163,1119 480,1119 C488.837,1119 496,1111.84 496,1103 C496,1094.16 488.837,1087 480,1087 L480,1087 Z M486,1102 L481,1102 L481,1097 C481,1096.45 480.553,1096 480,1096 C479.447,1096 479,1096.45 479,1097 L479,1102 L474,1102 C473.447,1102 473,1102.45 473,1103 C473,1103.55 473.447,1104 474,1104 L479,1104 L479,1109 C479,1109.55 479.447,1110 480,1110 C480.553,1110 481,1109.55 481,1109 L481,1104 L486,1104 C486.553,1104 487,1103.55 487,1103 C487,1102.45 486.553,1102 486,1102 L486,1102 Z" id="plus-circle" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg></button>'
         document.getElementById("email").innerHTML = globalThis.html_;
-
-        console.log(globalThis.name);
         },
         error: function(err) {
             console.error(err);
         }
         });
-
-
             },
         error: function(err) {
             console.error(err);
@@ -632,6 +617,8 @@ function get_chats (){
         }
 });
 }
+
+
 // отрисовка интерфейса
 get_chats();
 var f = document.getElementById("form").offsetHeight;
@@ -640,3 +627,10 @@ var m_c =   document.getElementById("container-mess");
 m_c.style.height =  window.innerHeight - f - nav + "px";
 m_c.style.top = nav;
 document.getElementById("background-img").style.height =  window.innerHeight - f - nav + "px";
+
+
+function set_bg(num) {
+        number_bg = num;
+        document.getElementById("background-img").src = "/static/img/bg/bg" + number_bg + ".jpg";
+    document.cookie = "bg="+ number_bg;
+}

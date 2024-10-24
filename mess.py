@@ -161,7 +161,7 @@ def edit_mess():
     data = request.get_json()
     db_sess = db_session.create_session()
     mess = db_sess.query(Message).filter(Message.id == data["id"]).first()
-    if mess.email_sender == current_user.email:
+    if mess.id_sender == current_user.id:
         mess.message = data["new_text"]
     db_sess.commit()
     db_sess.close()
