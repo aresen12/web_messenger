@@ -8,7 +8,7 @@
 <div class="alert alert-success my-message" id="m{{mess.id}}" role="alert" onclick="show_menu('{{mess.id}}')">
     {% if none != mess.img %}
     {% if ".jpeg" in mess.img or ".png" in mess.img  or ".bmp" in mess.img or ".jpg" in mess.img %}
-        <button class="info-btn" onclick="showImg('watch', '{{mess.img}}')">
+        <button class="info-btn" onclick="showImg('m{{mess.id}}', '{{mess.img}}')">
         <img class="mess-img" src="/static/img/{{mess.img}}"></button>
     {% else %}
     <a class="my-a" href="/static/img/{{mess.img}}">fail({{mess.img}})</a>

@@ -163,6 +163,7 @@ def edit_mess():
     mess = db_sess.query(Message).filter(Message.id == data["id"]).first()
     if mess.id_sender == current_user.id:
         mess.message = data["new_text"]
+        mess.read = 0
     db_sess.commit()
     db_sess.close()
     return {"log": True}

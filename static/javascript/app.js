@@ -102,11 +102,12 @@ var x = document.getElementById(Div);
 
 
 function showImg(Div, name_img){
-    var x = document.getElementById(Div);
+    var x = document.getElementById("watch");
     var w_img = document.getElementById("watch_img");
     w_img.src = "/static/img/" + name_img;
     if(x.style.display=="none") {
         x.style.display = "block";
+        document.getElementById(Div).click();
     } else {
         x.style.display = "none";
     }
@@ -494,10 +495,10 @@ $.ajax({
     console.log(json["users"].length);
     var html = '<h2>Создать чаты<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
        for (let i = 0; i < json["users"].length; i++){
-       html = html + '<label class="add-menu">' + '<input  type="checkbox" onclick="add_chat(' + json["users"][i][2] + ')"' + '" >' + json["users"][i][0] + '</label><br>';
+       html = html + '<label class="add-menu">' + '<input  type="checkbox" onclick="add_chat(' + json["users"][i][2] + ')">' + json["users"][i][0] + '</label><br>';
        }
        document.getElementById("global_menu").innerHTML = html;
-       document.getElementById("global_menu").innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><label>Имя чата</label><br><input id="name_new_chat" style="display:none;"><input id="list_members" style="display:none;" value="">';
+       document.getElementById("global_menu").innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><label>Имя чата</label><br><input id="name_new_chat" style="display:none;"><input id="list_members" style="display:none;">';
         },
     error: function(err) {
         console.error(err);
@@ -508,7 +509,8 @@ $.ajax({
 function add_chat(new_mem){
     console.log(new_mem);
     var list_mem = document.getElementById("list_members");
-    t_m = list_mem.value.split(" ")
+    list_mem.value = list_mem.value.trim();
+    t_m = list_mem.value.split(" ");
     if (new_mem + "" in t_m){
             console.log("test");
     } else {
@@ -524,9 +526,10 @@ function add_chat(new_mem){
 function create_group (){
     var list_members = document.getElementById("list_members").value;
     var is_primary = 1;
-    if (list_members.length > 2){
-        is_primary = 0
+    if (list_members.split().length > 2){
+        is_primary = 0;
     }
+    console.log(list_members.length, "len");
     name = document.getElementById("name_new_chat").value;
       $.ajax({
     url: '/m/create_chat',
@@ -537,6 +540,7 @@ function create_group (){
     success: function(json){
           // update chats list
           get_chats();
+          document.getElementById("global_menu").style.display = 'none';
         },
     error: function(err) {
         console.error(err);
