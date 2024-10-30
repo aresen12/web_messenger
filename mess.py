@@ -19,9 +19,7 @@ def get_chats():
     chats = db_sess.query(Chat).all()
     db_sess.close()
     new = []
-    print(chats)
     for i in chats:
-        print(i.members)
         if i.status == 1 and str(current_user.id) in i.members.split():
             new.append({"id": i.id, "name": i.name, "primary_chat": i.primary_chat})
     return new
@@ -138,8 +136,9 @@ def m_st():
         mess.chat_id = chat_id
         db_sess.add(mess)
         db_sess.commit()
+        id_m = mess.id
         db_sess.close()
-        return {"log": True}
+        return {"id": id_m}
 
 
 @mg.route("/create_chat", methods=["POST"])
