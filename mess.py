@@ -168,6 +168,24 @@ def edit_mess():
     return {"log": True}
 
 
+@mg.route("/send_message", methods=["POST"])
+def send_message():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    mess = Message()
+    mess.message = data["new_text"]
+    mess.read = 0
+    mess.html_m = data["html"]
+    mess.id_sender = current_user.id
+    mess.chat_id = data["chat_id"]
+    mess.name_sender = current_user.name
+    db_sess.add(mess)
+    db_sess.commit()
+    id_ = mess.id
+    db_sess.close()
+    return {"id": id_}
+
+
 @mg.route("/sing_out_chat")
 def sing_out_chat():
     data = request.get_json()

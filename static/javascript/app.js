@@ -210,8 +210,33 @@ function submit_form() {
         about.value = "";
         document.getElementById('inputTag').value = "";
     } else {
-        var b = x.submit();
-        console.log(b, "answer form");
+if ($('form input[type=file]').val() == ''){
+    var text = document.getElementById("about").value;
+    var html_m = document.getElementById("html_m").value;
+    $.ajax({
+    url: '/m/send_message',
+    type: 'POST',
+    dataType: 'json',
+    contentType:'application/json',
+    data: JSON.stringify({
+     "chat_id":document.getElementById("chat_id").value,
+     "new_text": text,
+     "html": html_m}),
+    success: function(json){
+    gener_html(json["id"], text);
+    },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}else {
+var b = x.submit();
+}
+
+
+
+
+
 //        var rec = document.getElementById("chat_id").value;
      x.reset();
 //        document.getElementById("chat_id").value = rec;
@@ -641,4 +666,7 @@ function gener_html(id_m, text) {
     new_mess = '<div class="alert alert-success my-message" id="m{{mess.id}}" role="alert" onclick="show_menu("' + id_m + '")"> <p id="text' + id_m + '">' + text + '</p>';
     new_mess += '<div class="context-menu-open" id="{{mess.id}}" style="display:none;"><ul><li onclick="delete_mess('  + id_m + ')">Delete</li><li onclick="answer('  + id_m + ')">Answer</li><li onclick="edit('  + id_m + ')">edit</li></ul></div>';
     document.getElementById("content").innerHTML += new_mess;
+          window.location.hash = "#";
+          window.location.hash = "#pos";
+        go()
 }
