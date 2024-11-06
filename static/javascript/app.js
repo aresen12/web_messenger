@@ -520,10 +520,12 @@ $.ajax({
     document.getElementById("global_menu").innerHTML="foo";
     var html = '<h2>Создать чаты<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
        for (let i = 0; i < json["users"].length; i++){
-       html = html + '<label class="add-menu">' + '<input  type="checkbox" onclick="add_chat(' + json["users"][i][2] + ')">' + json["users"][i][0] + '</label><br>';
+       if (json["c_user"] != json["users"][i][2]){
+       html = html + '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2] + ')">' + json["users"][i][0] + '</label><br>';
+       }
        }
        document.getElementById("global_menu").innerHTML = html;
-       document.getElementById("global_menu").innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><label>Имя чата</label><br><input id="name_new_chat" style="display:none;"><input id="list_members" style="display:none;">';
+       document.getElementById("global_menu").innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><label>Имя чата</label><br><input id="name_new_chat" style="display:none;"><input id="list_members" style="display:none;" value="' + json["c_user"] + '">';
         },
     error: function(err) {
         console.error(err);
@@ -540,7 +542,7 @@ function add_chat(new_mem){
     // нужно сделать удаление из списка
     } else {
     list_mem.value += " " + new_mem;
-    if (t_m.length > 2){
+    if (t_m.length >= 2){
         document.getElementById("name_new_chat").style.display = 'block';
     }
     }
@@ -548,13 +550,21 @@ function add_chat(new_mem){
 
 
 function create_group (){
+    var name = document.getElementById("name_new_chat").value;
     var list_members = document.getElementById("list_members").value;
+    if (list_members.trim() == ""){
+    return "";
+    }
     var is_primary = 1;
     if (list_members.split(" ").length > 2){
         is_primary = 0;
+        if (name.trim() == ""){
+        document.getElementById("name_new_chat").value = "Добавьте имя!!!";
+        return "";
+        }
     }
     console.log(list_members.split().length);
-    name = document.getElementById("name_new_chat").value;
+
       $.ajax({
     url: '/m/create_chat',
     type: 'POST',

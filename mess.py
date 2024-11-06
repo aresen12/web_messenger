@@ -208,7 +208,7 @@ def get_users():
     users = db_sess.query(User.email, User.name, User.id).all()
     db_sess.close()
     n = [list(_) for _ in users]
-    return {"users": n}
+    return {"users": n, "c_user": current_user.id}
 
 
 @mg.route("/get_user/<int:id_>")
