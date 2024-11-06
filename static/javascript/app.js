@@ -258,7 +258,6 @@ document.querySelector('.form2').addEventListener('submit', function(e) {
 
 document.addEventListener('keydown', function(event) {
     var x = document.querySelector('form');
-    console.log(event.code);
     if (enter_flag) {
         if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
         var about = document.getElementById("about");
@@ -551,9 +550,10 @@ function add_chat(new_mem){
 function create_group (){
     var list_members = document.getElementById("list_members").value;
     var is_primary = 1;
-    if (list_members.split().length > 2){
+    if (list_members.split(" ").length > 2){
         is_primary = 0;
     }
+    console.log(list_members.split().length);
     name = document.getElementById("name_new_chat").value;
       $.ajax({
     url: '/m/create_chat',

@@ -168,6 +168,8 @@ def edit_mess():
     return {"log": True}
 
 
+
+
 @mg.route("/send_message", methods=["POST"])
 def send_message():
     data = request.get_json()
@@ -226,6 +228,16 @@ def get_chat_user(id_):
     n = chat.members.split()
     return {"user": n}
 
+@mg.route("/get_chats_all")  # chat id
+def get_chat():
+    db_sess = db_session.create_session()
+    chat = db_sess.query(Chat).all()
+    db_sess.close()
+    n = []
+    for i in chat:
+        n.append({"id": i.id, "mem": i.members, "pr": i.primary_chat})
+    return {"user": n}
+
 
 @mg.route("/delete", methods=["DELETE"])
 def delete_mess():
@@ -238,6 +250,16 @@ def delete_mess():
     return {"log": "True"}
 
 
+@mg.route("/delete_chat/<int:id_>", methods=["GET"])
+def delete_chat(id_):
+    if not current_user.admin:
+        return redirect("/")
+    db_sess = db_session.create_session()
+    mes = db_sess.query(Chat).filter(Chat.id == id_).first()
+    db_sess.delete(mes)
+    db_sess.commit()
+    db_sess.close()
+    return {"log": "True"}
 @mg.route("/get_chats")
 def mg_get_chats():
     return {"chats": get_chats()}
