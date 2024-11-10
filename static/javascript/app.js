@@ -114,42 +114,8 @@ function showImg(Div, name_img){
 
 
 function set_recipient(id_chat, is_primary, name) {
-    globalThis.email_recipient = id_chat;
     document.getElementById("chat_id").value = id_chat;
-    if (is_primary) {
-    $.ajax({
-    url: '/m/get_chat_user/' + id_chat,
-    type: 'GET',
-    dataType: 'json',
-    contentType:'application/json',
-    success: function(json){
-    t_id = 0;
-    if (json["user"][0] != id){
-        t_id = json["user"][0]
-    } else{
-        t_id = json["user"][1]
-    }
-    if (email_recipient != "") {
-      $.ajax({
-    url: '/m/get_user/' + t_id,
-    type: 'GET',
-    dataType: 'json',
-    success: function(json){
-    document.getElementById('name_chat').innerText = json["user"];
-    },
-    error: function(err) {
-        console.error(err);
-    }
-    });
-    }
-        },
-    error: function(err) {
-        console.error(err);
-    }
-});
-}else {
-document.getElementById('name_chat').innerText = name;
-}
+    document.getElementById('name_chat').innerText = name;
     var x = document.getElementById("background-img");
     var y = document.getElementById("email");
     var button = document.getElementById("button");
@@ -525,7 +491,7 @@ $.ajax({
        }
        }
        document.getElementById("global_menu").innerHTML = html;
-       document.getElementById("global_menu").innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><label>Имя чата</label><br><input id="name_new_chat" style="display:none;"><input id="list_members" style="display:none;" value="' + json["c_user"] + '">';
+       document.getElementById("global_menu").innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><br><div class="add-menu" id="name_new_chat_group" style="display:none;"><label>Имя чата</label><br><input id="name_new_chat"></div><input id="list_members" style="display:none;" value="' + json["c_user"] + '">';
         },
     error: function(err) {
         console.error(err);
@@ -542,8 +508,8 @@ function add_chat(new_mem){
     // нужно сделать удаление из списка
     } else {
     list_mem.value += " " + new_mem;
-    if (t_m.length >= 2){
-        document.getElementById("name_new_chat").style.display = 'block';
+    if (t_m.length + 1 > 2){
+        document.getElementById("name_new_chat_group").style.display = 'block';
     }
     }
 }
