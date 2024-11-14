@@ -137,8 +137,9 @@ def m_st():
         db_sess.add(mess)
         db_sess.commit()
         id_m = mess.id
+        t_ = mess.get_time()
         db_sess.close()
-        return {"id": id_m}
+        return {"id": id_m, "time": t_}
 
 
 @mg.route("/create_chat", methods=["POST"])
@@ -183,9 +184,10 @@ def send_message():
     mess.name_sender = current_user.name
     db_sess.add(mess)
     db_sess.commit()
-    id_ = mess.id
+    id_m = mess.id
+    t_ = mess.get_time()
     db_sess.close()
-    return {"id": id_}
+    return {"id": id_m, "time": t_}
 
 
 @mg.route("/sing_out_chat")
@@ -267,14 +269,22 @@ def mg_get_chats():
 
 @mg.route("/delete_chat", methods=["DELETE"])
 def del_chat():
-    data = request.get_json()
-    db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
-    if str(current_user.id) in chat.members.split():
-        chat.status = 2
-    db_sess.commit()
-    db_sess.close()
-    return {"log": True}
+    try:
+        data = request.get_json()
+        db_sess = db_session.create_session()
+        chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
+        if str(current_user.id) in chat.members.split():
+            chat.status = 2
+        else:
+            db_sess.close()
+            raise PermissionError
+        db_sess.commit()
+        db_sess.close()
+        return {"log": True}
+    except PermissionError:
+        return {"log": False, "error": "PermissionError"}
+    except Exception:
+        return {"log": False}
 
 
 @mg.route("/block_chat", methods=["POST"])

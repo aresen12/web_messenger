@@ -189,7 +189,8 @@ if ($('form input[type=file]').val() == ''){
      "new_text": text,
      "html": html_m}),
     success: function(json){
-    gener_html(json["id"], text);
+    console.log(json);
+    gener_html(json["id"], text, json["time"]);
     },
     error: function(err) {
         console.error(err);
@@ -277,7 +278,8 @@ globalThis.position = document.getElementById("about").selectionStart;
 
 function get_new_m (){
 console.log(email_recipient);
-$.ajax({
+if (document.getElementById("chat_id").value != "") {
+    $.ajax({
     url: '/m/get_new',
     type: 'POST',
     dataType: 'json',
@@ -308,7 +310,7 @@ $.ajax({
     error: function(err) {
         console.error(err);
     }
-});
+});}
 }
 
 
@@ -413,7 +415,7 @@ $.ajax({
     type: 'DELETE',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"id_chat":email_recipient}),
+    data: JSON.stringify({"id_chat": document.getElementById("chat_id").value}),
     success: function(html){
           get_chats();
         },
@@ -638,8 +640,9 @@ function set_bg(num) {
 }
 
 
-function gener_html(id_m, text) {
+function gener_html(id_m, text, time) {
     new_mess = '<div class="alert alert-success my-message" id="m{{mess.id}}" role="alert" onclick="show_menu("' + id_m + '")"> <p id="text' + id_m + '">' + text + '</p>';
+    new_mess += '<p class="time-mess">'+ time +'<button type="button" class="info-btn " data-bs-toggle="tooltip" data-bs-placement="top" title="прочитано">✓</button></p>';
     new_mess += '<div class="context-menu-open" id="{{mess.id}}" style="display:none;"><ul><li onclick="delete_mess('  + id_m + ')">Delete</li><li onclick="answer('  + id_m + ')">Answer</li><li onclick="edit('  + id_m + ')">edit</li></ul></div>';
     document.getElementById("content").innerHTML += new_mess;
           window.location.hash = "#";
