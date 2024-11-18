@@ -7,15 +7,13 @@
 {% if current_user.id == mess.id_sender%}
 <div class="alert alert-success my-message" id="m{{mess.id}}" role="alert" onclick="show_menu('{{mess.id}}')">
     {% if none != mess.img %}
-    {% if ".jpeg" in mess.img or ".png" in mess.img  or ".bmp" in mess.img or ".jpg" in mess.img %}
-        <button class="info-btn" onclick="showImg('m{{mess.id}}', '{{mess.img}}')">
-        <img class="mess-img" src="/static/img/{{mess.img}}"></button>
+    {% if ".jpeg" in f_n[mess.img][1]  or ".png" in f_n[mess.img][1]  or ".bmp" in f_n[mess.img][1] or ".jpg" in f_n[mess.img][1] %}
+        <button class="info-btn" onclick="showImg('m{{mess.id}}', '{{f_n[mess.img][1]}}')">
+        <img class="mess-img" src="/static/img/{{f_n[mess.img][1]}}"></button>
     {% else %}
-    <a class="my-a" href="/static/img/{{mess.img}}">fail({{mess.img}})</a>
+    <a class="my-a" download="{{f_n[mess.img][0]}}" target="_blank"   href="/static/img/{{f_n[mess.img][1]}}">{{f_n[mess.img][0]}}</a>
     {% endif %}
     {% endif %}
-
-
      {% if mess.html_m != "" %}
     <p>
        {{   mess.html_m | safe }}
@@ -47,15 +45,16 @@
 {% else %}
 <div class="alert alert-info message-other" role="alert" onclick="show_menu('{{mess.id}}')" id="m{{mess.id}}">
     {% if none != mess.img %}
-{% if ".jpg" in mess.img  or ".png" in mess.img  or ".bmp" in mess.img or ".jpeg" in mess.img %}
-    <button class="info-btn" onclick="showImg('watch', '{{mess.img}}')">
-        <img class="mess-img" src="/static/img/{{mess.img}}"></button>
+    {% if ".jpeg" in f_n[mess.img][1]  or ".png" in f_n[mess.img][1]  or ".bmp" in f_n[mess.img][1] or ".jpg" in f_n[mess.img][1] %}
+        <button class="info-btn" onclick="showImg('m{{mess.id}}', '{{f_n[mess.img][1]}}')">
+        <img class="mess-img" src="/static/img/{{f_n[mess.img][1]}}"></button>
     {% else %}
-    <a class="my-a" href="/static/img/{{mess.img}}">fail({{mess.img}})</a>
+    <a class="my-a" download="{{f_n[mess.img][0]}}" target="_blank" href="/static/img/{{f_n[mess.img][1]}}">{{f_n[mess.img][0]}}</a>
     {% endif %}
     {% endif %}
     {% if mess.html_m != "" %}
     <p>
+        {{files}}
        {{   mess.html_m | safe }}
     </p>
     {% endif %}

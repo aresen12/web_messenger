@@ -9,6 +9,7 @@ from data.user import User
 from forms.register_form import RegisterForm
 from data.message import Message
 from data.chat import Chat
+from data.File import File
 
 app = Flask(__name__)
 

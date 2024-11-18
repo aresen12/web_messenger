@@ -436,7 +436,7 @@ $.ajax({
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"id_chat":email_recipient}),
+    data: JSON.stringify({"id_chat": document.getElementById("chat_id")}),
     success: function(html){
           get_chats();
         },
@@ -506,14 +506,59 @@ function add_chat(new_mem){
     var list_mem = document.getElementById("list_members");
     list_mem.value = list_mem.value.trim();
     t_m = list_mem.value.split(" ");
-    if (new_mem + "" in t_m){
-    // нужно сделать удаление из списка
+    if (new_mem + "" in t_m){ //  удаление из списка
+    for (i=0; i < t_m.length; i++){
+        if (new_mem == t_m[i]){
+            t_m.splice(i, i + 1);
+            list_members.value = t_m.join(" ");
+            if (t_m.length <= 2){
+                document.getElementById("name_new_chat_group").style.display = 'none';
+            }
+    }
+    }
     } else {
     list_mem.value += " " + new_mem;
     if (t_m.length + 1 > 2){
         document.getElementById("name_new_chat_group").style.display = 'block';
     }
     }
+}
+
+
+// добавление пользователя в уже существующий чат
+function add_chat_user(new_mem){
+    var list_mem = document.getElementById("list_of_new_u");
+    list_mem.value = list_mem.value.trim();
+    t_m = list_mem.value.split(" ");
+    if (new_mem + "" in t_m){ //  удаление из списка
+        for (i=0; i < t_m.length; i++){
+            if (new_mem == t_m[i]){
+                t_m.splice(i, i + 1);
+                list_members.value = t_m.join(" ");
+            }
+        }
+    } else {
+    list_mem.value += " " + new_mem;
+    }
+}
+
+
+
+function edit_name_chat(){
+    $.ajax({
+        url: '/m/edit_name_chat',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"chat_id": document.getElementById('chat_id').value, "new_name": document.getElementById('new_chat_name').value}),
+        success: function(html){
+              get_chats();
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+
 }
 
 
@@ -565,6 +610,25 @@ $.ajax({
 }
 
 
+function submit_new_users(){
+    var list_members = document.getElementById("list_of_new_u").value;
+    $.ajax({
+        url: '/m/add_in_chat',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"chat_id":document.getElementById("chat_id").value, "list_members": list_members}),
+        success: function(json){
+            show_users();
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+
+}
+
+
 var name = "";
 var html_ = "";
 function get_chats (){
@@ -596,7 +660,6 @@ function get_chats (){
                     success: function(json3){
                     globalThis.name = json3["user"];
                     globalThis.html_ = globalThis.html_ + '<button class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "')" + '"' + '">' + json3["user"] +'</button>';
-                //    globalThis.html_ = globalThis.html_ + '<button class="info-btn" onclick="show_global_menu(' + "'global_menu', {{current_user.id}})"+  '"><svg style="position:absolute; bottom:100px; left: 25vw;" width="40px" viewBox="-3.2 -3.2 38.40 38.40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-3.2" y="-3.2" width="38.40" height="38.40" rx="19.2" fill="#086faf" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>добавить чат</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set" sketch:type="MSLayerGroup" transform="translate(-464.000000, -1087.000000)" fill="#ffffff"> <path d="M480,1117 C472.268,1117 466,1110.73 466,1103 C466,1095.27 472.268,1089 480,1089 C487.732,1089 494,1095.27 494,1103 C494,1110.73 487.732,1117 480,1117 L480,1117 Z M480,1087 C471.163,1087 464,1094.16 464,1103 C464,1111.84 471.163,1119 480,1119 C488.837,1119 496,1111.84 496,1103 C496,1094.16 488.837,1087 480,1087 L480,1087 Z M486,1102 L481,1102 L481,1097 C481,1096.45 480.553,1096 480,1096 C479.447,1096 479,1096.45 479,1097 L479,1102 L474,1102 C473.447,1102 473,1102.45 473,1103 C473,1103.55 473.447,1104 474,1104 L479,1104 L479,1109 C479,1109.55 479.447,1110 480,1110 C480.553,1110 481,1109.55 481,1109 L481,1104 L486,1104 C486.553,1104 487,1103.55 487,1103 C487,1102.45 486.553,1102 486,1102 L486,1102 Z" id="plus-circle" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg></button>'
                     document.getElementById("email").innerHTML = globalThis.html_;
                     },
                     error: function(err) {
@@ -648,4 +711,76 @@ function gener_html(id_m, text, time) {
           window.location.hash = "#";
           window.location.hash = "#pos";
         go()
+}
+
+
+function add_in_chat_new(){
+    var global_menu = document.getElementById("global_menu");
+    document.getElementById("users").style.display = "none";
+    global_menu.innerHTML += '<div id="add_new_users"></div>';
+    var add_new_users = document.getElementById("add_new_users");
+    add_new_users.innerHTML = '<input style="display:none;" id="list_of_new_u">'
+    $.ajax({
+    url: '/m/get_users',
+    type: 'GET',
+    dataType: 'json',
+    contentType:'application/json',
+    success: function(json){
+            var sp = document.getElementById("list_c_u").value.split(" ");
+            for (let i = 0; i < json["users"].length; i++){
+                if (json["users"][i][2] in sp || json["c_user"] == json["users"][i][2]){
+                } else{
+                add_new_users.innerHTML += '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat_user(' + json["users"][i][2] + ')">' + json["users"][i][0] + '</label><br>';
+            }
+            }
+            add_new_users.innerHTML += '<button onclick="submit_new_users()" class="edit-btn">Добавить</button>'
+        },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
+
+
+function show_users(){
+    if (document.getElementById("chat_id").value != ""){
+        $.ajax({
+            url: '/m/get_chat_user/' + document.getElementById("chat_id").value,
+            type: 'GET',
+            dataType: 'json',
+            contentType:'application/json',
+            success: function(json){
+            var global_menu = document.getElementById("global_menu");
+            global_menu.style.display = "block";
+            global_menu.innerHTML = '<h2>Управление чатом<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2><br>';
+            global_menu.innerHTML += '<div id="users"><div id="con_users"></div><div id="edit_users"></div></div>';
+            var users_div = document.getElementById("con_users");
+            users_div.innerHTML += '<h3>Участники</h3>';
+            for (let i = 0; i < json["user"].length; i++){
+             $.ajax({
+                url: '/m/get_user/' + json["user"][i],
+                type: 'GET',
+                dataType: 'json',
+                contentType:'application/json',
+                success: function(json_data){
+                    users_div.innerHTML += '<label class="add-menu">'+ json_data["user"]+ '(' +json_data["email"] + ')' + '</label><br>';
+
+                    },
+                error: function(err) {
+                    console.error(err);
+                }
+            });
+            };
+            if (! json["primary_chat"]){
+            var users_div_edit = document.getElementById("edit_users");
+            users_div_edit.innerHTML += '<button onclick="add_in_chat_new()" class="edit-btn">Добавить участника</button>';
+            users_div_edit.innerHTML += '<div><label>Имя чата</label><br><input class="add-menu" id="new_chat_name" value="' + document.getElementById("name_chat").innerText + '"><br><button onclick="edit_name_chat()" class="edit-btn">изменить</button></div>';
+            users_div_edit.innerHTML += '<input id="list_c_u" value="'+ json["user"].join(" ") + '" style="display:none;">'
+            }
+            },
+            error: function(err) {
+                console.error(err);
+            }
+        });
+    };
 }
