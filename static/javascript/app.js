@@ -113,7 +113,31 @@ function showImg(Div, name_img){
 }
 
 
+function sing_out_of_chat(){
+    $.ajax({
+    url: '/m/sing_out_chat',
+    type: 'POST',
+    dataType: 'json',
+    contentType:'application/json',
+    data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
+    success: function(json){
+    get_chats();
+    exit_chat();
+    },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
+
+
 function set_recipient(id_chat, is_primary, name) {
+document.getElementById("form").style.display = "block";
+    var menu = document.getElementById("menu-chat-ul");
+    menu.innerHTML = '<li onclick="block_user()">Заблокировать</li><li onclick="delete_chat()">Удалить чат</li>';
+    if (is_primary){
+        menu.innerHTML += '<li onclick="sing_out_of_chat()">Покинуть чат</li>';
+    };
     document.getElementById("chat_id").value = id_chat;
     document.getElementById('name_chat').innerText = name;
     var x = document.getElementById("background-img");
@@ -139,11 +163,11 @@ function set_recipient(id_chat, is_primary, name) {
 
 
 function exit_chat(){
-globalThis.email_recipient = "";
-document.getElementById("content").innerHTML = "";
-document.getElementById('name_chat').innerText = "";
-document.getElementById('chat_id').innerText = "";
-
+    globalThis.email_recipient = "";
+    document.getElementById("content").innerHTML = "";
+    document.getElementById('name_chat').innerText = "";
+    document.getElementById('chat_id').innerText = "";
+    document.getElementById('form').style.display = "none";
 }
 
 
@@ -693,8 +717,8 @@ var nav = document.getElementById("nav").offsetHeight;
 var m_c =   document.getElementById("container-mess");
 m_c.style.height =  window.innerHeight - f - nav + "px";
 m_c.style.top = nav;
-document.getElementById("background-img").style.height =  window.innerHeight - f - nav + "px";
-
+document.getElementById("background-img").style.height =  window.innerHeight - nav + "px";
+document.getElementById("form").style.display = "none";
 
 function set_bg(num) {
         number_bg = num;

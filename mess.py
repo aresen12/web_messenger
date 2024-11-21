@@ -155,7 +155,7 @@ def send_message():
 def sing_out_chat():
     data = request.get_json()
     db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
+    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
     ch_mem = chat.members.split()
     if str(current_user.id) in ch_mem:
         del ch_mem[ch_mem.index(str(current_user.id))]
