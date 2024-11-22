@@ -13,14 +13,15 @@
 ## Скриншоты
 
 ## Чат
-![[static/img/chat.jpg]]
+![alt text](https://github.com/aresen12/web_messenger/blob/master/static/img/ScreenShots/chat.jpg?raw=true)
+
 
 
 Создание чатов и групп с неограниченным колличеством 
-![[static/img/create_chat.jpg]]
+![](https://github.com/aresen12/web_messenger/blob/master/static/img/ScreenShots/create_chat.jpg?raw=true)
+Настройка фона и редактирование профиля
 
-
-![[static/img/menu.jpg]]
+![](https://github.com/aresen12/web_messenger/blob/master/static/img/ScreenShots/menu.jpg?raw=true)
 
 
 
