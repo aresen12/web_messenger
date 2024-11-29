@@ -12,6 +12,7 @@
     width:40vw;
     height:90vh;
     border-radius:30px;
+    overflow:auto;
     border: 1px solid gray;
     background:white;
     top:10px;

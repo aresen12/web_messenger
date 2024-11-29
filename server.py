@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from flask import Flask, request, render_template, redirect
 from ip import get_ip
@@ -90,7 +91,11 @@ def main():
 
     
 if __name__ == "__main__":
-    db_session.global_init('db/master_paste.db')
+    try:
+        db_session.global_init('db/master_paste.db')
+    except Exception:
+        os.mkdir("db")
+        db_session.global_init('db/master_paste.db')
     from mess import mg
     app.register_blueprint(mg)
     app.run(host=my_ip, debug=True, port=port) 

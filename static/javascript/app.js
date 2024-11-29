@@ -14,7 +14,6 @@ function showDiv(Div, div2) {
 
 
 var enter_flag = true;
-var email_recipient = "";
 var answer_flag = false;
 var edit_flag = false;
 var edit_id = 0;
@@ -163,11 +162,11 @@ document.getElementById("form").style.display = "block";
 
 
 function exit_chat(){
-    globalThis.email_recipient = "";
     document.getElementById("content").innerHTML = "";
     document.getElementById('name_chat').innerText = "";
     document.getElementById('chat_id').innerText = "";
     document.getElementById('form').style.display = "none";
+    document.getElementById('menu-chat-ul').innerHTML = '';
 }
 
 
@@ -301,7 +300,6 @@ globalThis.position = document.getElementById("about").selectionStart;
 
 
 function get_new_m (){
-console.log(email_recipient);
 if (document.getElementById("chat_id").value != "") {
     $.ajax({
     url: '/m/get_new',
