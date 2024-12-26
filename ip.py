@@ -8,6 +8,7 @@ def get_ip():
         ip = s.getsockname()[0]
         s.close()
     except OSError:
+        print("ВНИМАНИЕ!!! НЕТ ПОДКЛЮЧЕНИЯ К ИНТЕРНЕТУ!!!")
         return "127.0.0.1"
     return ip
 

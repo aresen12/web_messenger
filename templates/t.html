@@ -1,3 +1,4 @@
+<input id="summ_id" value="{{summ_id}}" style="display:none;">
 {% set date = [] %}
 {%for mess in message %}
 {% if date == [] or (date != [] and mess.get_date() != date[-1]) %}
@@ -5,7 +6,7 @@
 <div class="date">{{ date[-1] }}</div>
 {% endif %}
 {% if current_user.id == mess.id_sender%}
-<div class="alert alert-success my-message" id="m{{mess.id}}" role="alert" onclick="show_menu('{{mess.id}}')">
+<div class="alert alert-success my-message" id="m{{mess.id}}" role="alert" onclick="open_menu_mess({{mess.id}})">
     {% if none != mess.img %}
     {% if ".jpeg" in f_n[mess.img][1]  or ".png" in f_n[mess.img][1]  or ".bmp" in f_n[mess.img][1] or ".jpg" in f_n[mess.img][1] %}
         <button class="info-btn" onclick="showImg('m{{mess.id}}', '{{f_n[mess.img][1]}}')">
@@ -34,16 +35,10 @@
         </button>
         {% endif %}
     </p>
-    <div class="context-menu-open" id="{{mess.id}}" style="display:none;">
-	<ul>
-		<li onclick="delete_mess({{mess.id}})">Delete</li>
-		<li onclick="answer({{mess.id}})">Answer</li>
-		<li onclick="edit({{mess.id}})">edit</li>
-	</ul>
-</div>
+    <div class="context-menu-open" id="mm{{mess.id}}" style="display:none;"></div>
 </div>
 {% else %}
-<div class="alert alert-info message-other" role="alert" onclick="show_menu('{{mess.id}}')" id="m{{mess.id}}">
+<div class="alert alert-info message-other" role="alert" onclick="open_menu_mess({{mess.id}})" id="m{{mess.id}}">
     {% if none != mess.img %}
     {% if ".jpeg" in f_n[mess.img][1]  or ".png" in f_n[mess.img][1]  or ".bmp" in f_n[mess.img][1] or ".jpg" in f_n[mess.img][1] %}
         <button class="info-btn" onclick="showImg('m{{mess.id}}', '{{f_n[mess.img][1]}}')">
@@ -62,12 +57,7 @@
         {{mess.message}}
     </p>
     <p class="time-mess">{{mess.get_time()}} {{mess.name_sender}}</p>
-    <div class="context-menu-open" id="{{mess.id}}" style="display:none;">
-	<ul>
-		<li onclick="delete_mess({{mess.id}})">Delete</li>
-		<li onclick="answer({{mess.id}})">Answer</li>
-	</ul>
-</div>
+    <div class="context-menu-open" id="mm{{mess.id}}" style="display:none;"></div>
 </div>
 {% endif %}
 

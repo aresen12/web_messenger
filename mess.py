@@ -22,7 +22,7 @@ def get_chats():
     new = []
     for i in chats:
         if i.status == 1 and str(current_user.id) in i.members.split():
-            new.append({"id": i.id, "name": i.name, "primary_chat": i.primary_chat})
+            new.append({"id": i.id, "name": i.name, "primary_chat": i.primary_chat, "status": i.status})
     return new
 
 
@@ -30,13 +30,15 @@ def get_new_not_read_m(chat_id):
     try:
         conn = sqlite3.connect("db/master_paste.db")
         curr = conn.cursor()
-        res = curr.execute(f"""SELECT * FROM message
-                        WHERE chat_id = {int(chat_id)} AND read = 0 AND id_sender != '{current_user.id}'""").fetchall()
+        res = curr.execute(f"""SELECT id FROM message
+                        WHERE chat_id = {int(chat_id)} """).fetchall()
         conn.close()
     except Exception as e:
-        print(e)
-        return []
-    return res
+        return 0
+    s = 0
+    for _ in res:
+        s += _[0]
+    return s
 
 
 @mg.route("/update/<int:chat_id>", methods=["GET", "POST"])
@@ -45,14 +47,22 @@ def m_update(chat_id):
         db_sess = db_session.create_session()
         message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
         message.sort(key=lambda x: x.time)
+        summ_id = 0
+        f = False
+        for _ in message:
+            summ_id += _.id
+            if not _.read:
+                _.read = 1
+                f = True
+        if f:
+            db_sess.commit()
         files = db_sess.query(File).filter(File.chat_id == chat_id).all()
         files2 = {}
         for f in files:
             files2[str(f.id)] = [f.name, f.path]
-        print(files2)
         db_sess.close()
-        return render_template("t.html", message=message, email_recipient=chat_id, f_n=files2)
-    return render_template("t.html")
+        return render_template("t.html", message=message, email_recipient=chat_id, f_n=files2, summ_id=summ_id)
+    return ""
 
 
 @mg.route("/", methods=["GET", "POST"])
@@ -229,7 +239,7 @@ def delete_mess():
     return {"log": "True"}
 
 
-@mg.route("/delete_chat/<int:id_>", methods=["GET"])
+@mg.route("/delete_chat/<int:id_>", methods=["DELETE"])
 def delete_chat(id_):
     if not current_user.admin:
         return redirect("/")
@@ -270,11 +280,9 @@ def del_chat():
 def block_chat():
     data = request.get_json()  # нужно добавить в чёрный список у пользователя
     db_sess = db_session.create_session()
-    print(data["id_chat"])
     chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
     if str(current_user.id) in chat.members.split():
         chat.status = 3
-    print(chat.status)
     db_sess.commit()
     db_sess.close()
     return {"log": True}
@@ -301,14 +309,11 @@ def html_new():
 @mg.route("/get_new", methods=["POST"])
 def get_new():
     data = request.get_json()
-    if not current_user.id is None:
+    if current_user.is_authenticated:
         chat_id = data["id"]
-        print(chat_id)
         message = get_new_not_read_m(chat_id)
-        print(message)
-        if message != list():
-            return {"message": [1]}
-    return {"message": []}
+        return {"summ_id": message}
+    return {"summ_id": 0}
 
 
 @mg.route("/c_get_user")

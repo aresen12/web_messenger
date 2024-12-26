@@ -130,8 +130,12 @@ function sing_out_of_chat(){
 }
 
 
-function set_recipient(id_chat, is_primary, name) {
+function set_recipient(id_chat, is_primary, name, status) {
+if (status == 1){
 document.getElementById("form").style.display = "block";
+}else{
+document.getElementById("form").style.display = "none";
+}
     var menu = document.getElementById("menu-chat-ul");
     menu.innerHTML = '<li onclick="block_user()">Заблокировать</li><li onclick="delete_chat()">Удалить чат</li>';
     if (is_primary){
@@ -308,8 +312,7 @@ if (document.getElementById("chat_id").value != "") {
     contentType:'application/json',
     data: JSON.stringify({"id": document.getElementById("chat_id").value}),
     success: function(json){
-        console.log(json["message"].length)
-          if (json["message"].length > 0){
+          if (json["summ_id"] != document.getElementById("summ_id").value){
             show();
             (async () => {
               try {
@@ -440,6 +443,7 @@ $.ajax({
     data: JSON.stringify({"id_chat": document.getElementById("chat_id").value}),
     success: function(html){
           get_chats();
+          exit_chat();
         },
     error: function(err) {
         console.error(err);
@@ -454,13 +458,14 @@ show_menu('menu-chat');
 let is_block = confirm("Вы действительно хотите заблокировать чат?");
 if (is_block){
 $.ajax({
-    url: '/m/delete_chat',
+    url: '/m/block_chat',
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"id_chat": document.getElementById("chat_id")}),
+    data: JSON.stringify({"id_chat": document.getElementById("chat_id").value}),
     success: function(html){
           get_chats();
+          exit_chat();
         },
     error: function(err) {
         console.error(err);
@@ -681,7 +686,7 @@ function get_chats (){
                     dataType: 'json',
                     success: function(json3){
                     globalThis.name = json3["user"];
-                    globalThis.html_ = globalThis.html_ + '<button class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "')" + '"' + '">' + json3["user"] +'</button>';
+                    globalThis.html_ = globalThis.html_ + '<button class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] + "', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "', " + json["chats"][i]["status"] + ')"' + '">' + json3["user"] +'</button>';
                     document.getElementById("email").innerHTML = globalThis.html_;
                     },
                     error: function(err) {
@@ -693,10 +698,10 @@ function get_chats (){
             console.error(err);
         }
     });
-           }else{name = json["chats"][i]["name"];
-           console.log(globalThis.name, "bu");
-           globalThis.html_ = globalThis.html_ + '<button class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + globalThis.name + "')" + '"' + '">' + json["chats"][i]["name"] +'</button>';
-    document.getElementById("email").innerHTML = globalThis.html_;
+            }else{
+                name = json["chats"][i]["name"];
+                globalThis.html_ = globalThis.html_ + '<button class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + globalThis.name + "', " + json["chats"][i]["status"] + ')">' + json["chats"][i]["name"] +'</button>';
+                document.getElementById("email").innerHTML = globalThis.html_;
            }
            }
            document.getElementById("email").innerHTML = globalThis.html_;
@@ -805,4 +810,11 @@ function show_users(){
             }
         });
     };
+}
+
+
+function open_menu_mess(id_mess){
+    var curr_m = document.getElementById("mm" + id_mess);
+    curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess + ')">Удалить</li><li onclick="answer(' + id_mess + ')">Ответить</li><li onclick="edit(' + id_mess + ')">редактировать</li></ul>';
+    show_menu("mm" + id_mess);
 }

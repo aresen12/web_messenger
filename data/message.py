@@ -25,5 +25,6 @@ class Message(SqlAlchemyBase, UserMixin, SerializerMixin):
         return str(self.time).split()[1]
 
     def get_date(self):
+        print(self.time)
         date = str(self.time).split()[0].split("-")
         return f"{date[2]}.{date[1]}.{date[0]}"
