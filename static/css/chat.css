@@ -21,7 +21,10 @@
     top:10px;
     margin-left:auto;
     margin-right:auto;
-    left:30vw;}
+    left:30vw;
+    overflow:hidden;
+    overflow-y:auto;
+    }
 
 .message-other {
     position:relative;
@@ -152,6 +155,8 @@ position:fixed;bottom:0vh; padding-down:0;}
     width:30vw;
     background-color: #f1f1f1;
     min-width: 160px;
+     overflow: hidden;
+    overflow-y:auto;
  }
  .date_k {
     display:flex;
@@ -165,7 +170,7 @@ position:fixed;bottom:0vh; padding-down:0;}
  .text {font-size:50pt;}
 
  .btn_down {position:fixed;
- bottom:10vh; right:2vw;background-color:#c0c0c0; border-radius:60px;}
+ bottom:13vh; right:2vw;background-color:#c0c0c0; border-radius:60px;}
 @media screen and (width < 981px) {
     .container-mess {position:relative;left:5vw; width:100vw;}
     .form2 {font-size:50pt;}

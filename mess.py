@@ -279,24 +279,6 @@ def block_chat():
     return {"log": True}
 
 
-@mg.route("/html_new", methods=["POST"])
-def html_new():
-    db_sess = db_session.create_session()
-    data = request.get_json()
-    if current_user.is_authenticated:
-        chat_id = data["id"]
-        message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
-        for m in message:
-            if m.id_sender != current_user.id:
-                m.read = True
-        db_sess.commit()
-        message.sort(key=lambda x: x.time)
-        db_sess.close()
-        return render_template("t.html", message=message, email_recipient=chat_id)
-    db_sess.close()
-    return ""
-
-
 @mg.route("/get_new", methods=["POST"])
 def get_new():
     data = request.get_json()
