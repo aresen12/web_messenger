@@ -1,4 +1,7 @@
-.time-mess {font-size:10pt;float:left;}
+.time-mess {font-size:10pt;float:left;
+    margin:0px;
+    padding: 0px;
+}
 
 
 .background-img {
@@ -26,9 +29,18 @@
     width:20vw;
 }
 
+
+.audio {
+    width: 18 vw;
+    object-fit: cover;
+    display:flex;
+    left: 0px;
+}
+
+
+
 .mess-img {
     width:18vw;
-    left:1vw;
 }
 
 .answer-a {
@@ -43,8 +55,9 @@
     width:20vw;
     position:relative;
     left:40vw;
+
 }
-.my-message:visited {background-color:blue;}
+.my-message:visited {background-color:blue; }
 
 .mess-admin {
     position:relative;
@@ -86,13 +99,15 @@ position:fixed;bottom:0vh; padding-down:0;}
 }
 
 .label-edit {
-height:40px;
-margin:0px;
-padding-left:20px;
-background-color:# E2E3E5;
+    height:40px;
+    margin:0px;
+    padding-left:20px;
+    background-color:# E2E3E5;
 }
 
+.update {
 
+}
 .edit-btn-close {
     position:absolute;
     left:auto;
@@ -138,10 +153,14 @@ background-color:# E2E3E5;
     background-color: #f1f1f1;
     min-width: 160px;
  }
- .date {
+ .date_k {
     display:flex;
     justify-content:center;
-    color:gray;
+    color:white;
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 100px;
+    margin:auto;
+    border-radius: 10px;
     }
  .text {font-size:50pt;}
 

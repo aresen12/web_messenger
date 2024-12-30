@@ -41,28 +41,12 @@ def get_new_not_read_m(chat_id):
     return s
 
 
-@mg.route("/update/<int:chat_id>", methods=["GET", "POST"])
-def m_update(chat_id):
-    if current_user.is_authenticated:
-        db_sess = db_session.create_session()
-        message = db_sess.query(Message).filter(Message.chat_id == chat_id).all()
-        message.sort(key=lambda x: x.time)
-        summ_id = 0
-        f = False
-        for _ in message:
-            summ_id += _.id
-            if not _.read:
-                _.read = 1
-                f = True
-        if f:
-            db_sess.commit()
-        files = db_sess.query(File).filter(File.chat_id == chat_id).all()
-        files2 = {}
-        for f in files:
-            files2[str(f.id)] = [f.name, f.path]
-        db_sess.close()
-        return render_template("t.html", message=message, email_recipient=chat_id, f_n=files2, summ_id=summ_id)
-    return ""
+def get_files(chat_id, db_sess):
+    files = db_sess.query(File).filter(File.chat_id == chat_id).all()
+    files2 = {}
+    for f in files:
+        files2[str(f.id)] = [f.name, f.path]
+    return files2
 
 
 @mg.route("/", methods=["GET", "POST"])
@@ -135,8 +119,15 @@ def edit_mess():
     db_sess = db_session.create_session()
     mess = db_sess.query(Message).filter(Message.id == data["id"]).first()
     if mess.id_sender == current_user.id:
-        mess.message = data["new_text"]
-        mess.read = 0
+        new_m = Message()
+        new_m.message = data["new_text"]
+        new_m.chat_id = mess.chat_id
+        new_m.name_sender = mess.name_sender
+        new_m.id_sender = mess.id_sender
+        new_m.html_m = mess.html_m
+        new_m.time = mess.time
+        new_m.read = 0
+        db_sess.delete(mess)
     db_sess.commit()
     db_sess.close()
     return {"log": True}
@@ -363,3 +354,25 @@ def edit_prof():
     db_sess.close()
     return {"log": True}
 
+
+@mg.route("/get_json_mess", methods=["POST"])
+def get_json_message():
+    if current_user.is_authenticated:
+        data = request.get_json()
+        db_sess = db_session.create_session()
+        messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).all()
+        js = {"messages": [], "files": get_files(data["chat_id"], db_sess), "current_user": current_user.id}
+        summ = 0
+        f = False
+        for m in messages:
+            summ += m.id
+            if m.id_sender != js["current_user"] and not m.read:
+                m.read = 1
+                f = True
+            js["messages"].append({"id": m.id, "read": m.read, "html_m": m.html_m, "text": m.message, 'time': m.time,
+                                   "file": m.img, "id_sender": m.id_sender})
+        if f:
+            db_sess.commit()
+        db_sess.close()
+        js["summ_id"] = summ
+        return js

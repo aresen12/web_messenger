@@ -7,4 +7,5 @@ status chat
     Запрос текущей суммы id сообщений в чате. (get_new_m)
     Далее если сумма не совпала вызов функции (show)
 
+gener_html(id, text, time, html_m, file, other);
 bg5.jpg и bg4.jpg принадлежат Шабашову Алексею Михайловичу.
