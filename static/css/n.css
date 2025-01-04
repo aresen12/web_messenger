@@ -199,12 +199,14 @@ position: relative;
 }
 .my-a {text-decoration:none; color:black;}
 .btn2 {margin:10px;}
- .email {border-radius: 10px;height:7vh;margin:2px;}
+
+
+
+
 /* Ссылки внутри выпадающего списка */
 .caption {display:flex;justify-content:center;}
 
 
-.zak-con {width:60vw;margin-right:auto;margin-left:auto;}
 .info-btn {border:0;background:none;}
 @media (pointer:none), (pointer:coarse) {
     .car-ogr{width:40vw;}

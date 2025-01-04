@@ -127,6 +127,9 @@ function sing_out_of_chat(){
 
 
 function set_recipient(id_chat, is_primary, name, status) {
+    if (mobile){
+        var button = document.getElementById("settings_btn").style.visibility = 'hidden';
+    }
     document.getElementById("content").innerHTML = '<h2 class="update">Загрузка...<h2>';
     if (status == 1){
         document.getElementById("form").style.display = "block";
@@ -152,7 +155,7 @@ function set_recipient(id_chat, is_primary, name, status) {
     document.getElementById('chat_id').innerText = id_chat;
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
         x.style.display = "block";
-        x.src = "/static/img/bg/mob_bg2.jpg"
+        x.src = "/static/img/bg/mob_bg"+ globalThis.number_bg +".jpg";
         var button = document.getElementById("button").style.visibility = 'visible';
         var cont = document.getElementById("container-mess");
         cont.style.display = "block";
@@ -168,6 +171,15 @@ function exit_chat(){
     document.getElementById('chat_id').innerText = "";
     document.getElementById('form').style.display = "none";
     document.getElementById('menu-chat-ul').innerHTML = '';
+    if (mobile) {
+        var x = document.getElementById("background-img");
+        var y = document.getElementById("container-mess");
+        x.style.display = "none";
+        y.style.display = "none";
+        document.getElementById("settings_btn").style.visibility = 'visible';
+        document.getElementById("button").style.visibility = 'hidden';
+        document.getElementById("email").style.display = "block";
+    }
 }
 
 
@@ -321,7 +333,7 @@ function show(){
 
 
 function get_new_m (){
-if (document.getElementById("chat_id").value != "") {
+if (document.getElementById("chat_id") & document.getElementById("chat_id").value != "") {
     $.ajax({
     url: '/m/get_new',
     type: 'POST',
@@ -375,7 +387,7 @@ function create_chat(list_members, name, is_primary){
     }
 
 show();
-
+var mobile = false;
 setInterval(get_new_m, 10000);
 const form = document.querySelector('form');
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
@@ -384,6 +396,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phon
     x.style.display = "none";
     var button = document.getElementById("button").style.visibility = 'hidden';
     y.style.display = "none";
+    globalThis.mobile = true;
 }
 var position = 0;
 

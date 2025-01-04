@@ -127,6 +127,7 @@ def edit_mess():
         new_m.html_m = mess.html_m
         new_m.time = mess.time
         new_m.read = 0
+        db_sess.add(new_m)
         db_sess.delete(mess)
     db_sess.commit()
     db_sess.close()
