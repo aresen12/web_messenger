@@ -347,6 +347,7 @@ def get_json_message():
         js = {"messages": [], "files": get_files(data["chat_id"], db_sess), "current_user": current_user.id}
         summ = 0
         f = False
+        messages.sort(key=lambda x: x.time)
         for m in messages:
             summ += m.id
             if m.id_sender != js["current_user"] and not m.read:

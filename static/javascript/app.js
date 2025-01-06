@@ -127,9 +127,6 @@ function sing_out_of_chat(){
 
 
 function set_recipient(id_chat, is_primary, name, status) {
-    if (mobile){
-        var button = document.getElementById("settings_btn").style.visibility = 'hidden';
-    }
     document.getElementById("content").innerHTML = '<h2 class="update">Загрузка...<h2>';
     if (status == 1){
         document.getElementById("form").style.display = "block";
@@ -160,6 +157,8 @@ function set_recipient(id_chat, is_primary, name, status) {
         var cont = document.getElementById("container-mess");
         cont.style.display = "block";
         y.style.display = "none";
+        document.getElementById("settings_btn").style.display = 'none';
+        document.getElementById("btn_down").style.visibility = 'visible';
     }
 
 }
@@ -176,9 +175,10 @@ function exit_chat(){
         var y = document.getElementById("container-mess");
         x.style.display = "none";
         y.style.display = "none";
-        document.getElementById("settings_btn").style.visibility = 'visible';
+        document.getElementById("settings_btn").style.display = 'block';
         document.getElementById("button").style.visibility = 'hidden';
         document.getElementById("email").style.display = "block";
+        document.getElementById("btn_down").style.visibility = 'hidden';
     }
 }
 
@@ -213,6 +213,7 @@ function submit_form() {
         edit_post(edit_id, about.value);
         about.value = "";
         document.getElementById('inputTag').value = "";
+        close_edit();
     } else {
         if ($('form input[type=file]').val() == ''){
         var text = document.getElementById("about").value;
@@ -233,6 +234,7 @@ function submit_form() {
             console.error(err);
         }
     });
+    close_edit();
     }else {
         var b = x.submit();
     }
@@ -754,7 +756,10 @@ email_cont.style.top = nav;
 email_cont.style.height = window.innerHeight - f - nav + "px";
 document.getElementById("background-img").style.height =  window.innerHeight - nav + "px";
 document.getElementById("form").style.display = "none";
-
+if (mobile){
+    document.getElementById("about").style.fontSize = "50px";
+    document.getElementById("btn_down").style.visibility = 'hidden';
+    }
 function set_bg(num) {
         number_bg = num;
         document.getElementById("background-img").src = "/static/img/bg/bg" + number_bg + ".jpg";
@@ -780,10 +785,18 @@ function gener_html(id_m, text, time, html_m, file_, other, read) {
             new_mess += '<button class="info-btn" onclick="' + "showImg('m" + id_m + "', '" + file_[1] + "')" + '"><img class="mess-img" src="/static/img/' + file_[1] + '"></button>';
         } else {
              if (audio.includes(ras)){
-                 new_mess += '<audio style="width:' + window.innerWidth * 0.187 + 'px;" controls class="audio" src="/static/img/' + file_[1] + '">' + file_[0] + '</audio>';
+                var w = window.innerWidth * 0.187;
+                    if (mobile){
+                        w = window.innerWidth * 0.57;
+                    };
+                 new_mess += '<audio style="width:' + w + 'px;" controls class="audio" src="/static/img/' + file_[1] + '">' + file_[0] + '</audio>';
             } else {
                 if (video.includes(ras)){
-                    new_mess += '<video width="' + window.innerWidth * 0.18 +'px" controls class="audio" src="/static/img/' + file_[1] + '">' + file_[0] + '</video>';
+                    var w = window.innerWidth * 0.18;
+                    if (mobile){
+                        w = window.innerWidth * 0.57;
+                    };
+                    new_mess += '<video width="' + w +'px" controls class="audio" src="/static/img/' + file_[1] + '">' + file_[0] + '</video>';
                 } else{
                     new_mess += '<a class="my-a" download="' + file_[0] + '" target="_blank" href="/static/img/' + file_[1] + '">' + file_[0] + '</a>';
                 }
@@ -882,3 +895,5 @@ function open_menu_mess(id_mess){
     curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess + ')">Удалить</li><li onclick="answer(' + id_mess + ')">Ответить</li><li onclick="edit(' + id_mess + ')">редактировать</li></ul>';
     show_menu("mm" + id_mess);
 }
+
+

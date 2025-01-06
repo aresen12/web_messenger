@@ -10,7 +10,8 @@
     height:80vh;
     left:30vw;}
 
-.global-menu{display:none;
+.global-menu{
+display:none;
     position:absolute;
     width:40vw;
     height:90vh;
@@ -171,10 +172,16 @@ position:fixed;bottom:0vh; padding-down:0;}
     margin:auto;
     border-radius: 10px;
     }
- .text {font-size:50pt;}
+
+.text-form {
+max-font-size: 50px;
+max-width:80vw;
+    font-size:50px;
+     color:blue;
+     }
 
  .btn_down {position:fixed;
- bottom:13vh; right:2vw;background-color:#c0c0c0; border-radius:60px;}
+ bottom:17vh; right:2vw;background-color:#c0c0c0; border-radius:60px;}
 
 
 .container-mess {
@@ -188,12 +195,29 @@ scrollbar-width: thin;
 @media screen and (width < 981px) and (pointer:none), (pointer:coarse) {
     .html {font-size: 20px;}
     .container-mess {position:relative;left:5vw; width:100vw;}
-    .form2 {font-size:50pt;}
-    .text {font-size:50pt;}
+    .form2 {font-size:50px;}
     .settings {
     width:100vw;
+    font-size: 30px;
+    }
 
-}
+
+
+    .global-menu {
+        font-size: 30px;
+        position:absolute;
+        width:95vw;
+        left: 2.5px;
+        margin-left:2.5vw;
+        }
+
+    .add-menu {
+    position:relative;
+        max-width: 100%;
+        width: 100%;
+
+    }
+
     .info-btn {
         font-size: 35px;
     }
@@ -302,11 +326,13 @@ scrollbar-width: thin;
 }
 
 
-.add-menu {position:relative;
-left:2vw;
-border:1px solid gray;
-width: 30vw;
-background:#f1f1f1;
+.add-menu {
+    position:relative;
+    left:2vw;
+    border:1px solid gray;
+
+    background:#f1f1f1;
+    width: 30vw;
 }
 
 
