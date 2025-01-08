@@ -907,7 +907,8 @@ function open_menu_mess(id_mess){
     globalThis.menu_id = "m" + id_mess;
     console.log("m" + id_mess);
     var curr_m = document.getElementById("m" + id_mess);
-    curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess + ')">Удалить</li><li onclick="answer(' + id_mess + ')">Ответить</li><li onclick="edit(' + id_mess + ')">редактировать</li></ul>';
+    console.log(id_mess.slice(0));
+    curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">редактировать</li></ul>';
     show_menu("m" + id_mess);
 }
 
