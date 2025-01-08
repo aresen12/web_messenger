@@ -1,3 +1,11 @@
+var enter_flag = true;
+var answer_flag = false;
+var edit_flag = false;
+var edit_id = 0;
+var global_distans = 0;
+var number_bg = 2;
+var menu_id = "";
+
 function showDiv(Div, div2) {
     var x = document.getElementById(Div);
     var y = document.getElementById(div2)
@@ -9,14 +17,6 @@ function showDiv(Div, div2) {
         y.style.display = "block";
     }
 }
-
-
-var enter_flag = true;
-var answer_flag = false;
-var edit_flag = false;
-var edit_id = 0;
-var global_distans = 0;
-var number_bg = 2;
 
 
 if (document.cookie){
@@ -257,6 +257,15 @@ document.querySelector('.form2').addEventListener('submit', function(e) {
 })
 
 
+document.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (menu_id != ""){
+        document.getElementById(menu_id).style.display = "none";
+        globalThis.menu_id = "";
+      };
+      })
+
+
 document.addEventListener('keydown', function(event) {
     var x = document.querySelector('form');
     if (enter_flag) {
@@ -335,7 +344,7 @@ function show(){
 
 
 function get_new_m (){
-if (document.getElementById("chat_id") & document.getElementById("chat_id").value != "") {
+if (document.getElementById("chat_id") && document.getElementById("chat_id").value != "") {
     $.ajax({
     url: '/m/get_new',
     type: 'POST',
@@ -544,7 +553,7 @@ function get_users (id){
         contentType:'application/json',
         success: function(json){
         document.getElementById("global_menu").innerHTML="foo";
-        var html = '<h2>Создать чаты<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
+        var html = '<h2>Создать чаты<button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
         for (let i = 0; i < json["users"].length; i++){
             if (json["c_user"] != json["users"][i][2]){
                html = html + '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2] + ')">' + json["users"][i][0] + '</label><br>';
@@ -776,7 +785,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read) {
     } else{
         var class_m = "alert-success my-message";
     }
-    new_mess = '<div class="alert ' + class_m + '" id="m' + id_m + '" role="alert" onclick="open_menu_mess(' + id_m + ' )">';
+    new_mess = '<div class="alert ' + class_m + '" id="m' + id_m + '" role="alert">';
     if (file_ != ""){
         var ras = file_[1].split(".");
         ras = ras[ras.length - 1];
@@ -798,7 +807,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read) {
                     };
                     new_mess += '<video width="' + w +'px" controls class="audio" src="/static/img/' + file_[1] + '">' + file_[0] + '</video>';
                 } else{
-                    new_mess += '<a class="my-a" download="' + file_[0] + '" target="_blank" href="/static/img/' + file_[1] + '">' + file_[0] + '</a>';
+                    new_mess += '<a class="my-a" download="' + file_[0] + '" href="/static/img/' + file_[1] + '">' + file_[0] + '</a>';
                 }
         }
     }
@@ -855,8 +864,9 @@ function show_users(){
             contentType:'application/json',
             success: function(json){
             var global_menu = document.getElementById("global_menu");
+            document.getElementById("global_menu_d").style.display = "flex";
             global_menu.style.display = "block";
-            global_menu.innerHTML = '<h2>Управление чатом<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2><br>';
+            global_menu.innerHTML = '<h2>Управление чатом<button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close m-close" aria-label="Close"></button></h2><br>';
             global_menu.innerHTML += '<div id="users"><div id="con_users"></div><div id="edit_users"></div></div>';
             var users_div = document.getElementById("con_users");
             users_div.innerHTML += '<h3>Участники</h3>';
@@ -891,9 +901,19 @@ function show_users(){
 
 
 function open_menu_mess(id_mess){
-    var curr_m = document.getElementById("mm" + id_mess);
+    if (globalThis.menu_id != ""){
+        document.getElementById(menu_id).style.display = "none";
+    };
+    globalThis.menu_id = "m" + id_mess;
+    console.log("m" + id_mess);
+    var curr_m = document.getElementById("m" + id_mess);
     curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess + ')">Удалить</li><li onclick="answer(' + id_mess + ')">Ответить</li><li onclick="edit(' + id_mess + ')">редактировать</li></ul>';
-    show_menu("mm" + id_mess);
+    show_menu("m" + id_mess);
 }
 
+
+$('#content').on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
+        e.preventDefault(); //Prevent defaults
+        open_menu_mess(this.id); //alert the id
+        });
 

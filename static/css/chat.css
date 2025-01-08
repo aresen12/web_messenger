@@ -11,18 +11,15 @@
     left:30vw;}
 
 .global-menu{
-display:none;
-    position:absolute;
+    position:relative;
     width:40vw;
     height:90vh;
     border-radius:30px;
-    overflow:auto;
     border: 1px solid gray;
     background:white;
     top:10px;
     margin-left:auto;
     margin-right:auto;
-    left:30vw;
     overflow:hidden;
     overflow-y:auto;
     }
@@ -54,6 +51,18 @@ display:none;
     text-decoration: none;
 
 }
+
+.z-d {
+    position: absolute;
+    top:0px;
+    left: 0px
+    display:none;
+    background-color: rgba(0, 0, 0, 0.4);
+    width:100vw;
+    height:100vh;
+    align-items: center;
+  justify-content: center;
+    }
 .my-message {
     position:relative;
     width:20vw;
@@ -119,6 +128,13 @@ position:fixed;bottom:0vh; padding-down:0;}
     left:auto;
     right:0px;
 
+}
+
+
+.m-close {
+    position:relative;
+    left:auto;
+    right:30px;
 }
 
 
@@ -205,7 +221,7 @@ scrollbar-width: thin;
 
     .global-menu {
         font-size: 30px;
-        position:absolute;
+        position:relative;
         width:95vw;
         left: 2.5px;
         margin-left:2.5vw;

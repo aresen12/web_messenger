@@ -107,17 +107,7 @@ h2 {
 }
 
 
-.button {
-position: relative;
-      top: 50vh;
-      padding: 10px;
-      max-height: 60px;
-      height: 10vh;
-      margin: 10px;
-      color: white;
-      text-decoration: none;
-      font-size:50pt;
-}
+
 
 .close {
       display: flex;
@@ -133,13 +123,12 @@ position: relative;
         cursor:pointer;
         left: 90vw;
 }
+
+
 .my-a {text-decoration:none; color:black;}
+
+
 .btn2 {margin:10px;}
 
 
 .info-btn {border:0;background:none;}
-
-
-@media screen and (width < 981px) {
-    .button {font-size:40pt;}
-    }
