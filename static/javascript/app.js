@@ -3,7 +3,6 @@ var answer_flag = false;
 var edit_flag = false;
 var edit_id = 0;
 var global_distans = 0;
-var number_bg = 2;
 var menu_id = "";
 
 function showDiv(Div, div2) {
@@ -199,7 +198,7 @@ setSelectionRange = function(input, selectionStart, selectionEnd) {
 
 
 function go(){
-    if (document.getElementById("global_menu").style.display = "none"){
+    if (document.getElementById("global_menu_d").style.display == "none"){
         setSelectionRange(document.getElementById("about"), globalThis.position, globalThis.position);
     }
 }
@@ -215,26 +214,28 @@ function submit_form() {
         document.getElementById('inputTag').value = "";
         close_edit();
     } else {
-        if ($('form input[type=file]').val() == ''){
         var text = document.getElementById("about").value;
-        var html_m = document.getElementById("html_m").value;
-        $.ajax({
-        url: '/m/send_message',
-        type: 'POST',
-        dataType: 'json',
-        contentType:'application/json',
-        data: JSON.stringify({
-         "chat_id":document.getElementById("chat_id").value,
-         "new_text": text,
-         "html": html_m}),
-        success: function(json){
-            gener_html(json["id"], text, json["time"], html_m, "",  0, 0);
-        },
-        error: function(err) {
-            console.error(err);
-        }
-    });
-    close_edit();
+        if ($('form input[type=file]').val() == '' && text.trim() != ""){
+            var html_m = document.getElementById("html_m").value;
+            $.ajax({
+            url: '/m/send_message',
+            type: 'POST',
+            dataType: 'json',
+            contentType:'application/json',
+            data: JSON.stringify({
+             "chat_id":document.getElementById("chat_id").value,
+             "new_text": text,
+             "html": html_m}),
+            success: function(json){
+                gener_html(json["id"], text, json["time"], html_m, "",  0, 0);
+                window.location.hash = "";
+            window.location.hash = "#pos";
+            },
+            error: function(err) {
+                console.error(err);
+            }
+            });
+            close_edit();
     }else {
         var b = x.submit();
     }
@@ -247,18 +248,8 @@ function submit_form() {
 
 }
 
-document.querySelector('.form2').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var rec = document.getElementById("chat_id").value;
-      document.getElementById("chat_id").value = rec;
-      document.getElementById("imageName").innerHTML = "";
-      this.reset();
-      show();
-})
 
-
-document.addEventListener('click', function(e) {
-      e.preventDefault();
+document.addEventListener('click', function(e){
       if (menu_id != ""){
         document.getElementById(menu_id).style.display = "none";
         globalThis.menu_id = "";
@@ -415,15 +406,15 @@ var position = 0;
 
 function edit_prof_html(){
     var menu = document.getElementById("global_menu");
-    menu.style.display = "block";
+    document.getElementById("global_menu_d") .style.display = "block";
     $.ajax({
         url: '/m/c_get_user',
         type: 'GET',
         dataType: 'json',
         contentType:'application/json',
         success: function(json){
-            menu.innerHTML = '<h2>Редактировать профиль<button onclick="show_global_menu(' + "'global_menu'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
-            menu.innerHTML  += '<div class="edit-cont"><label>Имя</label><br><input id="name_edit" name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br><input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br>'+'Для смены пародя введите старый пароль<input name="password_old" id="password_old"><br><label for="password_new">Новый пароль</label><br><input name="password_new" id="password_new"><br><button class="edit-btn" onclick="edit_prof_post()">Сохранить</button></div>';
+            menu.innerHTML = '<h2>Редактировать профиль<button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
+            menu.innerHTML  += '<div class="edit-cont"><label>Имя</label><br><input id="name_edit" name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br><input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br>'+'Для смены пародя введите старый пароль<br><input name="password_old" id="password_old"><br><label for="password_new">Новый пароль</label><br><input name="password_new" id="password_new"><br><button class="edit-btn" onclick="edit_prof_post()">Сохранить</button></div>';
             },
         error: function(err) {
             console.error(err);
@@ -536,7 +527,7 @@ function show_menu(id_div){
 
 function show_global_menu(id_div, id){
     var x = document.getElementById(id_div);
-    if(x.style.display=="none") {
+    if(x.style.display=="none" || x.style.display=="") {
         x.style.display = "block";
         get_users(id);
     } else {
@@ -770,8 +761,7 @@ if (mobile){
     document.getElementById("btn_down").style.visibility = 'hidden';
     }
 function set_bg(num) {
-        number_bg = num;
-        document.getElementById("background-img").src = "/static/img/bg/bg" + number_bg + ".jpg";
+    document.getElementById("background-img").src = "/static/img/bg/bg" + number_bg + ".jpg";
     document.cookie = "bg="+ number_bg;
 }
 
@@ -789,7 +779,6 @@ function gener_html(id_m, text, time, html_m, file_, other, read) {
     if (file_ != ""){
         var ras = file_[1].split(".");
         ras = ras[ras.length - 1];
-        console.log(ras in imges);
         if (imges.includes(ras)){
             new_mess += '<button class="info-btn" onclick="' + "showImg('m" + id_m + "', '" + file_[1] + "')" + '"><img class="mess-img" src="/static/img/' + file_[1] + '"></button>';
         } else {
@@ -821,8 +810,6 @@ function gener_html(id_m, text, time, html_m, file_, other, read) {
 
     new_mess += '<div class="context-menu-open" id="mm' + id_m + '" style="display:none;"></div>';
     document.getElementById("content").innerHTML += new_mess;
-    window.location.hash = "#";
-    window.location.hash = "#pos";
     go();
 }
 
@@ -905,10 +892,12 @@ function open_menu_mess(id_mess){
         document.getElementById(menu_id).style.display = "none";
     };
     globalThis.menu_id = "m" + id_mess;
-    console.log("m" + id_mess);
     var curr_m = document.getElementById("m" + id_mess);
-    console.log(id_mess.slice(0));
-    curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">редактировать</li></ul>';
+    if (document.getElementById(id_mess).className == "alert alert-success my-message") {
+        curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li></ul>';
+    } else {
+        curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li></ul>';
+    }
     show_menu("m" + id_mess);
 }
 
