@@ -790,7 +790,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read) {
     };
     var onclick = "";
     if (mobile){
-        onclick = 'onclick="open_menu_mess('+ id_m +')"';
+        onclick = 'onclick="open_menu_mess(' + "'m"+ id_m +"'" + ')"';
     }
     new_mess = '<div class="alert ' + class_m + '" id="m' + id_m + '" ' + onclick + 'role="alert">';
     if (file_ != ""){
