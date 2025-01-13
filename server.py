@@ -73,15 +73,7 @@ def reqister():
         db_sess.commit()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
-    
-    
-@app.route("/profile")
-def profile():
-    if current_user.is_authenticated:
 
-        return render_template("profile.html", title='профиль', href=f"{my_ip}:{port}")
-    return redirect("/")
-     
      
 @app.route("/main", methods=["GET", "POST"])
 @app.route("/", methods=["GET", "POST"])

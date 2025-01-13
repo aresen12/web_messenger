@@ -52,13 +52,10 @@ def get_files(chat_id, db_sess):
 @mg.route("/", methods=["GET", "POST"])
 def m_st():
     if request.method == 'GET':
-        if not current_user.is_authenticated:
-            return render_template("forms.html", title='Заказать')
         if current_user.is_authenticated:
             chats = get_chats()
             return render_template("form_admin.html", title='ответить', chats=chats, email_recipient="")
-        return render_template("forms.html", title='Заказать', date="no date", message="",
-                               email_recipient="")
+        return redirect("/login")
     else:
         f = request.files["img"]
         if request.form["about"].strip() == "" and f.filename == "":
@@ -299,16 +296,6 @@ def c_get_user():
         u = {"id": user.id, "name": user.name, "email": user.email}
         return {"user": u}
     return {"user": None}
-
-
-@mg.route("/v/<int:id_chat>")
-def v(id_chat):
-    db_sess = db_session.create_session()
-    c = db_sess.query(Chat).filter(Chat.id == id_chat).first()
-    c.status = 1
-    db_sess.commit()
-    db_sess.close()
-    return {"log": True}
 
 
 @mg.route("/edit_name_chat", methods=["POST"])
