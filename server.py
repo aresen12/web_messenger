@@ -14,7 +14,7 @@ from data.File import File
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+app.config['SECRET_KEY'] = 'certificate'
 hash_password = '7cb8fa366d774761d198d3dc6244740c'
 my_ip = get_ip()
 port = 8080
@@ -98,4 +98,4 @@ if __name__ == "__main__":
         db_session.global_init('db/master_paste.db')
     from mess import mg
     app.register_blueprint(mg)
-    app.run(host=my_ip, debug=True, port=port) 
+    app.run(host=my_ip, debug=True, port=port, ssl_context=('certificate.crt', 'privateKey.key'))  # ssl_context="adhoc"

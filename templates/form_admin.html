@@ -9,7 +9,6 @@
         cursor:pointer;
       }
 </style>
-
 <div style="display:flex;">
 <div id="email" class="content-email">
     </div>
@@ -26,22 +25,20 @@
     <fieldset>
   <legend>Settings</legend>
   <div>
-    <input onclick="set_enter(1)" type="radio" id="huey" name="drone" checked />
-    <label for="huey">Send by Enter</label>
+    <input onclick="set_enter(1)" type="radio" id="E1" name="drone" checked />
+    <label for="E1">Send by Enter</label>
   </div>
   <div>
-    <input type="radio" onclick="set_enter(2)" id="dewey" name="drone" />
-    <label for="dewey">Send by Ctrl + Enter</label>
+    <input type="radio" onclick="set_enter(2)" id="E2" name="drone" />
+    <label for="E2">Send by Ctrl + Enter</label>
   </div>
 </fieldset>
     <fieldset>
     <legend>Фон</legend>
-
   <div>
     <input onclick="set_bg(1)" type="radio" id="bg1" name="bg" value="2" checked />
     <label for="bg1">Фон №1</label>
   </div>
-
   <div>
     <input type="radio" onclick="set_bg(2)" id="bg2" name="bg" value="3" />
     <label for="bg2">Фон №2</label>
@@ -92,9 +89,7 @@
             <textarea id="html_m" name="html_m" style="display:none;"></textarea>
             <textarea id="chat_id" name="chat_id" style="display:none;"></textarea>
         </div>
-        <script src="/static/javascript/form.js">
-
-        </script>
+        <script src="/static/javascript/form.js"></script>
     </div>
 </form>
     </div>

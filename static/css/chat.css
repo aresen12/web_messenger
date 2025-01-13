@@ -70,7 +70,6 @@
     width:20vw;
     position:relative;
     left:40vw;
-    text-overflow:clip;
 
 }
 .my-message:visited {background-color:blue; }

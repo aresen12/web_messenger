@@ -4,6 +4,17 @@ var edit_flag = false;
 var edit_id = 0;
 var global_distans = 0;
 var menu_id = "";
+var mobile = false;
+
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
+    var x = document.getElementById("background-img");
+    var y = document.getElementById("container-mess");
+    x.style.display = "none";
+    var button = document.getElementById("button").style.visibility = 'hidden';
+    y.style.display = "none";
+    globalThis.mobile = true;
+};
+
 
 function showDiv(Div, div2) {
     var x = document.getElementById(Div);
@@ -19,14 +30,20 @@ function showDiv(Div, div2) {
 
 
 if (document.cookie){
-    globalThis.number_bg = getCookie("bg");
-    var button = document.getElementById("bg"+ number_bg);
+    var button = document.getElementById("bg"+  getCookie("bg"));
     button.click();
+    var e = getCookie("enter");
+    if (e){
+        console.log(e);
+        document.getElementById("E" + e).click();
+    } else {
+        document.cookie = "enter=1";
+    }
 
 } else {
-document.cookie = "bg=2";
-var button = document.getElementById("bg"+ number_bg);
-    button.click();
+    document.cookie = "bg=2";
+    document.cookie = "enter=1";
+    document.getElementById("bg2").click();
 }
 
 
@@ -39,9 +56,11 @@ function getCookie(name) {
 
 function set_enter(key) {
     if(key == 2) {
+        document.cookie = "enter=2";
         globalThis.enter_flag = false;
     } else {
         globalThis.enter_flag = true;
+        document.cookie = "enter=1";
     }
 }
 
@@ -151,7 +170,6 @@ function set_recipient(id_chat, is_primary, name, status) {
     document.getElementById('chat_id').innerText = id_chat;
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
         x.style.display = "block";
-        x.src = "/static/img/bg/mob_bg"+ globalThis.number_bg +".jpg";
         var button = document.getElementById("button").style.visibility = 'visible';
         var cont = document.getElementById("container-mess");
         cont.style.display = "block";
@@ -166,14 +184,12 @@ function set_recipient(id_chat, is_primary, name, status) {
 function exit_chat(){
     document.getElementById("content").innerHTML = "";
     document.getElementById('name_chat').innerText = "";
-    document.getElementById('chat_id').innerText = "";
+    document.getElementById('chat_id').value = "";
     document.getElementById('form').style.display = "none";
     document.getElementById('menu-chat-ul').innerHTML = '';
-    if (mobile) {
-        var x = document.getElementById("background-img");
-        var y = document.getElementById("container-mess");
-        x.style.display = "none";
-        y.style.display = "none";
+    if (globalThis.mobile) {
+        document.getElementById("background-img").style.display = "none";
+        document.getElementById("container-mess").style.display = "none";
         document.getElementById("settings_btn").style.display = 'block';
         document.getElementById("button").style.visibility = 'hidden';
         document.getElementById("email").style.display = "block";
@@ -250,7 +266,7 @@ function submit_form() {
 
 
 document.addEventListener('click', function(e){
-      if (menu_id != ""){
+      if (menu_id != "" && mobile != true){
         document.getElementById(menu_id).style.display = "none";
         globalThis.menu_id = "";
       };
@@ -389,17 +405,8 @@ function create_chat(list_members, name, is_primary){
     }
 
 show();
-var mobile = false;
 setInterval(get_new_m, 10000);
 const form = document.querySelector('form');
-if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
-    var x = document.getElementById("background-img");
-    var y = document.getElementById("container-mess");
-    x.style.display = "none";
-    var button = document.getElementById("button").style.visibility = 'hidden';
-    y.style.display = "none";
-    globalThis.mobile = true;
-}
 var position = 0;
 
 
@@ -443,7 +450,7 @@ function delete_mess(id_mess){
 function edit_prof_post() {
 let is_edit = confirm("Вы действительно хотите отредактировать профиль");
 if (is_edit){
-document.getElementById("global_menu").style.display = "none";
+document.getElementById("global_menu_d").style.display = "none";
 $.ajax({
     url: '/m/edit_prof',
     type: 'POST',
@@ -543,7 +550,7 @@ function get_users (id){
         dataType: 'json',
         contentType:'application/json',
         success: function(json){
-        document.getElementById("global_menu").innerHTML="foo";
+        document.getElementById("global_menu").innerHTML="";
         var html = '<h2>Создать чаты<button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
         for (let i = 0; i < json["users"].length; i++){
             if (json["c_user"] != json["users"][i][2]){
@@ -645,7 +652,7 @@ function create_group (){
     success: function(json){
           // update chats list
           get_chats();
-          document.getElementById("global_menu").style.display = 'none';
+          document.getElementById("global_menu_d").style.display = 'none';
         },
     error: function(err) {
         console.error(err);
@@ -759,10 +766,16 @@ document.getElementById("form").style.display = "none";
 if (mobile){
     document.getElementById("about").style.fontSize = "50px";
     document.getElementById("btn_down").style.visibility = 'hidden';
-    }
+    };
+
+
 function set_bg(num) {
-    document.getElementById("background-img").src = "/static/img/bg/bg" + number_bg + ".jpg";
-    document.cookie = "bg="+ number_bg;
+    if (mobile){
+        document.getElementById("background-img").src = "/static/img/bg/mob_bg" + num + ".jpg";
+    } else {
+    document.getElementById("background-img").src = "/static/img/bg/bg" + num + ".jpg";
+    }
+    document.cookie = "bg="+ num;
 }
 
 
@@ -774,8 +787,12 @@ function gener_html(id_m, text, time, html_m, file_, other, read) {
         var class_m = "alert-info message-other";
     } else{
         var class_m = "alert-success my-message";
+    };
+    var onclick = "";
+    if (mobile){
+        onclick = 'onclick="open_menu_mess('+ id_m +')"';
     }
-    new_mess = '<div class="alert ' + class_m + '" id="m' + id_m + '" role="alert">';
+    new_mess = '<div class="alert ' + class_m + '" id="m' + id_m + '" ' + onclick + 'role="alert">';
     if (file_ != ""){
         var ras = file_[1].split(".");
         ras = ras[ras.length - 1];
@@ -852,7 +869,6 @@ function show_users(){
             success: function(json){
             var global_menu = document.getElementById("global_menu");
             document.getElementById("global_menu_d").style.display = "flex";
-            global_menu.style.display = "block";
             global_menu.innerHTML = '<h2>Управление чатом<button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close m-close" aria-label="Close"></button></h2><br>';
             global_menu.innerHTML += '<div id="users"><div id="con_users"></div><div id="edit_users"></div></div>';
             var users_div = document.getElementById("con_users");
@@ -886,6 +902,14 @@ function show_users(){
     };
 }
 
+function copyToClipboard(id_m) {
+var t = document.getElementById("text" + id_m).textContent.trim();
+    console.log(t);
+    navigator.clipboard.writeText(t);
+
+
+  }
+
 
 function open_menu_mess(id_mess){
     if (globalThis.menu_id != ""){
@@ -894,7 +918,7 @@ function open_menu_mess(id_mess){
     globalThis.menu_id = "m" + id_mess;
     var curr_m = document.getElementById("m" + id_mess);
     if (document.getElementById(id_mess).className == "alert alert-success my-message") {
-        curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li></ul>';
+        curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li></ul>';
     } else {
         curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li></ul>';
     }
