@@ -368,11 +368,11 @@ if (document.getElementById("chat_id") && document.getElementById("chat_id").val
     }
                 console.log(permission);
                 const options = {
-                  body: "body",
+                  body: "Новые сообщения!",
                   icon:
-                    "https://www.iconninja.com/files/926/373/306/link-chain-url-web-permalink-web-address-icon.png"
+                    "https://raw.githubusercontent.com/aresen12/web_messenger/refs/heads/master/static/img/icon.ico"
                 };
-                new Notification("title", options);
+                new Notification(document.getElementById("name_chat").innerText, options);
               } catch (error) {
                 console.log(error);
               }
@@ -515,6 +515,9 @@ function block_user() {
 function answer(id_mess){
     var la = document.getElementById("edit-label");
     var t = document.getElementById("text" + id_mess).textContent.trim();
+     if (t == ""){
+        t = "файл";
+    };
     la.innerHTML = t;
     la.innerHTML += '<button type="button" onclick="close_edit()" class="btn-close edit-btn-close" aria-label="Close"></button>'
     la.style.display = "block";
@@ -920,7 +923,7 @@ function open_menu_mess(id_mess){
     if (document.getElementById(id_mess).className == "alert alert-success my-message") {
         curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li></ul>';
     } else {
-        curr_m.innerHTML = '<ul><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li></ul>';
+        curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li></ul>';
     }
     show_menu("m" + id_mess);
 }
