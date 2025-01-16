@@ -1,52 +1,15 @@
-import json
 import os
-import sqlite3
-
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, redirect, render_template, request
 )
 from data import db_session
 from data.user import User
 from flask_login import current_user
-from data.message import Message
-from data.chat import Chat
-from data.File import File
+from data.message import Message, get_summ_id
+from data.chat import Chat, get_chats
+from data.File import File, get_files
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
-
-
-def get_chats():
-    db_sess = db_session.create_session()
-    chats = db_sess.query(Chat).all()
-    db_sess.close()
-    new = []
-    for i in chats:
-        if i.status == 1 and str(current_user.id) in i.members.split():
-            new.append({"id": i.id, "name": i.name, "primary_chat": i.primary_chat, "status": i.status})
-    return new
-
-
-def get_new_not_read_m(chat_id):
-    try:
-        conn = sqlite3.connect("db/master_paste.db")
-        curr = conn.cursor()
-        res = curr.execute(f"""SELECT id FROM message
-                        WHERE chat_id = {int(chat_id)} """).fetchall()
-        conn.close()
-    except Exception as e:
-        return 0
-    s = 0
-    for _ in res:
-        s += _[0]
-    return s
-
-
-def get_files(chat_id, db_sess):
-    files = db_sess.query(File).filter(File.chat_id == chat_id).all()
-    files2 = {}
-    for f in files:
-        files2[str(f.id)] = [f.name, f.path]
-    return files2
 
 
 @mg.route("/", methods=["GET", "POST"])
@@ -179,11 +142,13 @@ def add_in_chat():
 
 @mg.route("/get_users")
 def get_users():
-    db_sess = db_session.create_session()
-    users = db_sess.query(User.email, User.name, User.id).all()
-    db_sess.close()
-    n = [list(_) for _ in users]
-    return {"users": n, "c_user": current_user.id}
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        users = db_sess.query(User.email, User.name, User.id).all()
+        db_sess.close()
+        n = [list(_) for _ in users]
+        return {"users": n, "c_user": current_user.id}
+    return redirect("/login")
 
 
 @mg.route("/get_user/<int:id_>")
@@ -204,17 +169,6 @@ def get_chat_user(id_):
     n = chat.members.split()
     is_pr = chat.primary_chat
     return {"user": n, 'primary_chat': is_pr}
-
-
-@mg.route("/get_chats_all")  # chat id
-def get_chat():
-    db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).all()
-    db_sess.close()
-    n = []
-    for i in chat:
-        n.append({"id": i.id, "mem": i.members, "pr": i.primary_chat})
-    return {"user": n}
 
 
 @mg.route("/delete", methods=["DELETE"])
@@ -282,7 +236,7 @@ def get_new():
     data = request.get_json()
     if current_user.is_authenticated:
         chat_id = data["id"]
-        message = get_new_not_read_m(chat_id)
+        message = get_summ_id(chat_id)
         return {"summ_id": message}
     return {"summ_id": 0}
 
@@ -325,6 +279,21 @@ def edit_prof():
     return {"log": True}
 
 
+@mg.route("/edit_password", methods=["POST"])
+def edit_password():
+    if current_user.id is None:
+        return {"log": False}
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
+    if user.check_password(data["old_password"]):
+        user.set_password(data["new_password"])
+        db_sess.commit()
+    db_sess.close()
+    return {"log": True}
+
+
+
 @mg.route("/get_json_mess", methods=["POST"])
 def get_json_message():
     if current_user.is_authenticated:
@@ -347,3 +316,8 @@ def get_json_message():
         db_sess.close()
         js["summ_id"] = summ
         return js
+
+
+@mg.route("/get_not_read", methods=["POST"])
+def get_not_read():
+    pass

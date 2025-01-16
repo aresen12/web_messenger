@@ -5,7 +5,7 @@ var edit_id = 0;
 var global_distans = 0;
 var menu_id = "";
 var mobile = false;
-
+var vis = true;
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
     var x = document.getElementById("background-img");
     var y = document.getElementById("container-mess");
@@ -275,9 +275,10 @@ document.addEventListener('click', function(e){
 
 document.addEventListener('keydown', function(event) {
     var x = document.querySelector('form');
+    var about = document.getElementById("about");
+    globalThis.position = about.selectionStart
     if (enter_flag) {
         if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
-        var about = document.getElementById("about");
         var test_in_about = about.value;
         globalThis.position = about.selectionStart + 1;
         about.value = test_in_about + "\n";
@@ -349,6 +350,25 @@ function show(){
 });}
     }
 
+function notification (text, chat_name) {
+    (async () => {
+              try {
+                const permission = await Notification.requestPermission();
+                if (Notification.permission === 'denied') {
+                }
+                console.log(permission);
+                const options = {
+                  body: text,
+                  icon:
+                    "https://raw.githubusercontent.com/aresen12/web_messenger/refs/heads/master/static/img/icon.ico"
+                };
+                new Notification(chat_name, options);
+              } catch (error) {
+                console.log(error);
+              }
+            })();
+}
+
 
 function get_new_m (){
 if (document.getElementById("chat_id") && document.getElementById("chat_id").value != "") {
@@ -361,22 +381,9 @@ if (document.getElementById("chat_id") && document.getElementById("chat_id").val
     success: function(json){
           if (json["summ_id"] != document.getElementById("summ_id").value){
             show();
-            (async () => {
-              try {
-                const permission = await Notification.requestPermission();
-                if (Notification.permission === 'denied') {
-    }
-                console.log(permission);
-                const options = {
-                  body: "Новые сообщения!",
-                  icon:
-                    "https://raw.githubusercontent.com/aresen12/web_messenger/refs/heads/master/static/img/icon.ico"
-                };
-                new Notification(document.getElementById("name_chat").innerText, options);
-              } catch (error) {
-                console.log(error);
-              }
-            })();
+            if (!vis){
+                notification("Новые сообшения!", document.getElementById('name_chat').innerText);
+            }
           }
           },
     error: function(err) {
@@ -404,11 +411,8 @@ function create_chat(list_members, name, is_primary){
 });
     }
 
-show();
 setInterval(get_new_m, 10000);
-const form = document.querySelector('form');
 var position = 0;
-
 
 
 function edit_prof_html(){
@@ -420,15 +424,42 @@ function edit_prof_html(){
         dataType: 'json',
         contentType:'application/json',
         success: function(json){
-            menu.innerHTML = '<h2>Редактировать профиль<button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
-            menu.innerHTML  += '<div class="edit-cont"><label>Имя</label><br><input id="name_edit" name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br><input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br>'+'Для смены пародя введите старый пароль<br><input name="password_old" id="password_old"><br><label for="password_new">Новый пароль</label><br><input name="password_new" id="password_new"><br><button class="edit-btn" onclick="edit_prof_post()">Сохранить</button></div>';
+            menu.innerHTML = '<h2>Редактировать профиль</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close edit-btn-close" aria-label="Close"></button>';
+            menu.innerHTML += '<div class="edit-cont" id="p_group" style="display:none;"></div>';
+            menu.innerHTML  += '<div class="edit-cont" id="edit_cont"><label>Имя</label><br><input id="name_edit" name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br></div>';
+            var edit_cont = document.getElementById("edit_cont");
+            edit_cont.innerHTML += '<input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br><button class="edit-btn" onclick="edit_prof_post()">Сохранить</button><button class="edit-btn" onclick="showDiv(' + "'p_group', 'edit_cont'" +')">Сменить пароль</button>';
+            var p_group = document.getElementById("p_group");
+            p_group.innerHTML = 'Для смены пародя введите старый пароль<br><input name="password_old" id="password_old" type="password"><br><label for="password_new">Новый пароль</label><br><input name="password_new" id="password_new" type="password">';
+            p_group.innerHTML += '<br><button class="edit-btn" onclick="post_password()">Сменить</button>';
             },
         error: function(err) {
             console.error(err);
         }
     });
 }
-
+function post_password() {
+    var password_old = document.getElementById("password_old");
+    var new_password = document.getElementById("password_new");
+    if (password_old.value.trim() != "" && new_password.value.trim() != "") {
+        let is_edit = confirm("Вы действительно хотите сменить пароль?");
+        if (is_edit){
+        $.ajax({
+            url: '/m/edit_password',
+            type: 'POST',
+            dataType: 'json',
+            contentType:'application/json',
+            data: JSON.stringify({"new_password": new_password.value, "old_password": password_old.value}),
+            success: function(html){
+                  document.getElementById("global_menu_d").style.display = "none";
+                },
+            error: function(err) {
+                console.error(err);
+            }
+            });
+    }
+}
+}
 
 function delete_mess(id_mess){
       $.ajax({
@@ -934,3 +965,10 @@ $('#content').on('contextmenu','div', function(e) { //Get li under ul and invoke
         open_menu_mess(this.id); //alert the id
         });
 
+window.onfocus = function() {
+    globalThis.vis = true;
+};
+
+window.onblur = function() {
+    globalThis.vis = false;
+};

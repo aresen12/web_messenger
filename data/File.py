@@ -14,3 +14,11 @@ class File(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     def __repr__(self):
         return f"{self.path} {self.name}"
+
+
+def get_files(chat_id, db_sess):
+    files = db_sess.query(File).filter(File.chat_id == chat_id).all()
+    files2 = {}
+    for f in files:
+        files2[str(f.id)] = [f.name, f.path]
+    return files2
