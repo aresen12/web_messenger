@@ -6,6 +6,8 @@ var global_distans = 0;
 var menu_id = "";
 var mobile = false;
 var vis = true;
+
+
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
     var x = document.getElementById("background-img");
     var y = document.getElementById("container-mess");
@@ -145,6 +147,11 @@ function sing_out_of_chat(){
 
 
 function set_recipient(id_chat, is_primary, name, status) {
+    var st_chat = document.getElementById("chat_id").value
+    document.getElementById("chat"+ id_chat).style.background =  "#f1f1f1";
+    if (st_chat){
+    document.getElementById("chat"+ st_chat).style.background =  "#CCCCCC";
+    }
     document.getElementById("content").innerHTML = '<h2 class="update">Загрузка...<h2>';
     if (status == 1){
         document.getElementById("form").style.display = "block";
@@ -182,18 +189,23 @@ function set_recipient(id_chat, is_primary, name, status) {
 
 
 function exit_chat(){
+    var st_chat = document.getElementById("chat_id").value
+    if (st_chat){
+    document.getElementById("chat"+ st_chat).style.background =  "#CCCCCC";
+    };
     document.getElementById("content").innerHTML = "";
     document.getElementById('name_chat').innerText = "";
     document.getElementById('chat_id').value = "";
     document.getElementById('form').style.display = "none";
     document.getElementById('menu-chat-ul').innerHTML = '';
+    document.getElementById("btn_down").style.visibility = 'hidden';
     if (globalThis.mobile) {
         document.getElementById("background-img").style.display = "none";
         document.getElementById("container-mess").style.display = "none";
         document.getElementById("settings_btn").style.display = 'block';
         document.getElementById("button").style.visibility = 'hidden';
         document.getElementById("email").style.display = "block";
-        document.getElementById("btn_down").style.visibility = 'hidden';
+
     }
 }
 
@@ -424,7 +436,7 @@ function edit_prof_html(){
         dataType: 'json',
         contentType:'application/json',
         success: function(json){
-            menu.innerHTML = '<h2>Редактировать профиль</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close edit-btn-close" aria-label="Close"></button>';
+            menu.innerHTML = '<h2>Редактировать профиль</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
             menu.innerHTML += '<div class="edit-cont" id="p_group" style="display:none;"></div>';
             menu.innerHTML  += '<div class="edit-cont" id="edit_cont"><label>Имя</label><br><input id="name_edit" name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br></div>';
             var edit_cont = document.getElementById("edit_cont");
@@ -585,14 +597,16 @@ function get_users (id){
         contentType:'application/json',
         success: function(json){
         document.getElementById("global_menu").innerHTML="";
-        var html = '<h2>Создать чаты<button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close" aria-label="Close"></button></h2>';
+        var html = '<h2>Создать чаты</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
         for (let i = 0; i < json["users"].length; i++){
             if (json["c_user"] != json["users"][i][2]){
                html = html + '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2] + ')">' + json["users"][i][0] + '</label><br>';
             }
         }
-        document.getElementById("global_menu").innerHTML = html;
-        document.getElementById("global_menu").innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><br><div class="add-menu" id="name_new_chat_group" style="display:none;"><label>Имя чата</label><br><input id="name_new_chat"></div><input id="list_members" style="display:none;" value="' + json["c_user"] + '">';
+        var menu = document.getElementById("global_menu");
+        menu.innerHTML = html;
+        menu.innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><br><div class="add-menu" id="name_new_chat_group" style="display:none;"><label>Имя чата</label><br><input id="name_new_chat"></div>';
+        menu.innerHTML += '<input id="list_members" style="display:none;" value="' + json["c_user"] + '">';
             },
         error: function(err) {
             console.error(err);
@@ -758,7 +772,7 @@ function get_chats (){
                     dataType: 'json',
                     success: function(json3){
                     globalThis.name = json3["user"];
-                    globalThis.html_ = globalThis.html_ + '<button class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] + "', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "', " + json["chats"][i]["status"] + ')"' + '">' + json3["user"] +'</button>';
+                    globalThis.html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] + "', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "', " + json["chats"][i]["status"] + ')"' + '">' + json3["user"] +'</button>';
                     document.getElementById("email").innerHTML = globalThis.html_;
                     },
                     error: function(err) {
@@ -772,7 +786,7 @@ function get_chats (){
     });
             }else{
                 name = json["chats"][i]["name"];
-                globalThis.html_ = globalThis.html_ + '<button class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + globalThis.name + "', " + json["chats"][i]["status"] + ')">' + json["chats"][i]["name"] +'</button>';
+                globalThis.html_ = globalThis.html_ + '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + globalThis.name + "', " + json["chats"][i]["status"] + ')">' + json["chats"][i]["name"] +'</button>';
                 document.getElementById("email").innerHTML = globalThis.html_;
            }
            }
@@ -852,7 +866,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read) {
         }
     }
     };
-    new_mess += '<p>' + html_m +'</p> <p id="text' + id_m + '">' + text + '</p>';
+    new_mess += '<p>' + html_m +'</p> <p id="text' + id_m + '" class="text-in-mess">' + text + '</p>';
     if (read){
         new_mess += '<p class="time-mess">'+ time +'<button type="button" class="info-btn " data-bs-toggle="tooltip" data-bs-placement="top" title="прочитано">✓✓</button></p>';
     } else{
@@ -903,7 +917,7 @@ function show_users(){
             success: function(json){
             var global_menu = document.getElementById("global_menu");
             document.getElementById("global_menu_d").style.display = "flex";
-            global_menu.innerHTML = '<h2>Управление чатом<button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close m-close" aria-label="Close"></button></h2><br>';
+            global_menu.innerHTML = '<h2>Управление чатом</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button><br>';
             global_menu.innerHTML += '<div id="users"><div id="con_users"></div><div id="edit_users"></div></div>';
             var users_div = document.getElementById("con_users");
             users_div.innerHTML += '<h3>Участники</h3>';
@@ -950,6 +964,7 @@ function open_menu_mess(id_mess){
         document.getElementById(menu_id).style.display = "none";
     };
     globalThis.menu_id = "m" + id_mess;
+    var ul = '';
     var curr_m = document.getElementById("m" + id_mess);
     if (document.getElementById(id_mess).className == "alert alert-success my-message") {
         curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li></ul>';

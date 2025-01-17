@@ -171,11 +171,24 @@ position:fixed;bottom:0vh; padding-down:0;}
    width:30vw;
 }
 
+
+.gl-btn-close {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+}
+
+
+.text-in-mess {
+    overflow:none;
+    overflow-y:hidden;
+}
+
+
 .content-email {
     position:relative;
     top:1;
     width:30vw;
-    background-color: #f1f1f1;
     min-width: 160px;
      overflow: hidden;
     overflow-y:auto;

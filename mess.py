@@ -320,4 +320,9 @@ def get_json_message():
 
 @mg.route("/get_not_read", methods=["POST"])
 def get_not_read():
-    pass
+    data = request.get_json()
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        m = db_sess.query(Message.read).filter(Message.chat_id == data["chat_id"]).all()
+        return {"r": len(m) - sum(m)}
+    return {"log": "error"}
