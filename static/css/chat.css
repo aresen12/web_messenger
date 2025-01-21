@@ -195,6 +195,14 @@ position:fixed;bottom:0vh; padding-down:0;}
     scrollbar-width: thin;
     scrollbar-color: hsl(0 0% 50%);
  }
+ .r-n {
+    display:inline-block;
+    background-color:red;
+    color: white;
+    border-radius: 10px;
+     width:fit-content;
+     min-width: 25  px;
+ }
  .date_k {
     display:flex;
     justify-content:center;

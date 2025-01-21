@@ -742,6 +742,26 @@ function submit_new_users(){
 }
 
 
+function get_read(chat_id){
+    $.ajax({
+        url: '/m/get_not_read',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"chat_id":chat_id}),
+        success: function(json){
+            if (json["r"]){
+                document.getElementById("rn" + chat_id).innerHTML = json["r"];
+            }
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+
+}
+
+
 var name = "";
 var html_ = "";
 function get_chats (){
@@ -772,7 +792,8 @@ function get_chats (){
                     dataType: 'json',
                     success: function(json3){
                     globalThis.name = json3["user"];
-                    globalThis.html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] + "', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "', " + json["chats"][i]["status"] + ')"' + '">' + json3["user"] +'</button>';
+                    get_read(json["chats"][i]["id"]);
+                    globalThis.html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] + "', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "', " + json["chats"][i]["status"] + ')"' + '">' + json3["user"] +'<div class="r-n" id="rn' + json["chats"][i]["id"] + '"></div></button>';
                     document.getElementById("email").innerHTML = globalThis.html_;
                     },
                     error: function(err) {
@@ -786,7 +807,7 @@ function get_chats (){
     });
             }else{
                 name = json["chats"][i]["name"];
-                globalThis.html_ = globalThis.html_ + '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + globalThis.name + "', " + json["chats"][i]["status"] + ')">' + json["chats"][i]["name"] +'</button>';
+                globalThis.html_ = globalThis.html_ + '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + globalThis.name + "', " + json["chats"][i]["status"] + ')">' + json["chats"][i]["name"] +'<div class="r-n" id="rn' + json["chats"][i]["id"] + '"></div></button>';
                 document.getElementById("email").innerHTML = globalThis.html_;
            }
            }

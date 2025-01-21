@@ -323,6 +323,14 @@ def get_not_read():
     data = request.get_json()
     if current_user.is_authenticated:
         db_sess = db_session.create_session()
-        m = db_sess.query(Message.read).filter(Message.chat_id == data["chat_id"]).all()
-        return {"r": len(m) - sum(m)}
+        m = db_sess.query(Message.read, Message.id_sender).filter(Message.chat_id == data["chat_id"]).all()
+        db_sess.close()
+        l = 0
+        for i in range(len(m) -1, -1, -1):
+            print(m[i])
+            if not m[i][0] and current_user.id != m[i][1]:
+                l += 1
+            else:
+                break
+        return {"r": l}
     return {"log": "error"}
