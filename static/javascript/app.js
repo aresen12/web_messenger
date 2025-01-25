@@ -256,8 +256,11 @@ function submit_form() {
              "html": html_m}),
             success: function(json){
                 gener_html(json["id"], text, json["time"], html_m, "",  0, 0);
-                window.location.hash = "";
+                if (window.location.hash == "#pos"){
+                window.location.hash = "#pos2";
+            }else{
             window.location.hash = "#pos";
+            }
             },
             error: function(err) {
                 console.error(err);
@@ -285,18 +288,24 @@ document.addEventListener('click', function(e){
       })
 
 
+document.querySelector('.form2').addEventListener('submit', function(e) {
+      e.preventDefault();
+      go();
+})
+
+
 document.addEventListener('keydown', function(event) {
     var x = document.querySelector('form');
     var about = document.getElementById("about");
     globalThis.position = about.selectionStart
+    console.log(enter_flag);
     if (enter_flag) {
         if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
-        var test_in_about = about.value;
         globalThis.position = about.selectionStart + 1;
-        about.value = test_in_about + "\n";
+        about.value = about.value + "\n";
         go();
         // add len text
-        }
+        };
         if (event.keyCode == 13 && !(event.ctrlKey)) {
          event.preventDefault();
         submit_form();
@@ -342,7 +351,7 @@ function show(){
             };
             gener_html(c_m["id"], c_m["text"], time[1].split(".")[0], c_m["html_m"], file, other, c_m['read']);
         }
-        cont.innerHTML += '<div id="pos"></div>';
+        cont.innerHTML += '<div id="pos"><div id="pos2"></div></div>';
         var scrollTop = $(window).scrollTop(),
         elementOffset = $('#content').offset().top,
         distance = (elementOffset - scrollTop);
@@ -351,9 +360,12 @@ function show(){
         }
         globalThis.position = document.getElementById("about").selectionStart;
         if (-400 < globalThis.global_distans - distance){
-             window.location.hash = "#";
+            if (window.location.hash == "#pos"){
+                window.location.hash = "#pos2";
+            }else{
+            window.location.hash = "#pos";
+            }
         }
-        window.location.hash = "#pos";
         go()
         },
     error: function(err) {
@@ -811,7 +823,11 @@ function get_chats (){
                 document.getElementById("email").innerHTML = globalThis.html_;
            }
            }
-           document.getElementById("email").innerHTML = globalThis.html_;
+           if (globalThis.html_ != ""){
+                document.getElementById("email").innerHTML = globalThis.html_;
+           } else {
+                 document.getElementById("email").innerHTML = '<h2>Для того чтобы создать чат нажмите на синий плюс.</h2>'
+           }
             },
         error: function(err) {
             console.error(err);
