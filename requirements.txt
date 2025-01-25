@@ -1,0 +1,6 @@
+sqlalchemy
+flask
+flask_login
+sqlalchemy_serializer
+flask_wtf
+pyopenssl
