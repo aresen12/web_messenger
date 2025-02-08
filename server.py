@@ -2,7 +2,6 @@ import datetime
 import os
 
 from flask import Flask, request, render_template, redirect
-from ip import get_ip
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data import db_session
@@ -16,7 +15,6 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'certificate'
 hash_password = '7cb8fa366d774761d198d3dc6244740c'
-my_ip = get_ip()
 port = 8080
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -90,4 +88,4 @@ if __name__ == "__main__":
         db_session.global_init('db/master_paste.db')
     from mess import mg
     app.register_blueprint(mg)
-    app.run(host=my_ip, debug=True, port=port, ssl_context=('certificate.crt', 'privateKey.key'))  # ssl_context="adhoc"
+    app.run(host='0.0.0.0', debug=True, port=port, ssl_context=('certificate.crt', 'privateKey.key'))  # ssl_context="adhoc"
