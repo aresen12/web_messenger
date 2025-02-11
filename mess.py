@@ -214,7 +214,7 @@ def del_chat():
         db_sess.close()
         return {"log": True}
     except PermissionError:
-        return {"log": False, "error": "PermissionError"}
+        return {"log": False, "error": "Permission error"}
     except Exception:
         return {"log": False}
 
@@ -293,12 +293,14 @@ def edit_password():
     return {"log": True}
 
 
-
 @mg.route("/get_json_mess", methods=["POST"])
 def get_json_message():
     if current_user.is_authenticated:
         data = request.get_json()
         db_sess = db_session.create_session()
+        mem = db_sess.query(Chat.members).filter(Chat.id == data["chat_id"]).first()
+        if not (str(current_user.id) in mem[0].split()):
+            return {"log": "Permission error"}
         messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).all()
         js = {"messages": [], "files": get_files(data["chat_id"], db_sess), "current_user": current_user.id}
         summ = 0
@@ -325,12 +327,11 @@ def get_not_read():
         db_sess = db_session.create_session()
         m = db_sess.query(Message.read, Message.id_sender).filter(Message.chat_id == data["chat_id"]).all()
         db_sess.close()
-        l = 0
-        for i in range(len(m) -1, -1, -1):
-            print(m[i])
+        le = 0
+        for i in range(len(m) - 1, -1, -1):
             if not m[i][0] and current_user.id != m[i][1]:
-                l += 1
+                le += 1
             else:
                 break
-        return {"r": l}
+        return {"r": le}
     return {"log": "error"}
