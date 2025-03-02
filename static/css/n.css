@@ -125,7 +125,7 @@ h2 {
 }
 
 
-.my-a {text-decoration:none; color:black;}
+.my-a {text-decoration:none;max-width:10px; color:black; overflow:auto;}
 
 
 .btn2 {margin:10px;}
