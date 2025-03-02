@@ -74,7 +74,8 @@ function edit (id_mess){
     document.getElementById("about").value = t;
     var la = document.getElementById("edit-label");
     la.innerHTML = t;
-    la.innerHTML += '<button type="button" onclick="close_edit()" class="btn-close edit-btn-close" aria-label="Close"></button>'
+    la.innerHTML += '<button type="button" onclick="close_edit()" class="btn-close edit-btn-close" aria-label="Close">\
+    </button>'
     la.style.display = "block";
 
 }
@@ -136,7 +137,7 @@ function sing_out_of_chat(){
     contentType:'application/json',
     data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
     success: function(json){
-        get_chats();
+        get_chats('email');
         exit_chat();
     },
     error: function(err) {
@@ -175,7 +176,7 @@ function set_recipient(id_chat, is_primary, name, status) {
     distance = (elementOffset - scrollTop);
     globalThis.global_distans = distance;
     document.getElementById('chat_id').innerText = id_chat;
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
+    if (mobile){
         x.style.display = "block";
         var button = document.getElementById("button").style.visibility = 'visible';
         var cont = document.getElementById("container-mess");
@@ -427,7 +428,7 @@ function create_chat(list_members, name, is_primary){
     data: JSON.stringify({"name":name, "list_members": list_members, "primary":is_primary}),
     success: function(json){
           // update chats list
-          get_chats();
+          get_chats('email');
         },
     error: function(err) {
         console.error(err);
@@ -448,13 +449,19 @@ function edit_prof_html(){
         dataType: 'json',
         contentType:'application/json',
         success: function(json){
-            menu.innerHTML = '<h2>Редактировать профиль</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
+            menu.innerHTML = '<h2>Редактировать профиль</h2><button onclick="show_global_menu(' + "'global_menu_d'" + '\
+            , ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
             menu.innerHTML += '<div class="edit-cont" id="p_group" style="display:none;"></div>';
-            menu.innerHTML  += '<div class="edit-cont" id="edit_cont"><label>Имя</label><br><input id="name_edit" name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br></div>';
+            menu.innerHTML  += '<div class="edit-cont" id="edit_cont"><label>Имя</label><br><input id="name_edit"\
+             name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br></div>';
             var edit_cont = document.getElementById("edit_cont");
-            edit_cont.innerHTML += '<input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br><button class="edit-btn" onclick="edit_prof_post()">Сохранить</button><button class="edit-btn" onclick="showDiv(' + "'p_group', 'edit_cont'" +')">Сменить пароль</button>';
+            edit_cont.innerHTML += '<input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br>\
+            <button class="edit-btn" onclick="edit_prof_post()">Сохранить</button>\
+            <button class="edit-btn" onclick="showDiv(' + "'p_group', 'edit_cont'" +')">Сменить пароль</button>';
             var p_group = document.getElementById("p_group");
-            p_group.innerHTML = 'Для смены пародя введите старый пароль<br><input name="password_old" id="password_old" type="password"><br><label for="password_new">Новый пароль</label><br><input name="password_new" id="password_new" type="password">';
+            p_group.innerHTML = 'Для смены пародя введите старый пароль<br><input name="password_old" id="password_old"\
+             type="password"><br><label for="password_new">Новый пароль</label><br><input name="password_new"\
+              id="password_new" type="password">';
             p_group.innerHTML += '<br><button class="edit-btn" onclick="post_password()">Сменить</button>';
             },
         error: function(err) {
@@ -462,6 +469,15 @@ function edit_prof_html(){
         }
     });
 }
+
+
+function send(id){
+    get_chats_gl("global_menu", id);
+    document.getElementById("global_menu_d").style.display = "block";
+}
+
+
+
 function post_password() {
     var password_old = document.getElementById("password_old");
     var new_password = document.getElementById("password_new");
@@ -511,9 +527,10 @@ $.ajax({
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"name": document.getElementById("name_edit").value, "email": document.getElementById("email_edit").value}),
+    data: JSON.stringify({"name": document.getElementById("name_edit").value,
+     "email": document.getElementById("email_edit").value}),
     success: function(html){
-          get_chats();
+          get_chats('email');
         },
     error: function(err) {
         console.error(err);
@@ -535,7 +552,7 @@ function delete_chat() {
             contentType:'application/json',
             data: JSON.stringify({"id_chat": document.getElementById("chat_id").value}),
             success: function(html){
-                  get_chats();
+                  get_chats('email');
                   exit_chat();
                 },
             error: function(err) {
@@ -557,7 +574,7 @@ function block_user() {
             contentType:'application/json',
             data: JSON.stringify({"id_chat": document.getElementById("chat_id").value}),
             success: function(html){
-                  get_chats();
+                  get_chats("email");
                   exit_chat();
                 },
             error: function(err) {
@@ -677,7 +694,7 @@ function edit_name_chat(){
         contentType:'application/json',
         data: JSON.stringify({"chat_id": document.getElementById('chat_id').value, "new_name": document.getElementById('new_chat_name').value}),
         success: function(html){
-              get_chats();
+              get_chats('email');
             },
         error: function(err) {
             console.error(err);
@@ -711,7 +728,7 @@ function create_group (){
     data: JSON.stringify({"name":name, "list_members": list_members, "primary":is_primary}),
     success: function(json){
           // update chats list
-          get_chats();
+          get_chats('email');
           document.getElementById("global_menu_d").style.display = 'none';
         },
     error: function(err) {
@@ -774,10 +791,27 @@ function get_read(chat_id){
 }
 
 
-var name = "";
-var html_ = "";
-function get_chats (){
-    globalThis.html_ = "";
+function send_of(chat_id, id_m){
+    $.ajax({
+        url: '/m/mail',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m}),
+        success: function(json){
+            document.getElementById("global_menu_d").style.display = "none"
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+
+
+}
+
+
+function get_chats (id_div){
+    html_ = "";
     $.ajax({
         url: '/m/get_chats',
         type: 'GET',
@@ -803,10 +837,10 @@ function get_chats (){
                     type: 'GET',
                     dataType: 'json',
                     success: function(json3){
-                    globalThis.name = json3["user"];
                     get_read(json["chats"][i]["id"]);
-                    globalThis.html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] + "', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "', " + json["chats"][i]["status"] + ')"' + '">' + json3["user"] +'<div class="r-n" id="rn' + json["chats"][i]["id"] + '"></div></button>';
-                    document.getElementById("email").innerHTML = globalThis.html_;
+                    html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] + "', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "', " + json["chats"][i]["status"] + ')"' + '">' + json3["user"] +'<div class="r-n"\
+                     id="rn' + json["chats"][i]["id"] + '"></div></button>';
+                    document.getElementById(id_div).innerHTML = html_;
                     },
                     error: function(err) {
                         console.error(err);
@@ -818,16 +852,69 @@ function get_chats (){
         }
     });
             }else{
-                name = json["chats"][i]["name"];
-                globalThis.html_ = globalThis.html_ + '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" + globalThis.name + "', " + json["chats"][i]["status"] + ')">' + json["chats"][i]["name"] +'<div class="r-n" id="rn' + json["chats"][i]["id"] + '"></div></button>';
-                document.getElementById("email").innerHTML = globalThis.html_;
+                html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" +  json["chats"][i]["name"] + "', " + json["chats"][i]["status"] + ')">' + json["chats"][i]["name"] +'<div class="r-n" id="rn' + json["chats"][i]["id"] + '"></div></button>';
+                document.getElementById(id_div).innerHTML = html_;
            }
            }
-           if (globalThis.html_ != ""){
-                document.getElementById("email").innerHTML = globalThis.html_;
+           if (html_ != ""){
+                document.getElementById(id_div).innerHTML = html_;
            } else {
-                 document.getElementById("email").innerHTML = '<h2>Для того чтобы создать чат нажмите на синий плюс.</h2>'
+                 document.getElementById(id_div).innerHTML = '<h2>Для того чтобы создать чат нажмите на синий плюс.</h2>'
            }
+            },
+        error: function(err) {
+            console.error(err);
+        }
+});
+}
+
+function get_chats_gl (id_div, id_m){
+    html_ = "";
+    $.ajax({
+        url: '/m/get_chats',
+        type: 'GET',
+        dataType: 'json',
+        contentType:'application/json',
+        success: function(json){
+           for (let i = 0; i < json["chats"].length; i++){
+            console.log(json["chats"][i]["primary_chat"]);
+               if (json["chats"][i]["primary_chat"]){
+                 $.ajax({
+                    url: '/m/get_chat_user/' + json["chats"][i]["id"],
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType:'application/json',
+                    success: function(json2){
+                    t_id = 0;
+                    if (json2["user"][0] != id){
+                        t_id = json2["user"][0]
+                    } else{
+                        t_id = json2["user"][1]
+                    }
+                    $.ajax({
+                        url: '/m/get_user/' + t_id,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(json3){
+                            document.getElementById(id_div).innerHTML += '<button " class="a-email" onclick="send_of(' + "'" +json["chats"][i]["id"] + "', " + id_m + ')"' + '">' + json3["user"] +'<div class="r-n"\
+                             id="rn' + json["chats"][i]["id"] + '"></div></button>';
+                    },
+                    error: function(err) {
+                        console.error(err);
+                    }
+                    });
+           },
+            error: function(err) {
+                             console.error(err);
+                              }
+                             });
+       } else {
+                html_ += '<button class="a-email" onclick="send_of(' + "'" +json["chats"][i]["id"] +"', " + id_m + ')">' + json["chats"][i]["name"] +'<div class="r-n" id="rn' + json["chats"][i]["id"] + '"></div></button>';
+           }
+           }
+           document.getElementById(id_div).innerHTML = html_;
+                document.getElementById(id_div).innerHTML += '<button onclick="show_global_menu(' + "'global_menu_d'" + ', 0)" type="button"\
+                    class="btn-close gl-btn-close" aria-label="Close"></button>'
             },
         error: function(err) {
             console.error(err);
@@ -837,7 +924,7 @@ function get_chats (){
 
 
 // отрисовка интерфейса
-get_chats();
+get_chats('email');
 var f = document.getElementById("form").offsetHeight;
 var nav = document.getElementById("nav").offsetHeight;
 var m_c =   document.getElementById("container-mess");
@@ -1004,9 +1091,13 @@ function open_menu_mess(id_mess){
     var ul = '';
     var curr_m = document.getElementById("m" + id_mess);
     if (document.getElementById(id_mess).className == "alert alert-success my-message") {
-        curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li></ul>';
+        curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
+        <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li>\
+        <li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';
     } else {
-        curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li><li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li></ul>';
+        curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li>\
+        <li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
+        <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';
     }
     show_menu("m" + id_mess);
 }
