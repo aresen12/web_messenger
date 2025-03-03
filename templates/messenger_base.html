@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link href="/static/css/n.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/chat.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="icon" href="/static/img/icon.ico">
+    <title>{{ title }}</title>
+</head>
+<body>
+<header>
+    <nav id="nav" class="navbar navbar-dark bg-dark" style="color:white; background:black;">
+        <div style="width:5w;" id="settings_btn">
+        <button onclick="showDiv('settings', 'email')" class="info-btn" >
+            <svg width="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 6H12H19M5 12H19M5 18H19" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path> </g>
+            </svg>
+        </button>
+            <img src="/static/img/main.png" style="height:70px;">
+            <b style="margin-left:5px;font-size:30px;">Kazbek</b>
+        </div>
+        <button class="info-btn" id="button" onclick="exit_chat()" style="position:relative;left:0vw;">
+            <svg height="50px" viewBox="-3 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#ffff" stroke="#ffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g>
+                    <path d="M13.114 2.887c-7.243 0-13.114 5.871-13.114 13.113s5.871 13.113 13.114 13.113c7.242 0 13.112-5.871 13.112-13.113s-5.87-13.113-13.112-13.113zM13.114 28.064c-6.653 0-12.065-5.412-12.065-12.064s5.412-12.063 12.065-12.063c6.652 0 12.063 5.412 12.063 12.063s-5.411 12.064-12.063 12.064z" fill="#ffff">
+                    </path>
+                    <path d="M12.318 10.363l-0.742-0.742-6.379 6.379 6.379 6.379 0.742-0.742-5.113-5.113h12.726v-1.049h-12.726z" fill="#ffff">
+                    </path>
+                </g>
+            </svg>
+        </button>
+        <button class="info-btn" onclick="show_users()" id="name_chat" style="color:white;"></button>
+        <div><div class="context-menu-open" id="menu-chat" style="position:absolute;right:10px; top:70px; display:none;">
+        <ul id="menu-chat-ul" style="color:black;">
+        </ul></div>
+        <button class="info-btn" onclick="show_menu('menu-chat')">
+            <svg width="68px" height="50px" viewBox="0 0 24 24" id="three-dots" xmlns="http://www.w3.org/2000/svg" fill="#ffff" stroke="#ffff">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="0.192"></g>
+                <g id="SVGRepo_iconCarrier">
+                <g id="_20x20_three-dots--grey" data-name="20x20/three-dots--grey" transform="translate(24) rotate(90)">
+                    <circle id="Oval" cx="1" cy="1" r="1" transform="translate(5 11)" stroke="#ffff" stroke-miterlimit="10" stroke-width="0.5"></circle>
+                    <circle id="Oval-2" data-name="Oval" cx="1" cy="1" r="1" transform="translate(11 11)" stroke="#ffff" stroke-miterlimit="10" stroke-width="0.5"></circle>
+                    <circle id="Oval-3" data-name="Oval" cx="1" cy="1" r="1" transform="translate(17 11)" stroke="#ffff" stroke-miterlimit="10" stroke-width="0.5"></circle>
+                </g>
+                </g>
+            </svg>
+        </button>
+
+        </div>
+        {% if not current_user.is_authenticated %}
+        <p>
+            <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+            <a class="btn btn-success" href="/login">Войти</a>
+        </p>
+        {% endif %}
+    </nav>
+</header>
+<main role="main">
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>
