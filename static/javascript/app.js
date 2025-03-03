@@ -1116,3 +1116,10 @@ window.onfocus = function() {
 window.onblur = function() {
     globalThis.vis = false;
 };
+
+function injectEmojisToList(e) {
+        document.getElementById("about").value += e.innerHTML;
+        globalThis.position = document.getElementById("about").selectionStart;
+                go();
+    }
+
