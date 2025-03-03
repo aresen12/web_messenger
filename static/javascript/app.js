@@ -465,7 +465,7 @@ function delete_mess(id_mess){
 
 
 function edit_prof_post() {
-let is_edit = confirm("Вы действительно хотите отредактировать профиль");
+let is_edit = confirm("Вы действительно хотите отредактировать профиль?");
 if (is_edit){
 document.getElementById("global_menu_d").style.display = "none";
 $.ajax({
@@ -488,7 +488,7 @@ $.ajax({
 
 
 function delete_chat() {
-    show_menu('menu-chat');
+    showdiv1('menu-chat');
     let is_del = confirm("Вы действительно хотите удалить этот чат?");
     if (is_del){
         $.ajax({
@@ -510,7 +510,7 @@ function delete_chat() {
 
 
 function block_user() {
-    show_menu('menu-chat');
+    showdiv1('menu-chat');
     let is_block = confirm("Вы действительно хотите заблокировать чат?");
     if (is_block){
         $.ajax({
@@ -543,16 +543,6 @@ function answer(id_mess){
 }
 
 
-function show_menu(id_div){
-    var x = document.getElementById(id_div);
-    if(x.style.display=="none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
-}
-
-
 function show_global_menu(id_div, id){
     var x = document.getElementById(id_div);
     if(x.style.display=="none" || x.style.display=="") {
@@ -570,7 +560,6 @@ function show_create_primary_chat(id){
     x.style.display = "block";
     document.getElementById("how_create").style.display = "none";
     get_users_primary(id);
-
 }
 
 function get_users (id){
@@ -900,26 +889,6 @@ function get_chats_gl (id_div, id_m){
 
 
 // отрисовка интерфейса
-
-if (mobile){
-    document.getElementById("about").style.fontSize = "50px";
-    document.getElementById("btn_down").style.visibility = 'hidden';
-    };
-
-
-function set_bg(num) {
-    if (mobile){
-        document.getElementById("background-img").src = "/static/img/bg/mob_bg" + num + ".jpg";
-    } else {
-    document.getElementById("background-img").src = "/static/img/bg/bg" + num + ".jpg";
-    }
-    document.cookie = "bg="+ num;
-}
-
-
-
-
-
 function add_in_chat_new(){
     var global_menu = document.getElementById("global_menu");
     document.getElementById("users").style.display = "none";

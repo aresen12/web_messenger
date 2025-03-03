@@ -358,3 +358,18 @@ def mail():
         db_sess.close()
         return {"log": True}
     return {'log'}
+
+
+@mg.route("/get_cnt_m", methods=["POST"])
+def get_cnt_m():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
+    ch_mem = chat.members.split()
+    if str(current_user.id) in ch_mem:
+        c = db_sess.query(Message.id).filter(Message.chat_id == data["chat_id"]).all()
+        return {"len": len(c)}
+    db_sess.close()
+    return {"log": "PermissionError"}
+
+

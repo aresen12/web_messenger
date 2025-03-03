@@ -120,7 +120,9 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
 
 function open_menu_mess(id_mess){
     if (globalThis.menu_id != ""){
+        try{
         document.getElementById(menu_id).style.display = "none";
+        } catch(err) {}
     };
     globalThis.menu_id = "m" + id_mess;
     var ul = '';
@@ -134,5 +136,21 @@ function open_menu_mess(id_mess){
         <li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
         <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';
     }
-    show_menu("m" + id_mess);
+    showdiv1("m" + id_mess);
+}
+
+
+if (mobile){
+    document.getElementById("about").style.fontSize = "50px";
+    document.getElementById("btn_down").style.visibility = 'hidden';
+    };
+
+
+function set_bg(num) {
+    if (mobile){
+        document.getElementById("background-img").src = "/static/img/bg/mob_bg" + num + ".jpg";
+    } else {
+    document.getElementById("background-img").src = "/static/img/bg/bg" + num + ".jpg";
+    }
+    document.cookie = "bg="+ num;
 }
