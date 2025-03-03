@@ -18,37 +18,6 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phon
 };
 
 
-function showDiv(Div, div2) {
-    var x = document.getElementById(Div);
-    var y = document.getElementById(div2)
-    if(x.style.display=="none") {
-        x.style.display = "block";
-        y.style.display = "none";
-    } else {
-        x.style.display = "none";
-        y.style.display = "block";
-    }
-}
-
-
-if (document.cookie){
-    var button = document.getElementById("bg"+  getCookie("bg"));
-    button.click();
-    var e = getCookie("enter");
-    if (e){
-        console.log(e);
-        document.getElementById("E" + e).click();
-    } else {
-        document.cookie = "enter=1";
-    }
-
-} else {
-    document.cookie = "bg=2";
-    document.cookie = "enter=1";
-    document.getElementById("bg2").click();
-}
-
-
 function getCookie(name) {
   let cookie = document.cookie.split('; ').find(row => row.startsWith(name + '='));
   return cookie ? cookie.split('=')[1] : null;
@@ -103,29 +72,6 @@ function edit_post(id_mess, text){
         console.error(err);
     }
 });
-}
-
-
-function showdiv1(Div){
-    var x = document.getElementById(Div);
-    if(x.style.display=="none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
-}
-
-
-function showImg(Div, name_img){
-    var x = document.getElementById("watch");
-    var w_img = document.getElementById("watch_img");
-    w_img.src = "/static/img/" + name_img;
-    if(x.style.display=="none") {
-        x.style.display = "block";
-        document.getElementById(Div).click();
-    } else {
-        x.style.display = "none";
-    }
 }
 
 
@@ -611,12 +557,21 @@ function show_global_menu(id_div, id){
     var x = document.getElementById(id_div);
     if(x.style.display=="none" || x.style.display=="") {
         x.style.display = "block";
+        document.getElementById("how_create").style.display = "none";
         get_users(id);
     } else {
         x.style.display = "none";
     }
 }
 
+
+function show_create_primary_chat(id){
+    var x = document.getElementById('global_menu_d');
+    x.style.display = "block";
+    document.getElementById("how_create").style.display = "none";
+    get_users_primary(id);
+
+}
 
 function get_users (id){
     $.ajax({
@@ -634,8 +589,32 @@ function get_users (id){
         }
         var menu = document.getElementById("global_menu");
         menu.innerHTML = html;
-        menu.innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><br><div class="add-menu" id="name_new_chat_group" style="display:none;"><label>Имя чата</label><br><input id="name_new_chat"></div>';
+        menu.innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><br><div class="add-menu" id="name_new_chat_group"><label>Имя чата</label><br><input id="name_new_chat"></div>';
         menu.innerHTML += '<input id="list_members" style="display:none;" value="' + json["c_user"] + '">';
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}
+
+
+function get_users_primary (id){
+    $.ajax({
+        url: '/m/get_users',
+        type: 'GET',
+        dataType: 'json',
+        contentType:'application/json',
+        success: function(json){
+        document.getElementById("global_menu").innerHTML="";
+        var html = '<h2>Создать чат с пользователем</h2><button onclick="' + "show_global_menu('global_menu_d',  0)" +'" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
+        for (let i = 0; i < json["users"].length; i++){
+            if (json["c_user"] != json["users"][i][2]){
+               html = html + '<label class="add-menu" onclick="create_chat('+ "'"+ json["users"][i][2] + ' ' + json["c_user"] + "', '', 1" + ')">' + json["users"][i][0] + '</label><br>';
+            }
+        }
+        var menu = document.getElementById("global_menu");
+        menu.innerHTML = html;
             },
         error: function(err) {
             console.error(err);
@@ -648,21 +627,16 @@ function add_chat(new_mem){
     var list_mem = document.getElementById("list_members");
     list_mem.value = list_mem.value.trim();
     t_m = list_mem.value.split(" ");
-    if (new_mem + "" in t_m){ //  удаление из списка
-    for (i=0; i < t_m.length; i++){
-        if (new_mem == t_m[i]){
-            t_m.splice(i, i + 1);
-            list_members.value = t_m.join(" ");
-            if (t_m.length <= 2){
-                document.getElementById("name_new_chat_group").style.display = 'none';
-            }
-    }
-    }
-    } else {
+    var delete_fl = true;
+    for (i=0; i <= t_m.length; i++){
+            if (new_mem == t_m[i]){
+                t_m.splice(i, i + 1);
+                list_members.value = t_m.join(" ");
+                delete_fl = false;
+            };
+        };
+    if (delete_fl) {
         list_mem.value += " " + new_mem;
-        if (t_m.length + 1 > 2){
-            document.getElementById("name_new_chat_group").style.display = 'block';
-        }
     }
 }
 
@@ -677,11 +651,12 @@ function add_chat_user(new_mem){
             if (new_mem == t_m[i]){
                 t_m.splice(i, i + 1);
                 list_members.value = t_m.join(" ");
-            }
-        }
+                console.log("deleted");
+            };
+        };
     } else {
-    list_mem.value += " " + new_mem;
-    }
+        list_mem.value += " " + new_mem;
+    };
 }
 
 
@@ -710,15 +685,11 @@ function create_group (){
     if (list_members.trim() == ""){
     return "";
     }
-    var is_primary = 1;
-    if (list_members.split(" ").length > 2){
-        is_primary = 0;
-        if (name.trim() == ""){
+    var is_primary = 0;
+    if (name.trim() == ""){
         document.getElementById("name_new_chat").value = "Добавьте имя!!!";
         return "";
-        }
     }
-    console.log(list_members.split().length);
 
       $.ajax({
     url: '/m/create_chat',
@@ -839,7 +810,8 @@ function get_chats (id_div){
                     dataType: 'json',
                     success: function(json3){
                     get_read(json["chats"][i]["id"]);
-                    html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] + "', '" + json["chats"][i]["primary_chat"] +  "', '" + json3["user"] + "', " + json["chats"][i]["status"] + ')"' + '">' + json3["user"] +'<div class="r-n"\
+                    html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] + "', '" + json["chats"][i]["primary_chat"] +  "',\
+                     '" + json3["user"] + "', " + json["chats"][i]["status"] + ')"' + '">' + json3["user"] +'<div class="r-n"\
                      id="rn' + json["chats"][i]["id"] + '"></div></button>';
                     document.getElementById(id_div).innerHTML = html_;
                     },
@@ -853,7 +825,10 @@ function get_chats (id_div){
         }
     });
             }else{
-                html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"', '" + json["chats"][i]["primary_chat"] +  "', '" +  json["chats"][i]["name"] + "', " + json["chats"][i]["status"] + ')">' + json["chats"][i]["name"] +'<div class="r-n" id="rn' + json["chats"][i]["id"] + '"></div></button>';
+                html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"'\
+                , '" + json["chats"][i]["primary_chat"] +  "', '" +  json["chats"][i]["name"] + "', \
+                " + json["chats"][i]["status"] + ')">' + json["chats"][i]["name"] +'<div class="r-n"\
+                 id="rn' + json["chats"][i]["id"] + '"></div></button>';
                 document.getElementById(id_div).innerHTML = html_;
            }
            }
@@ -925,17 +900,7 @@ function get_chats_gl (id_div, id_m){
 
 
 // отрисовка интерфейса
-get_chats('email');
-var f = document.getElementById("form").offsetHeight;
-var nav = document.getElementById("nav").offsetHeight;
-var m_c =   document.getElementById("container-mess");
-var email_cont = document.getElementById("email");
-m_c.style.height =  window.innerHeight - f - nav + "px";
-m_c.style.top = nav;
-email_cont.style.top = nav;
-email_cont.style.height = window.innerHeight - f - nav + "px";
-document.getElementById("background-img").style.height =  window.innerHeight - nav + "px";
-document.getElementById("form").style.display = "none";
+
 if (mobile){
     document.getElementById("about").style.fontSize = "50px";
     document.getElementById("btn_down").style.visibility = 'hidden';
@@ -952,56 +917,7 @@ function set_bg(num) {
 }
 
 
-function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
-    imges = ["bmp", "jpg", "png", "svg"]
-    audio = ["mp3", "flac", "m4a"]
-    video = ["mp4", "mov"]
-    if (other) {
-        var class_m = "alert-info message-other";
-    } else{
-        var class_m = "alert-success my-message";
-    };
-    var onclick = "";
-    if (mobile){
-        onclick = 'onclick="open_menu_mess(' + "'m"+ id_m +"'" + ')"';
-    }
-    new_mess = '<div class="alert ' + class_m + '" id="m' + id_m + '" ' + onclick + 'role="alert">';
-    if (file_ != ""){
-        var ras = file_[1].split(".");
-        ras = ras[ras.length - 1];
-        if (imges.includes(ras)){
-            new_mess += '<button class="info-btn" onclick="' + "showImg('m" + id_m + "', '" + file_[1] + "')" + '"><img class="mess-img" src="/static/img/' + file_[1] + '"></button>';
-        } else {
-             if (audio.includes(ras)){
-                var w = window.innerWidth * 0.187;
-                    if (mobile){
-                        w = window.innerWidth * 0.57;
-                    };
-                 new_mess += '<audio style="width:' + w + 'px;" controls class="audio" src="/static/img/' + file_[1] + '">' + file_[0] + '</audio>';
-            } else {
-                if (video.includes(ras)){
-                    var w = window.innerWidth * 0.18;
-                    if (mobile){
-                        w = window.innerWidth * 0.57;
-                    };
-                    new_mess += '<video width="' + w +'px" controls class="audio" src="/static/img/' + file_[1] + '">' + file_[0] + '</video>';
-                } else{
-                    new_mess += '<a class="my-a" download="' + file_[0] + '" href="/static/img/' + file_[1] + '">' + file_[0] + '</a>';
-                }
-        }
-    }
-    };
-    new_mess += '<p>' + html_m +'</p> <p id="text' + id_m + '" class="text-in-mess">' + text + '</p>';
-    if (read){
-        new_mess += '<p class="time-mess">'+ time + ' '+ name_sender +'<button type="button" class="info-btn " data-bs-toggle="tooltip" data-bs-placement="top" title="прочитано">✓✓</button></p>';
-    } else{
-        new_mess += '<p class="time-mess">'+ time + ' '+ name_sender + '<button type="button" class="info-btn " data-bs-toggle="tooltip" data-bs-placement="top" title="доставлено">✓</button></p>';
-    }
 
-    new_mess += '<div class="context-menu-open" id="mm' + id_m + '" style="display:none;"></div>';
-    document.getElementById("content").innerHTML += new_mess;
-    go();
-}
 
 
 function add_in_chat_new(){
@@ -1082,26 +998,6 @@ var t = document.getElementById("text" + id_m).textContent.trim();
 
 
   }
-
-
-function open_menu_mess(id_mess){
-    if (globalThis.menu_id != ""){
-        document.getElementById(menu_id).style.display = "none";
-    };
-    globalThis.menu_id = "m" + id_mess;
-    var ul = '';
-    var curr_m = document.getElementById("m" + id_mess);
-    if (document.getElementById(id_mess).className == "alert alert-success my-message") {
-        curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
-        <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li>\
-        <li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';
-    } else {
-        curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li>\
-        <li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
-        <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';
-    }
-    show_menu("m" + id_mess);
-}
 
 
 $('#content').on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
