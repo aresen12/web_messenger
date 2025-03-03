@@ -312,7 +312,7 @@ def get_json_message():
                 m.read = 1
                 f = True
             js["messages"].append({"id": m.id, "read": m.read, "html_m": m.html_m, "text": m.message, 'time': m.time,
-                                   "file": m.img, "id_sender": m.id_sender})
+                                   "file": m.img, "id_sender": m.id_sender, "name_sender": m.name_sender})
         if f:
             db_sess.commit()
         db_sess.close()

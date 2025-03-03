@@ -256,7 +256,7 @@ function submit_form() {
              "new_text": text,
              "html": html_m}),
             success: function(json){
-                gener_html(json["id"], text, json["time"], html_m, "",  0, 0);
+                gener_html(json["id"], text, json["time"], html_m, "",  0, 0, "");
                 if (window.location.hash == "#pos"){
                 window.location.hash = "#pos2";
             }else{
@@ -350,7 +350,7 @@ function show(){
                 date = time[0];
                 cont.innerHTML += '<div class="date_k">' + time2[2]+ "." + time2[1] + "." + time2[0] + '</div>';
             };
-            gener_html(c_m["id"], c_m["text"], time[1].split(".")[0], c_m["html_m"], file, other, c_m['read']);
+            gener_html(c_m["id"], c_m["text"], time[1].split(".")[0], c_m["html_m"], file, other, c_m['read'], c_m["name_sender"]);
         }
         cont.innerHTML += '<div id="pos"><div id="pos2"></div></div>';
         var scrollTop = $(window).scrollTop(),
@@ -952,7 +952,7 @@ function set_bg(num) {
 }
 
 
-function gener_html(id_m, text, time, html_m, file_, other, read) {
+function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
     imges = ["bmp", "jpg", "png", "svg"]
     audio = ["mp3", "flac", "m4a"]
     video = ["mp4", "mov"]
@@ -993,9 +993,9 @@ function gener_html(id_m, text, time, html_m, file_, other, read) {
     };
     new_mess += '<p>' + html_m +'</p> <p id="text' + id_m + '" class="text-in-mess">' + text + '</p>';
     if (read){
-        new_mess += '<p class="time-mess">'+ time +'<button type="button" class="info-btn " data-bs-toggle="tooltip" data-bs-placement="top" title="прочитано">✓✓</button></p>';
+        new_mess += '<p class="time-mess">'+ time + ' '+ name_sender +'<button type="button" class="info-btn " data-bs-toggle="tooltip" data-bs-placement="top" title="прочитано">✓✓</button></p>';
     } else{
-        new_mess += '<p class="time-mess">'+ time +'<button type="button" class="info-btn " data-bs-toggle="tooltip" data-bs-placement="top" title="доставлено">✓</button></p>';
+        new_mess += '<p class="time-mess">'+ time + ' '+ name_sender + '<button type="button" class="info-btn " data-bs-toggle="tooltip" data-bs-placement="top" title="доставлено">✓</button></p>';
     }
 
     new_mess += '<div class="context-menu-open" id="mm' + id_m + '" style="display:none;"></div>';
