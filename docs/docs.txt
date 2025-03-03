@@ -8,4 +8,4 @@ status chat
     Далее если сумма не совпала вызов функции (show)
 
 gener_html(id, text, time, html_m, file, other);
-bg5.jpg и bg4.jpg принадлежат Шабашову Алексею Михайловичу.
+set_recipient(id_chat, is_primary, name, status);

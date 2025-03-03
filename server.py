@@ -88,4 +88,7 @@ if __name__ == "__main__":
         db_session.global_init('db/master_paste.db')
     from mess import mg
     app.register_blueprint(mg)
+    # from gevent import pywsgi
+    # http_server = pywsgi.WSGIServer(('0.0.0.0', 8080), app, keyfile='privateKey.key', certfile='certificate.crt')
+    # http_server.serve_forever()
     app.run(host='0.0.0.0', debug=True, port=port, ssl_context=('certificate.crt', 'privateKey.key'))  # ssl_context="adhoc"

@@ -791,7 +791,7 @@ function get_read(chat_id){
 }
 
 
-function send_of(chat_id, id_m){
+function send_of(chat_id, id_m, name_chat){
     $.ajax({
         url: '/m/mail',
         type: 'POST',
@@ -799,7 +799,8 @@ function send_of(chat_id, id_m){
         contentType:'application/json',
         data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m}),
         success: function(json){
-            document.getElementById("global_menu_d").style.display = "none"
+            document.getElementById("global_menu_d").style.display = "none";
+            set_recipient(chat_id, 0, name_chat,  1)
             },
         error: function(err) {
             console.error(err);
@@ -896,7 +897,7 @@ function get_chats_gl (id_div, id_m){
                         type: 'GET',
                         dataType: 'json',
                         success: function(json3){
-                            document.getElementById(id_div).innerHTML += '<button " class="a-email" onclick="send_of(' + "'" +json["chats"][i]["id"] + "', " + id_m + ')"' + '">' + json3["user"] +'<div class="r-n"\
+                            document.getElementById(id_div).innerHTML += '<button " class="a-email" onclick="send_of(' + "'" +json["chats"][i]["id"] + "', " + id_m   + ", '" + json3["user"] + "'" +  ')"' + '">' + json3["user"] +'<div class="r-n"\
                              id="rn' + json["chats"][i]["id"] + '"></div></button>';
                     },
                     error: function(err) {
@@ -909,7 +910,7 @@ function get_chats_gl (id_div, id_m){
                               }
                              });
        } else {
-                html_ += '<button class="a-email" onclick="send_of(' + "'" +json["chats"][i]["id"] +"', " + id_m + ')">' + json["chats"][i]["name"] +'<div class="r-n" id="rn' + json["chats"][i]["id"] + '"></div></button>';
+                html_ += '<button class="a-email" onclick="send_of(' + "'" +json["chats"][i]["id"] +"', " + id_m + ", '" + json["chats"][i]["name"] + "'" + ')">' + json["chats"][i]["name"] +'<div class="r-n" id="rn' + json["chats"][i]["id"] + '"></div></button>';
            }
            }
            document.getElementById(id_div).innerHTML = html_;

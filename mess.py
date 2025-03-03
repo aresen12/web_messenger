@@ -339,9 +339,13 @@ def get_not_read():
 
 @mg.route("/mail", methods=["POST"])
 def mail():
+
     if current_user.is_authenticated:
         data = request.get_json()
         db_sess = db_session.create_session()
+        if not (str(current_user.id) in db_sess.query(Chat).filter(Chat.id == data["mail_id_chat"]).first().members.split()):
+            db_sess.close()
+            return {"log": 'PermissionError'}
         message = db_sess.query(Message).filter(Message.id == data["mess_id"]).first()
         new_mail = Message()
         new_mail.chat_id = data["mail_id_chat"]
