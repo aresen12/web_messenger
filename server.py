@@ -3,13 +3,14 @@ import os
 
 from flask import Flask, request, render_template, redirect
 from forms.login_form import LoginForm
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, logout_user
 from data import db_session
 from data.user import User
 from forms.register_form import RegisterForm
 from data.message import Message
 from data.chat import Chat
 from data.File import File
+from data.black_list import Black
 
 app = Flask(__name__)
 
@@ -82,9 +83,17 @@ def main():
     
 if __name__ == "__main__":
     try:
+        os.chdir("static/img/data")
+        os.chdir("..")
+        os.chdir("..")
+        os.chdir("..")
         db_session.global_init('db/master_paste.db')
     except Exception:
         os.mkdir("db")
+        os.chdir("static/img")
+        os.mkdir("data")
+        os.chdir("..")
+        os.chdir("..")
         db_session.global_init('db/master_paste.db')
     from mess import mg
     app.register_blueprint(mg)

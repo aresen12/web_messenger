@@ -8,6 +8,7 @@ from flask_login import current_user
 from data.message import Message, get_summ_id
 from data.chat import Chat, get_chats
 from data.File import File, get_files
+from data.black_list import Black
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
@@ -17,7 +18,7 @@ def m_st():
     if request.method == 'GET':
         if current_user.is_authenticated:
             chats = get_chats()
-            return render_template("messenger.html", title='ответить', chats=chats, email_recipient="")
+            return render_template("messenger.html", title='Kazbek', chats=chats)
         return redirect("/login")
     else:
         f = request.files["img"]
@@ -38,14 +39,15 @@ def m_st():
             file_db = File()
             file_db.name = f.filename
             ex = f.filename.split(".")[-1]
-            os.chdir('static/img')
+            os.chdir('static/img/data')
             dd = len(os.listdir())
             os.chdir("..")
             os.chdir("..")
-            file = open(f"static/img/{dd}.{ex}", mode="wb")
+            os.chdir("..")
+            file = open(f"static/img/data/{dd}.{ex}", mode="wb")
             file.write(f.read())
             file.close()
-            file_db.path = f"{dd}.{ex}"
+            file_db.path = f"data/{dd}.{ex}"
             db_sess.add(file_db)
             db_sess.commit()
             file_db.chat_id = chat_id
@@ -63,6 +65,13 @@ def m_st():
 def create_chat():
     data = request.get_json()
     db_sess = db_session.create_session()
+    if data["primary"]:
+        mem = data["list_members"].split()
+        mem1 = db_sess.query(Black.list_b).filter(Black.id_user == mem[0]).first()
+        mem2 = db_sess.query(Black.list_b).filter(Black.id_user == mem[1]).first()
+        if (not (mem2 is None) and (mem[1] in mem2[0].split() or mem[0] in mem2[0].split()) ) or (not (mem1 is None) and (mem[0] in mem1[0].split() or mem[1] in mem1[0].split())):
+            db_sess.close()
+            return {"log": 'PermissionError'}
     chat = Chat()
     chat.name = data["name"]
     chat.members = data["list_members"]  # list of id users
@@ -224,9 +233,21 @@ def block_chat():
     data = request.get_json()  # нужно добавить в чёрный список у пользователя
     db_sess = db_session.create_session()
     chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
+    mem = chat.members.split()
     if str(current_user.id) in chat.members.split():
         chat.status = 3
-    db_sess.commit()
+        if chat.primary_chat:
+            bl_list = db_sess.query(Black).filter(Black.id_user == current_user.id).first()
+            print(bl_list)
+            del mem[mem.index(str(current_user.id))]
+            if bl_list is None:
+                bl_list = Black()
+                bl_list.id_user = current_user.id
+                bl_list.list_b = mem[0]
+                db_sess.add(bl_list)
+            else:
+                bl_list.list_b += mem[0]
+        db_sess.commit()
     db_sess.close()
     return {"log": True}
 
