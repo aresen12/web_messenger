@@ -154,3 +154,23 @@ function set_bg(num) {
     }
     document.cookie = "bg="+ num;
 }
+
+//$('.plus_btn, .menu_nav>a').click(function() {
+//  $('.plus_btn').toggleClass('open');
+//  $('.menu_nav').toggleClass('menu_nav_active');
+//});
+
+
+
+document.addEventListener('click', (e) => {
+var div = document.querySelector('#menu_create_div');
+  var withinBoundaries = e.composedPath().includes(div);
+    if (!withinBoundaries) {
+    document.getElementById("how_create").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
+  }
+  var div2 = document.querySelector('#menu_chat_div_all');
+  var withinBoundaries = e.composedPath().includes(div2);
+    if (!withinBoundaries) {
+    document.getElementById("menu-chat").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
+  }
+})
