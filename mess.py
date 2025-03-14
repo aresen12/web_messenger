@@ -69,7 +69,8 @@ def create_chat():
         mem = data["list_members"].split()
         mem1 = db_sess.query(Black.list_b).filter(Black.id_user == mem[0]).first()
         mem2 = db_sess.query(Black.list_b).filter(Black.id_user == mem[1]).first()
-        if (not (mem2 is None) and (mem[1] in mem2[0].split() or mem[0] in mem2[0].split()) ) or (not (mem1 is None) and (mem[0] in mem1[0].split() or mem[1] in mem1[0].split())):
+        if (not (mem2 is None) and (mem[1] in mem2[0].split() or mem[0] in mem2[0].split())) or (
+                not (mem1 is None) and (mem[0] in mem1[0].split() or mem[1] in mem1[0].split())):
             db_sess.close()
             return {"log": 'PermissionError'}
     chat = Chat()
@@ -360,11 +361,11 @@ def get_not_read():
 
 @mg.route("/mail", methods=["POST"])
 def mail():
-
     if current_user.is_authenticated:
         data = request.get_json()
         db_sess = db_session.create_session()
-        if not (str(current_user.id) in db_sess.query(Chat).filter(Chat.id == data["mail_id_chat"]).first().members.split()):
+        if not (str(current_user.id) in db_sess.query(Chat).filter(
+                Chat.id == data["mail_id_chat"]).first().members.split()):
             db_sess.close()
             return {"log": 'PermissionError'}
         message = db_sess.query(Message).filter(Message.id == data["mess_id"]).first()
@@ -394,3 +395,43 @@ def get_cnt_m():
     return {"log": "PermissionError"}
 
 
+@mg.route("/get_json_mess_cast", methods=["POST"])
+def get_json_mess():
+    if current_user.is_authenticated:
+        data = request.get_json()
+        db_sess = db_session.create_session()
+        mem = db_sess.query(Chat.members).filter(Chat.id == data["chat_id"]).first()
+        if not (str(current_user.id) in mem[0].split()):
+            return {"log": "Permission error"}
+        messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).all()
+        js = {"messages": [], "files": get_files(data["chat_id"], db_sess), "current_user": current_user.id}
+        summ = 0
+        f = False
+        messages.sort(key=lambda x: x.time)
+        for m in range(0, data["cnt"], -1):
+            summ += messages[m].id
+            if messages[m].id_sender != js["current_user"] and not m.read:
+                m.read = 1
+                f = True
+            js["messages"].append({"id": messages[m].id, "read": messages[m].read, "html_m": messages[m].html_m,
+                                   "text": messages[m].message, 'time': messages[m].time,
+                                   "file": messages[m].img, "id_sender": messages[m].id_sender,
+                                   "name_sender": messages[m].name_sender})
+        if f:
+            db_sess.commit()
+        db_sess.close()
+        js["summ_id"] = summ
+        return js
+
+
+@mg.route("/get_cnt_m_cast", methods=["POST"])
+def get_cnt_m_cast():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
+    ch_mem = chat.members.split()
+    if str(current_user.id) in ch_mem:
+        c = db_sess.query(Message.id).filter(Message.chat_id == data["chat_id"]).all()
+        return {"len": len(c[-20:])}
+    db_sess.close()
+    return {"log": "PermissionError"}

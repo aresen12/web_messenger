@@ -205,9 +205,10 @@ function submit_form() {
                 gener_html(json["id"], text, json["time"], html_m, "",  0, 0, "");
                 if (window.location.hash == "#pos"){
                 window.location.hash = "#pos2";
+
             }else{
             window.location.hash = "#pos";
-            }
+            }go();
             },
             error: function(err) {
                 console.error(err);
@@ -225,14 +226,6 @@ function submit_form() {
     }
 
 }
-
-
-document.addEventListener('click', function(e){
-      if (menu_id != "" && mobile != true){
-        document.getElementById(menu_id).style.display = "none";
-        globalThis.menu_id = "";
-      };
-      })
 
 
 document.querySelector('.form2').addEventListener('submit', function(e) {
@@ -268,6 +261,7 @@ document.addEventListener('keydown', function(event) {
 
 
 function show(){
+    globalThis.position = document.getElementById("about").selectionStart;
     if (document.getElementById("chat_id").value != "") {
       $.ajax({
     url: '/m/get_json_mess',
@@ -299,20 +293,7 @@ function show(){
             gener_html(c_m["id"], c_m["text"], time[1].split(".")[0], c_m["html_m"], file, other, c_m['read'], c_m["name_sender"]);
         }
         cont.innerHTML += '<div id="pos"><div id="pos2"></div></div>';
-        var scrollTop = $(window).scrollTop(),
-        elementOffset = $('#content').offset().top,
-        distance = (elementOffset - scrollTop);
-        if (distance < globalThis.global_distans){
-            globalThis.global_distans = distance
-        }
-        globalThis.position = document.getElementById("about").selectionStart;
-        if (-400 < globalThis.global_distans - distance){
-            if (window.location.hash == "#pos"){
-                window.location.hash = "#pos2";
-            }else{
-            window.location.hash = "#pos";
-            }
-        }
+        scroll();
         go()
         },
     error: function(err) {
@@ -320,6 +301,7 @@ function show(){
     }
 });}
     }
+
 
 function notification (text, chat_name) {
     (async () => {
@@ -530,6 +512,7 @@ function block_user() {
     }
 }
 
+
 function answer(id_mess){
     var la = document.getElementById("edit-label");
     var t = document.getElementById("text" + id_mess).textContent.trim();
@@ -562,6 +545,7 @@ function show_create_primary_chat(id){
     get_users_primary(id);
 }
 
+
 function get_users (id){
     $.ajax({
         url: '/m/get_users',
@@ -573,7 +557,7 @@ function get_users (id){
         var html = '<h2>Создать чаты</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
         for (let i = 0; i < json["users"].length; i++){
             if (json["c_user"] != json["users"][i][2]){
-               html = html + '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2] + ')">' + json["users"][i][0] + '</label><br>';
+               html = html + '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2]+ ", 'list_members'" + ')">' + json["users"][i][0] + '</label><br>';
             }
         }
         var menu = document.getElementById("global_menu");
@@ -612,43 +596,6 @@ function get_users_primary (id){
 }
 
 
-function add_chat(new_mem){
-    var list_mem = document.getElementById("list_members");
-    list_mem.value = list_mem.value.trim();
-    t_m = list_mem.value.split(" ");
-    var delete_fl = true;
-    for (i=0; i <= t_m.length; i++){
-            if (new_mem == t_m[i]){
-                t_m.splice(i, i + 1);
-                list_members.value = t_m.join(" ");
-                delete_fl = false;
-            };
-        };
-    if (delete_fl) {
-        list_mem.value += " " + new_mem;
-    }
-}
-
-
-// добавление пользователя в уже существующий чат
-function add_chat_user(new_mem){
-    var list_mem = document.getElementById("list_of_new_u");
-    list_mem.value = list_mem.value.trim();
-    t_m = list_mem.value.split(" ");
-    if (new_mem + "" in t_m){ //  удаление из списка
-        for (i=0; i < t_m.length; i++){
-            if (new_mem == t_m[i]){
-                t_m.splice(i, i + 1);
-                list_members.value = t_m.join(" ");
-                console.log("deleted");
-            };
-        };
-    } else {
-        list_mem.value += " " + new_mem;
-    };
-}
-
-
 
 function edit_name_chat(){
     $.ajax({
@@ -667,6 +614,23 @@ function edit_name_chat(){
 
 }
 
+
+function add_chat(new_mem, name_id){
+    var list_mem = document.getElementById(name_id);
+    list_mem.value = list_mem.value.trim();
+    t_m = list_mem.value.split(" ");
+    var delete_fl = true;
+    for (i=0; i <= t_m.length; i++){
+            if (new_mem == t_m[i]){
+                t_m.splice(i, i + 1);
+                list_members.value = t_m.join(" ");
+                delete_fl = false;
+            };
+        };
+    if (delete_fl) {
+        list_mem.value += " " + new_mem;
+    }
+}
 
 function create_group (){
     var name = document.getElementById("name_new_chat").value;
@@ -894,7 +858,7 @@ function add_in_chat_new(){
     document.getElementById("users").style.display = "none";
     global_menu.innerHTML += '<div id="add_new_users"></div>';
     var add_new_users = document.getElementById("add_new_users");
-    add_new_users.innerHTML = '<input style="display:none;" id="list_of_new_u">'
+    add_new_users.innerHTML = '<input style="display:none;" id="list_of_new_u">';
     $.ajax({
     url: '/m/get_users',
     type: 'GET',
@@ -905,7 +869,7 @@ function add_in_chat_new(){
             for (let i = 0; i < json["users"].length; i++){
                 if (json["users"][i][2] in sp || json["c_user"] == json["users"][i][2]){
                 } else{
-                add_new_users.innerHTML += '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat_user(' + json["users"][i][2] + ')">' + json["users"][i][0] + '</label><br>';
+                add_new_users.innerHTML += '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2]+ ", 'list_of_new_u'" + ')">' + json["users"][i][0] + '</label><br>';
             }
             }
             add_new_users.innerHTML += '<button onclick="submit_new_users()" class="edit-btn">Добавить</button>'
@@ -985,6 +949,6 @@ window.onblur = function() {
 function injectEmojisToList(e) {
         document.getElementById("about").value += e.innerHTML;
         globalThis.position = document.getElementById("about").selectionStart;
-                go();
+        go();
     }
 

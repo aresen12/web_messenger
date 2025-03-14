@@ -114,7 +114,6 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
 
     new_mess += '<div class="context-menu-open" id="mm' + id_m + '" style="display:none;"></div>';
     document.getElementById("content").innerHTML += new_mess;
-    go();
 }
 
 
@@ -155,22 +154,37 @@ function set_bg(num) {
     document.cookie = "bg="+ num;
 }
 
-//$('.plus_btn, .menu_nav>a').click(function() {
-//  $('.plus_btn').toggleClass('open');
-//  $('.menu_nav').toggleClass('menu_nav_active');
-//});
-
-
 
 document.addEventListener('click', (e) => {
-var div = document.querySelector('#menu_create_div');
-  var withinBoundaries = e.composedPath().includes(div);
+    var div = document.querySelector('#menu_create_div');
+    var withinBoundaries = e.composedPath().includes(div);
+    var div2 = document.querySelector('#menu_chat_div_all');
+    var flag = e.composedPath().includes(div2);
     if (!withinBoundaries) {
-    document.getElementById("how_create").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
-  }
-  var div2 = document.querySelector('#menu_chat_div_all');
-  var withinBoundaries = e.composedPath().includes(div2);
-    if (!withinBoundaries) {
-    document.getElementById("menu-chat").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
-  }
+        document.getElementById("how_create").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
+    };
+    if (!flag) {
+        document.getElementById("menu-chat").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
+    };
+    if (menu_id != "" && mobile != true){
+        document.getElementById(menu_id).style.display = "none";
+        globalThis.menu_id = "";
+      };
 })
+
+
+function scroll(){
+     var scrollTop = $(window).scrollTop(),
+        elementOffset = $('#content').offset().top,
+        distance = (elementOffset - scrollTop);
+     if (distance < globalThis.global_distans){
+         globalThis.global_distans = distance;
+     };
+    if (-400 < globalThis.global_distans - distance){
+         if (window.location.hash == "#pos"){
+                window.location.hash = "#pos2";
+         }else{
+            window.location.hash = "#pos";
+            }
+        }
+}
