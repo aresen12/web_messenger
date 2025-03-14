@@ -188,3 +188,34 @@ function scroll(){
             }
         }
 }
+
+
+function edit_prof_html(){
+    var menu = document.getElementById("global_menu");
+    document.getElementById("global_menu_d") .style.display = "block";
+    $.ajax({
+        url: '/m/c_get_user',
+        type: 'GET',
+        dataType: 'json',
+        contentType:'application/json',
+        success: function(json){
+            menu.innerHTML = '<h2>Редактировать профиль</h2><button onclick="show_global_menu(' + "'global_menu_d'" + '\
+            , ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
+            menu.innerHTML += '<div class="edit-cont" id="p_group" style="display:none;"></div>';
+            menu.innerHTML  += '<div class="edit-cont" id="edit_cont"><label>Имя</label><br><input id="name_edit"\
+             name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br></div>';
+            var edit_cont = document.getElementById("edit_cont");
+            edit_cont.innerHTML += '<input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br>\
+            <button class="edit-btn" onclick="edit_prof_post()">Сохранить</button>\
+            <button class="edit-btn" onclick="showDiv(' + "'p_group', 'edit_cont'" +')">Сменить пароль</button>';
+            var p_group = document.getElementById("p_group");
+            p_group.innerHTML = 'Для смены пародя введите старый пароль<br><input name="password_old" id="password_old"\
+             type="password"><br><label for="password_new">Новый пароль</label><br><input name="password_new"\
+              id="password_new" type="password">';
+            p_group.innerHTML += '<br><button class="edit-btn" onclick="post_password()">Сменить</button>';
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}

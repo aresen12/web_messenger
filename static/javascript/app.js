@@ -6,6 +6,7 @@ var global_distans = 0;
 var menu_id = "";
 var mobile = false;
 var vis = true;
+var position = 0;
 
 
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
@@ -203,12 +204,8 @@ function submit_form() {
              "html": html_m}),
             success: function(json){
                 gener_html(json["id"], text, json["time"], html_m, "",  0, 0, "");
-                if (window.location.hash == "#pos"){
-                window.location.hash = "#pos2";
-
-            }else{
-            window.location.hash = "#pos";
-            }go();
+                scroll();
+                go();
             },
             error: function(err) {
                 console.error(err);
@@ -218,11 +215,8 @@ function submit_form() {
     }else {
         var b = x.submit();
     }
-//        var rec = document.getElementById("chat_id").value;
      x.reset();
-//        document.getElementById("chat_id").value = rec;
    document.getElementById("imageName").innerHTML = "";
-//        show();
     }
 
 }
@@ -363,40 +357,6 @@ function create_chat(list_members, name, is_primary){
     }
 });
     }
-
-setInterval(get_new_m, 10000);
-var position = 0;
-
-
-function edit_prof_html(){
-    var menu = document.getElementById("global_menu");
-    document.getElementById("global_menu_d") .style.display = "block";
-    $.ajax({
-        url: '/m/c_get_user',
-        type: 'GET',
-        dataType: 'json',
-        contentType:'application/json',
-        success: function(json){
-            menu.innerHTML = '<h2>Редактировать профиль</h2><button onclick="show_global_menu(' + "'global_menu_d'" + '\
-            , ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
-            menu.innerHTML += '<div class="edit-cont" id="p_group" style="display:none;"></div>';
-            menu.innerHTML  += '<div class="edit-cont" id="edit_cont"><label>Имя</label><br><input id="name_edit"\
-             name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br></div>';
-            var edit_cont = document.getElementById("edit_cont");
-            edit_cont.innerHTML += '<input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br>\
-            <button class="edit-btn" onclick="edit_prof_post()">Сохранить</button>\
-            <button class="edit-btn" onclick="showDiv(' + "'p_group', 'edit_cont'" +')">Сменить пароль</button>';
-            var p_group = document.getElementById("p_group");
-            p_group.innerHTML = 'Для смены пародя введите старый пароль<br><input name="password_old" id="password_old"\
-             type="password"><br><label for="password_new">Новый пароль</label><br><input name="password_new"\
-              id="password_new" type="password">';
-            p_group.innerHTML += '<br><button class="edit-btn" onclick="post_password()">Сменить</button>';
-            },
-        error: function(err) {
-            console.error(err);
-        }
-    });
-}
 
 
 function send(id){
@@ -952,3 +912,5 @@ function injectEmojisToList(e) {
         go();
     }
 
+
+setInterval(get_new_m, 10000);
