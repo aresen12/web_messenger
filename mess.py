@@ -18,7 +18,7 @@ def m_st():
     if request.method == 'GET':
         if current_user.is_authenticated:
             chats = get_chats()
-            return render_template("messenger.html", title='Kazbek', chats=chats)
+            return render_template("messenger.html", title='Kazbek', chats=chats, my_bg=current_user.id)
         return redirect("/login")
     else:
         f = request.files["img"]
@@ -435,3 +435,13 @@ def get_cnt_m_cast():
         return {"len": len(c[-20:])}
     db_sess.close()
     return {"log": "PermissionError"}
+
+
+@mg.route("/users_bg", methods=["POST"])
+def users_bg():
+    file = request.files["file"]
+    print(file)
+    file2 = open(f"static/img/bg_users/{current_user.id}.jpg", mode="wb+")
+    file2.write(file.read())
+    file2.close()
+    return {"log": True}

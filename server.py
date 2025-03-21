@@ -89,11 +89,12 @@ if __name__ == "__main__":
         os.chdir("..")
         db_session.global_init('db/master_paste.db')
     except Exception:
-        os.mkdir("db")
         os.chdir("static/img")
+        os.mkdir("bg_users")
         os.mkdir("data")
         os.chdir("..")
         os.chdir("..")
+        os.mkdir("db")
         db_session.global_init('db/master_paste.db')
     from mess import mg
     app.register_blueprint(mg)

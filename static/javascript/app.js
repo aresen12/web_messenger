@@ -226,7 +226,18 @@ document.querySelector('.form2').addEventListener('submit', function(e) {
       e.preventDefault();
       go();
 })
+document.querySelector('#bg_form').addEventListener('submit', function(e) {
+  event.preventDefault(); // Отмена стандартного поведения формы
+  const fileInput = document.getElementById('input');
+  const file = fileInput.files[0];
+  if (file) {
+    uploadFile(file); // Передаем файл в функцию для загрузки
+  } else {
+    alert('Пожалуйста, выберите файл.');
+  }
 
+
+})
 
 document.addEventListener('keydown', function(event) {
     var x = document.querySelector('form');

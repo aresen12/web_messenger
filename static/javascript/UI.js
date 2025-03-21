@@ -154,6 +154,12 @@ function set_bg(num) {
     document.cookie = "bg="+ num;
 }
 
+function set_bg_my(num) {
+
+    document.getElementById("background-img").src = "/static/img/bg_users/" + num + ".jpg";
+
+    document.cookie = "bg=5";
+}
 
 document.addEventListener('click', (e) => {
     var div = document.querySelector('#menu_create_div');
@@ -218,4 +224,36 @@ function edit_prof_html(){
             console.error(err);
         }
     });
+}
+function uploadFile(file) {
+  const xhr = new XMLHttpRequest(); // Создаем новый XMLHttpRequest
+  const formData = new FormData(); // Используем FormData для отправки файла
+
+  formData.append('file', file); // Добавляем файл в объект FormData
+
+  // Обработчик для отслеживания прогресса загрузки
+  xhr.upload.addEventListener('progress', function (event) {
+    if (event.lengthComputable) {
+      const percentComplete = (event.loaded / event.total) * 100;
+      document.getElementById('progressBar').value = percentComplete; // Обновляем прогресс-бар
+    }
+  });
+
+  // Обработчик на случай успешной загрузки
+  xhr.addEventListener('load', function () {
+    if (xhr.status === 200) {
+      document.getElementById('status').textContent = 'Файл успешно загружен!';
+      document.getElementById("bg5").click();
+    } else {
+      document.getElementById('status').textContent = 'Ошибка при загрузке файла.';
+    }
+  });
+
+  // Обработчик для ошибок
+  xhr.addEventListener('error', function () {
+    document.getElementById('status').textContent = 'Произошла ошибка при загрузке файла.';
+  });
+
+  xhr.open('POST', '/m/users_bg'); // Указываем метод и URL для отправки файла
+  xhr.send(formData); // Отправляем данные
 }

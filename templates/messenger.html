@@ -7,9 +7,10 @@
       .file-label{
         cursor:pointer;
       }
+
 </style>
 <div style="display:flex;">
-<div id="email" class="content-email">
+    <div id="email" class="content-email">
     </div>
     <div style="position:absolute; bottom:100px; left: 25vw;" id="menu_create_div">
         <div class="context-menu-open" id="how_create" style="display:none;bottom:40px; ">
@@ -18,54 +19,119 @@
                 <li onclick="show_create_primary_chat({{current_user.id}})">Добавить контакт</li>
             </ul>
         </div>
-    <button  id="plus_btn" class="info-btn" onclick="showdiv1('how_create')">
-    <svg  width="40px" viewBox="-3.2 -3.2 38.40 38.40" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-3.2" y="-3.2" width="38.40" height="38.40" rx="19.2" fill="#086faf" strokewidth="0"></rect></g>
-        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>добавить чат</title> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" > <g id="Icon-Set"  transform="translate(-464.000000, -1087.000000)" fill="#ffffff">
-        <path d="M480,1117 C472.268,1117 466,1110.73 466,1103 C466,1095.27 472.268,1089 480,1089 C487.732,1089 494,1095.27 494,1103 C494,1110.73 487.732,1117 480,1117 L480,1117 Z M480,1087 C471.163,1087 464,1094.16 464,1103 C464,1111.84 471.163,1119 480,1119
+        <button id="plus_btn" class="info-btn" onclick="showdiv1('how_create')">
+            <svg width="40px" viewBox="-3.2 -3.2 38.40 38.40" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 fill="#ffffff">
+                <g id="SVGRepo_bgCarrier" stroke-width="0">
+                    <rect x="-3.2" y="-3.2" width="38.40" height="38.40" rx="19.2" fill="#086faf"
+                          strokewidth="0"></rect>
+                </g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier"><title>добавить чат</title>
+                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="Icon-Set" transform="translate(-464.000000, -1087.000000)" fill="#ffffff">
+                            <path d="M480,1117 C472.268,1117 466,1110.73 466,1103 C466,1095.27 472.268,1089 480,1089 C487.732,1089 494,1095.27 494,1103 C494,1110.73 487.732,1117 480,1117 L480,1117 Z M480,1087 C471.163,1087 464,1094.16 464,1103 C464,1111.84 471.163,1119 480,1119
         C488.837,1119 496,1111.84 496,1103 C496,1094.16 488.837,1087 480,1087 L480,1087 Z M486,1102 L481,1102
-        L481,1097 C481,1096.45 480.553,1096 480,1096 C479.447,1096 479,1096.45 479,1097 L479,1102 L474,1102 C473.447,1102 473,1102.45 473,1103 C473,1103.55 473.447,1104 474,1104 L479,1104 L479,1109 C479,1109.55 479.447,1110 480,1110 C480.553,1110 481,1109.55 481,1109 L481,1104 L486,1104 C486.553,1104 487,1103.55 487,1103 C487,1102.45 486.553,1102 486,1102 L486,1102 Z" id="plus-circle" >
-        </path> </g> </g> </g></svg>
-    </button>
+        L481,1097 C481,1096.45 480.553,1096 480,1096 C479.447,1096 479,1096.45 479,1097 L479,1102 L474,1102 C473.447,1102 473,1102.45 473,1103 C473,1103.55 473.447,1104 474,1104 L479,1104 L479,1109 C479,1109.55 479.447,1110 480,1110 C480.553,1110 481,1109.55 481,1109 L481,1104 L486,1104 C486.553,1104 487,1103.55 487,1103 C487,1102.45 486.553,1102 486,1102 L486,1102 Z"
+                                  id="plus-circle">
+                            </path>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </button>
     </div>
-<div id="settings" class="settings" style="display:none;">
-    <div style="display:flex;">
-    <h2  style="width:200px;">{{current_user.name}}</h2><a class="info-btn" href="/logout" >
-        <svg fill="#000000" height="30px" width="64px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 384.971 384.971" xml:space="preserve" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g id="Sign_Out"> <path d="M180.455,360.91H24.061V24.061h156.394c6.641,0,12.03-5.39,12.03-12.03s-5.39-12.03-12.03-12.03H12.03 C5.39,0.001,0,5.39,0,12.031V372.94c0,6.641,5.39,12.03,12.03,12.03h168.424c6.641,0,12.03-5.39,12.03-12.03 C192.485,366.299,187.095,360.91,180.455,360.91z"></path> <path d="M381.481,184.088l-83.009-84.2c-4.704-4.752-12.319-4.74-17.011,0c-4.704,4.74-4.704,12.439,0,17.179l62.558,63.46H96.279 c-6.641,0-12.03,5.438-12.03,12.151c0,6.713,5.39,12.151,12.03,12.151h247.74l-62.558,63.46c-4.704,4.752-4.704,12.439,0,17.179 c4.704,4.752,12.319,4.752,17.011,0l82.997-84.2C386.113,196.588,386.161,188.756,381.481,184.088z"></path> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </g> </g></svg>
-</a></div>
-    <h3>{{current_user.email }}</h3>
-    <button onclick="edit_prof_html()"  class="edit-btn"><svg width="20px" viewBox="0 -0.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>edit_cover [#1481]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-419.000000, -359.000000)" fill="#ffffff"> <g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M384,209.210475 L384,219 L363,219 L363,199.42095 L373.5,199.42095 L373.5,201.378855 L365.1,201.378855 L365.1,217.042095 L381.9,217.042095 L381.9,209.210475 L384,209.210475 Z M370.35,209.51395 L378.7731,201.64513 L380.4048,203.643172 L371.88195,212.147332 L370.35,212.147332 L370.35,209.51395 Z M368.25,214.105237 L372.7818,214.105237 L383.18415,203.64513 L378.8298,199 L368.25,208.687714 L368.25,214.105237 Z" id="edit_cover-[#1481]"> </path> </g> </g> </g> </g></svg>Редактировать</button>
-    <fieldset>
-  <legend>Settings</legend>
-  <div>
-    <input onclick="set_enter(1)" type="radio" id="E1" name="drone" checked />
-    <label for="E1">Send by Enter</label>
-  </div>
-  <div>
-    <input type="radio" onclick="set_enter(2)" id="E2" name="drone" />
-    <label for="E2">Send by Ctrl + Enter</label>
-  </div>
-</fieldset>
-    <input type="checkbox" onclick="cast()">
-    <label>Частичная отрисовка</label>
-    <fieldset>
-    <legend>Фон</legend>
-  <div>
-    <input onclick="set_bg(1)" type="radio" id="bg1" name="bg" value="2" checked />
-    <label for="bg1">Фон №1</label>
-  </div>
-  <div>
-    <input type="radio" onclick="set_bg(2)" id="bg2" name="bg" value="3" />
-    <label for="bg2">Фон №2</label>
-  </div>
-<div>
-    <input type="radio" onclick="set_bg(3)" id="bg3" name="bg" value="dewey" />
-    <label for="bg3">Фон №3</label>
-  </div>
-        <div>
-    <input type="radio" onclick="set_bg(4)" id="bg4" name="bg" value="dewey" />
-    <label for="bg4">Фон №4</label>
-  </div>
-</fieldset>
+    <div id="settings" class="settings" style="display:none;">
+        <div style="display:flex;">
+            <h2 style="width:200px;">{{current_user.name}}</h2><a class="info-btn" href="/logout">
+            <svg fill="#000000" height="30px" width="64px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                 xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 384.971 384.971" xml:space="preserve"
+                 stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier"> <g> <g id="Sign_Out"> <path
+                        d="M180.455,360.91H24.061V24.061h156.394c6.641,0,12.03-5.39,12.03-12.03s-5.39-12.03-12.03-12.03H12.03 C5.39,0.001,0,5.39,0,12.031V372.94c0,6.641,5.39,12.03,12.03,12.03h168.424c6.641,0,12.03-5.39,12.03-12.03 C192.485,366.299,187.095,360.91,180.455,360.91z"></path>
+                    <path d="M381.481,184.088l-83.009-84.2c-4.704-4.752-12.319-4.74-17.011,0c-4.704,4.74-4.704,12.439,0,17.179l62.558,63.46H96.279 c-6.641,0-12.03,5.438-12.03,12.151c0,6.713,5.39,12.151,12.03,12.151h247.74l-62.558,63.46c-4.704,4.752-4.704,12.439,0,17.179 c4.704,4.752,12.319,4.752,17.011,0l82.997-84.2C386.113,196.588,386.161,188.756,381.481,184.088z"></path> </g>
+                    <g> </g>
+                    <g> </g>
+                    <g> </g>
+                    <g> </g>
+                    <g> </g>
+                    <g> </g> </g> </g></svg>
+        </a></div>
+        <h3>{{current_user.email }}</h3>
+        <button onclick="edit_prof_html()" class="edit-btn">
+            <svg width="20px" viewBox="0 -0.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                 xmlns:xlink="http://www.w3.org/1999/xlink" fill="#ffffff">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier"><title>edit_cover [#1481]</title>
+                    <desc>Created with Sketch.</desc>
+                    <defs></defs>
+                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g id="Dribbble-Light-Preview" transform="translate(-419.000000, -359.000000)" fill="#ffffff">
+                            <g id="icons" transform="translate(56.000000, 160.000000)">
+                                <path d="M384,209.210475 L384,219 L363,219 L363,199.42095 L373.5,199.42095 L373.5,201.378855 L365.1,201.378855 L365.1,217.042095 L381.9,217.042095 L381.9,209.210475 L384,209.210475 Z M370.35,209.51395 L378.7731,201.64513 L380.4048,203.643172 L371.88195,212.147332 L370.35,212.147332 L370.35,209.51395 Z M368.25,214.105237 L372.7818,214.105237 L383.18415,203.64513 L378.8298,199 L368.25,208.687714 L368.25,214.105237 Z"
+                                      id="edit_cover-[#1481]"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+            Редактировать
+        </button>
+        <fieldset>
+            <legend>Settings</legend>
+            <div>
+                <input onclick="set_enter(1)" type="radio" id="E1" name="drone" checked/>
+                <label for="E1">Send by Enter</label>
+            </div>
+            <div>
+                <input type="radio" onclick="set_enter(2)" id="E2" name="drone"/>
+                <label for="E2">Send by Ctrl + Enter</label>
+            </div>
+        </fieldset>
+        <iframe name="b" style="display:none;"></iframe>
+        <form target="b" action="users_bg" method="post" enctype="multipart/form-data" id="bg_form">
+            свой фон
+            <div style="margin:0px;">
+                <label class="file-label" for="input">
+                    <input style="display:block;" name="bg" id="input" type="file" accept="image/png, image/jpeg"/>
+                </label>
+            </div>
+            <button type="submit" class="edit-btn" id="bg_btn">Отправить</button>
+            <progress id="progressBar" value="0" max="100"></progress>
+   <div id="status"></div>
+        </form>
+        <input type="checkbox" onclick="cast()">
+        <label>Частичная отрисовка</label>
+        <fieldset>
+            <legend>Фон</legend>
+            <div>
+                <input onclick="set_bg(1)" type="radio" id="bg1" name="bg" value="2" checked/>
+                <label for="bg1">Фон №1</label>
+            </div>
+            <div>
+                <input type="radio" onclick="set_bg(2)" id="bg2" name="bg" value="3"/>
+                <label for="bg2">Фон №2</label>
+            </div>
+            <div>
+                <input type="radio" onclick="set_bg(3)" id="bg3" name="bg" value="dewey"/>
+                <label for="bg3">Фон №3</label>
+            </div>
+            <div>
+                <input type="radio" onclick="set_bg(4)" id="bg4" name="bg" value="dewey"/>
+                <label for="bg4">Фон №4</label>
+
+
+            </div>
+            <div>
+                <input type="radio" onclick="set_bg_my({{my_bg}})" id="bg5" name="bg" value="dewey"/>
+                <label for="bg5">Свой</label>
+
+
+            </div>
+        </fieldset>
+
     </div>
     <img src="" class="background-img" id="background-img">
     <div class="mess-admin" id="container-mess">
@@ -75,12 +141,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
             var id = {{current_user.id}};
+
 </script>
 
-<iframe name="votar" style="display:none;"></iframe>
 <div class="form-group">
-    <div id="edit-label" class="alert-secondary label-edit"  style="display:none;">    </div>
-    <div class="emojis" id="emojis_menu" style="display:none;font-size:15px; position:absolute;bottom:100px; right: 50px; width:20vw">
+    <div id="edit-label" class="alert-secondary label-edit" style="display:none;"></div>
+    <div class="emojis" id="emojis_menu"
+         style="display:none;font-size:15px; position:absolute;bottom:100px; right: 50px; width:20vw">
 
         <br>
         <button class="info-btn" onclick="injectEmojisToList(this)">😃</button>
@@ -136,54 +203,59 @@
             <button class="info-btn" onclick="injectEmojisToList(this)">🧸</button>
             <button class="info-btn" onclick="injectEmojisToList(this)">💍</button>
     </div>
-    <form id="form" method="post" class="form2" enctype="multipart/form-data" target="votar" contenteditable="false" >
+    <form id="form" method="post" class="form2" enctype="multipart/form-data" target="votar" contenteditable="false">
         <div class="form-container">
-            <textarea class="text-form form-control" id="about" name="about" contenteditable="true" style="resize: none;"></textarea>
+            <textarea class="text-form form-control" id="about" name="about" contenteditable="true"
+                      style="resize: none;"></textarea>
             <button onclick="submit_form();" class="btn btn-primary submit_btn">
-            <svg width="30px" height="29px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 466.897 466.897"
-                 style="enable-background:new 0 0 466.897 466.897;" xml:space="preserve"><g><g><polygon style="fill:#010002;" points="374.105,73.807 203.974,318.03 203.974,432.042 259.801,358.275 410.505,466.897 441.012,0 25.885,189.672 143.823,274.681 "/></g></g></svg>
+                <svg width="30px" height="29px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                     xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 466.897 466.897"
+                     style="enable-background:new 0 0 466.897 466.897;" xml:space="preserve"><g><g><polygon style="fill:#010002;" points="374.105,73.807 203.974,318.03 203.974,432.042 259.801,358.275 410.505,466.897 441.012,0 25.885,189.672 143.823,274.681 "/></g></g></svg>
             </button>
-        <div style="margin:0px;">
-            <label class="file-label" for="inputTag">
-                <svg width="30px" height="30px" id="object" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                    <g id="_16" data-name="16">
-                        <path d="m144.407 507.882a116.583 116.583 0 0 1 -82.436-199.018l205.329-205.329a83.054 83.054 0 0 1 117.457 117.457l-181.621 181.622a16 16 0 0 1 -22.628-22.627l181.622-181.623a51.054 51.054 0 1 0 -72.2-72.2l-205.33 205.328a84.581 84.581 0 1 0 119.615 119.616l213.367-213.366a118.109 118.109 0 1 0 -167.032-167.03l-189.658 189.658a16 16 0 0 1 -22.627-22.627l189.658-189.659c58.528-58.527 153.76-58.526 212.285 0a150.109 150.109 0 0 1 0 212.286l-213.366 213.365a115.815 115.815 0 0 1 -82.435 34.147z"/>
-                    </g>
-                </svg>
-                <input name="img" id="inputTag" type="file"/>
+            <div style="margin:0px;">
+                <label class="file-label" for="inputTag">
+                    <svg width="30px" height="30px" id="object" viewBox="0 0 512 512"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <g id="_16" data-name="16">
+                            <path d="m144.407 507.882a116.583 116.583 0 0 1 -82.436-199.018l205.329-205.329a83.054 83.054 0 0 1 117.457 117.457l-181.621 181.622a16 16 0 0 1 -22.628-22.627l181.622-181.623a51.054 51.054 0 1 0 -72.2-72.2l-205.33 205.328a84.581 84.581 0 1 0 119.615 119.616l213.367-213.366a118.109 118.109 0 1 0 -167.032-167.03l-189.658 189.658a16 16 0 0 1 -22.627-22.627l189.658-189.659c58.528-58.527 153.76-58.526 212.285 0a150.109 150.109 0 0 1 0 212.286l-213.366 213.365a115.815 115.815 0 0 1 -82.435 34.147z"/>
+                        </g>
+                    </svg>
+                    <input name="img" id="inputTag" type="file"/>
 
-                <span id="imageName"></span>
-            </label>
-        </div>
+                    <span id="imageName"></span>
+                </label>
+            </div>
             <button class="info-btn" onclick="showdiv1('emojis_menu')">😃</button>
-        <div>
-            <textarea id="html_m" name="html_m" style="display:none;"></textarea>
-            <textarea id="chat_id" name="chat_id" style="display:none;"></textarea>
-        </div>
+            <div>
+                <textarea id="html_m" name="html_m" style="display:none;"></textarea>
+                <textarea id="chat_id" name="chat_id" style="display:none;"></textarea>
+            </div>
 
-        <script src="/static/javascript/form.js"></script>
-    </div>
-</form>
-    </div>
-<div class="z-d" id="global_menu_d" style="display:none;" >
-<div id="global_menu" class="global-menu">
+            <script src="/static/javascript/form.js"></script>
+        </div>
+    </form>
 </div>
+<div class="z-d" id="global_menu_d" style="display:none;">
+    <div id="global_menu" class="global-menu">
+    </div>
 </div>
 <a href="#pos">
-<svg class="btn_down" id="btn_down" width="60px" height="60px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
-    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-    <g id="SVGRepo_iconCarrier">
-        <path d="M5.70711 9.71069C5.31658 10.1012 5.31658 10.7344 5.70711 11.1249L10.5993 16.0123C11.3805 16.7927 12.6463 16.7924 13.4271 16.0117L18.3174 11.1213C18.708 10.7308 18.708 10.0976 18.3174 9.70708C17.9269 9.31655 17.2937 9.31655 16.9032 9.70708L12.7176 13.8927C12.3271 14.2833 11.6939 14.2832 11.3034 13.8927L7.12132 9.71069C6.7308 9.32016 6.09763 9.32016 5.70711 9.71069Z"
-              fill="#ffffff"></path>
-    </g>
-</svg></a>
+    <svg class="btn_down" id="btn_down" width="60px" height="60px" viewBox="0 0 24 24" fill="none"
+         xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+        <g id="SVGRepo_iconCarrier">
+            <path d="M5.70711 9.71069C5.31658 10.1012 5.31658 10.7344 5.70711 11.1249L10.5993 16.0123C11.3805 16.7927 12.6463 16.7924 13.4271 16.0117L18.3174 11.1213C18.708 10.7308 18.708 10.0976 18.3174 9.70708C17.9269 9.31655 17.2937 9.31655 16.9032 9.70708L12.7176 13.8927C12.3271 14.2833 11.6939 14.2832 11.3034 13.8927L7.12132 9.71069C6.7308 9.32016 6.09763 9.32016 5.70711 9.71069Z"
+                  fill="#ffffff"></path>
+        </g>
+    </svg>
+</a>
 <div class="watch-img" id="watch" style="display:none;">
     <div class="close">
-    <button onclick="showdiv1('watch')" class="close-btn">❌</button></div>
+        <button onclick="showdiv1('watch')" class="close-btn">❌</button>
+    </div>
     <div class="win">
-            <img  src="" id="watch_img" class="car-img" style="">
+        <img src="" id="watch_img" class="car-img" style="">
     </div>
 </div>
 <script src="/static/javascript/app.js"></script>
