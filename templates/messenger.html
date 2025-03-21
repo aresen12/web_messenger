@@ -99,7 +99,7 @@
                 </label>
             </div>
             <button type="submit" class="edit-btn" id="bg_btn">Отправить</button>
-            <progress id="progressBar" value="0" max="100"></progress>
+            <progress style="display:none;" id="progressBar" value="0" max="100"></progress>
    <div id="status"></div>
         </form>
         <input type="checkbox" onclick="cast()">
@@ -121,14 +121,10 @@
             <div>
                 <input type="radio" onclick="set_bg(4)" id="bg4" name="bg" value="dewey"/>
                 <label for="bg4">Фон №4</label>
-
-
             </div>
             <div>
                 <input type="radio" onclick="set_bg_my({{my_bg}})" id="bg5" name="bg" value="dewey"/>
                 <label for="bg5">Свой</label>
-
-
             </div>
         </fieldset>
 
@@ -141,14 +137,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
             var id = {{current_user.id}};
-
 </script>
-
 <div class="form-group">
     <div id="edit-label" class="alert-secondary label-edit" style="display:none;"></div>
     <div class="emojis" id="emojis_menu"
          style="display:none;font-size:15px; position:absolute;bottom:100px; right: 50px; width:20vw">
-
         <br>
         <button class="info-btn" onclick="injectEmojisToList(this)">😃</button>
         <button class="info-btn" onclick="injectEmojisToList(this)">😁</button>
@@ -203,6 +196,7 @@
             <button class="info-btn" onclick="injectEmojisToList(this)">🧸</button>
             <button class="info-btn" onclick="injectEmojisToList(this)">💍</button>
     </div>
+    <iframe name="votar" style="display:none;"></iframe>
     <form id="form" method="post" class="form2" enctype="multipart/form-data" target="votar" contenteditable="false">
         <div class="form-container">
             <textarea class="text-form form-control" id="about" name="about" contenteditable="true"
@@ -221,7 +215,6 @@
                         </g>
                     </svg>
                     <input name="img" id="inputTag" type="file"/>
-
                     <span id="imageName"></span>
                 </label>
             </div>

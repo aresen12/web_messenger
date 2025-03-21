@@ -155,9 +155,7 @@ function set_bg(num) {
 }
 
 function set_bg_my(num) {
-
     document.getElementById("background-img").src = "/static/img/bg_users/" + num + ".jpg";
-
     document.cookie = "bg=5";
 }
 
@@ -259,5 +257,6 @@ function uploadFile(file) {
 }
 window.addEventListener('paste', e => {
   document.getElementById("inputTag").files = e.clipboardData.files;
+  imageName.innerText = "картинка";
 //  document.
 });

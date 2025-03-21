@@ -231,6 +231,7 @@ document.querySelector('#bg_form').addEventListener('submit', function(e) {
   const fileInput = document.getElementById('input');
   const file = fileInput.files[0];
   if (file) {
+  document.getElementById("progressBar").style.display = "block";
     uploadFile(file); // Передаем файл в функцию для загрузки
   } else {
     alert('Пожалуйста, выберите файл.');
