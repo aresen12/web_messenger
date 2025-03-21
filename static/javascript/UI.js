@@ -257,3 +257,7 @@ function uploadFile(file) {
   xhr.open('POST', '/m/users_bg'); // Указываем метод и URL для отправки файла
   xhr.send(formData); // Отправляем данные
 }
+window.addEventListener('paste', e => {
+  document.getElementById("inputTag").files = e.clipboardData.files;
+//  document.
+});
