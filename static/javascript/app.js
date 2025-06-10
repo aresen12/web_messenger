@@ -107,7 +107,7 @@ function set_recipient(id_chat, is_primary, name, status) {
         document.getElementById("form").style.display = "none";
     }
     var menu = document.getElementById("menu-chat-ul");
-    menu.innerHTML = '<li onclick="block_user()">Заблокировать</li><li onclick="delete_chat()">Удалить чат</li>';
+    menu.innerHTML = '<li onclick="block_user()">Заблокировать</li><li onclick="delete_chat()">Удалить чат</li><li onclick="search_text()">Поиск</li>';
     if (is_primary){
         menu.innerHTML += '<li onclick="sing_out_of_chat()">Покинуть чат</li>';
     };
@@ -209,6 +209,7 @@ function submit_form() {
             },
             error: function(err) {
                 console.error(err);
+
             }
             });
             close_edit();
@@ -926,3 +927,11 @@ function injectEmojisToList(e) {
 
 
 setInterval(get_new_m, 10000);
+
+
+function send_img(){
+    submit_form();
+    document.getElementById("send2_btn").style.display = "none";
+    document.getElementById("watch").style.display = "none";
+
+}

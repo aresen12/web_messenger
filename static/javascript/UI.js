@@ -256,7 +256,28 @@ function uploadFile(file) {
   xhr.send(formData); // Отправляем данные
 }
 window.addEventListener('paste', e => {
+    document.getElementById("send2_btn").style.display = "block";
   document.getElementById("inputTag").files = e.clipboardData.files;
   imageName.innerText = "картинка";
-//  document.
+  const item = e.clipboardData.items[0];
+   if (item.type.indexOf("image") === 0) {
+         document.getElementById("watch").style.display = "block";
+         document.getElementById("form").style.display = "block";
+         document.getElementById("form").style.zIndex = "10";
+         const blob = item.getAsFile();
+        // создаем объект, считывающий файлы
+                const reader = new FileReader();
+                // когда файл загрузится
+                reader.onload = function (event) {
+                    // вставляем его на страницу
+                    document.getElementById("watch_img").src = event.target.result;
+                };
+                // запускаем чтение двоичных данных файл как тип data URL
+                reader.readAsDataURL(blob);
+            }
 });
+
+
+function search_text(){
+    alert("В разработке!");
+}
