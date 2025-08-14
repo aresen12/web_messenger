@@ -70,6 +70,8 @@
     width:20vw;
     position:relative;
     left:40vw;
+    background-color: #D1E7DD;
+    color:#0F5132;
 
 }
 .my-message:visited {background-color:blue; }

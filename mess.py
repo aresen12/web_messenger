@@ -331,8 +331,9 @@ def get_json_message():
         for m in messages:
             summ += m.id
             if m.id_sender != js["current_user"] and not m.read:
-                m.read = 1
-                f = True
+                # m.read = 1
+                # f = True
+                pass
             js["messages"].append({"id": m.id, "read": m.read, "html_m": m.html_m, "text": m.message, 'time': m.time,
                                    "file": m.img, "id_sender": m.id_sender, "name_sender": m.name_sender})
         if f:
@@ -445,3 +446,19 @@ def users_bg():
     file2.write(file.read())
     file2.close()
     return {"log": True}
+
+
+@mg.route("/set_read", methods=["POST"])
+def set_raed():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    mess = db_sess.query(Message).filter(Message.chat_id == data["chat_id"])
+    f = False
+    for m in mess:
+        if not m.read and current_user.id != m.id_sender:
+            m.read = 1
+            f = True
+    if f:
+        db_sess.commit()
+    db_sess.close()
+    return {"log": 200}

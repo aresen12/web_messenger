@@ -341,8 +341,8 @@ if (document.getElementById("chat_id") && document.getElementById("chat_id").val
     success: function(json){
           if (json["summ_id"] != document.getElementById("summ_id").value){
             show();
-            if (!vis){
-                notification("Новые сообшения!", document.getElementById('name_chat').innerText);
+            if (vis){
+                set_read(document.getElementById("chat_id").value);
             }
           }
           },
@@ -364,6 +364,7 @@ function create_chat(list_members, name, is_primary){
     success: function(json){
           // update chats list
           get_chats('email');
+          document.getElementById("global_menu_d").style.display = 'none';
         },
     error: function(err) {
         console.error(err);
@@ -495,7 +496,7 @@ function answer(id_mess){
     la.innerHTML = t;
     la.innerHTML += '<button type="button" onclick="close_edit()" class="btn-close edit-btn-close" aria-label="Close"></button>'
     la.style.display = "block";
-    document.getElementById("html_m").value = '<a href="#m' + id_mess +'" class="answer-a">' + t + '</a>';
+    document.getElementById("html_m").value = '<button class="answer-a" onclick="answer_color(' + "'" + 'm' + id_mess +"'"+ ')">' + t + '</button>';
 }
 
 
@@ -616,7 +617,7 @@ function create_group (){
         document.getElementById("name_new_chat").value = "Добавьте имя!!!";
         return "";
     }
-
+//    create_chat(name, list_members, is_primary);
       $.ajax({
     url: '/m/create_chat',
     type: 'POST',
@@ -627,6 +628,7 @@ function create_group (){
           // update chats list
           get_chats('email');
           document.getElementById("global_menu_d").style.display = 'none';
+
         },
     error: function(err) {
         console.error(err);
@@ -913,6 +915,9 @@ $('#content').on('contextmenu','div', function(e) { //Get li under ul and invoke
 
 window.onfocus = function() {
     globalThis.vis = true;
+    if (document.getElementById("chat_id") && document.getElementById("chat_id").value != ""){
+    set_read(document.getElementById("chat_id").value);
+    }
 };
 
 window.onblur = function() {
@@ -934,4 +939,20 @@ function send_img(){
     document.getElementById("send2_btn").style.display = "none";
     document.getElementById("watch").style.display = "none";
 
+}
+
+function set_read(chat_id){
+    $.ajax({
+        url: '/m/set_read',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"chat_id":chat_id}),
+        success: function(json){
+
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
 }

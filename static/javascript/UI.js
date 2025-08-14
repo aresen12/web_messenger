@@ -65,13 +65,16 @@ document.getElementById("form").style.display = "none";
 
 
 function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
+     if (other && !read && !vis){
+                notification(text, document.getElementById('name_chat').innerText);
+            }
     imges = ["bmp", "jpg", "png", "svg"]
     audio = ["mp3", "flac", "m4a"]
     video = ["mp4", "mov"]
     if (other) {
         var class_m = "alert-info message-other";
     } else{
-        var class_m = "alert-success my-message";
+        var class_m = "my-message";
     };
     var onclick = "";
     if (mobile){
@@ -142,6 +145,7 @@ function open_menu_mess(id_mess){
 if (mobile){
     document.getElementById("about").style.fontSize = "50px";
     document.getElementById("btn_down").style.visibility = 'hidden';
+    document.getElementById("plus_svg").setAttribute("width", "100px");
     };
 
 
@@ -280,4 +284,20 @@ window.addEventListener('paste', e => {
 
 function search_text(){
     alert("В разработке!");
+}
+
+
+function answer_color (src){
+    window.location.hash = "#" + src;
+    var mess = document.getElementById(src);
+    mess.style.background = "#6666ff";
+    setTimeout(function() {
+    if (mess.className == "my-message"){
+        mess.style.background = "#D1E7DD";
+    } else{
+        mess.style.background = "#CFF4FC";
+    }
+
+    // do your thing!
+}, 2000);
 }
