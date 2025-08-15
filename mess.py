@@ -79,8 +79,10 @@ def create_chat():
     chat.primary_chat = data["primary"]
     db_sess.add(chat)
     db_sess.commit()
+    chat_id = chat.id
     db_sess.close()
-    return {"log": True}
+    print(chat_id)
+    return {"chat_id": str(chat_id), "name": data["name"], "is_primary": data["primary"]}
 
 
 @mg.route("/edit_message", methods=["POST"])

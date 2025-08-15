@@ -12,13 +12,13 @@ from data.chat import Chat
 from data.File import File
 from data.black_list import Black
 
-app = Flask(__name__)
+application = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'certificate'
+application.config['SECRET_KEY'] = 'certificate'
 hash_password = '7cb8fa366d774761d198d3dc6244740c'
 port = 8080
 login_manager = LoginManager()
-login_manager.init_app(app)
+login_manager.init_app(application)
 
 
 @login_manager.user_loader
@@ -29,14 +29,14 @@ def load_user(user_id):
     return rs
     
     
-@app.route('/logout')
+@application.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect("/")
     
     
-@app.route('/login', methods=['GET', 'POST'])
+@application.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -51,7 +51,7 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)   
     
     
-@app.route('/register', methods=['GET', 'POST'])
+@application.route('/register', methods=['GET', 'POST'])
 def reqister():
     form = RegisterForm()
     if form.validate_on_submit():
@@ -74,8 +74,8 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form)
 
      
-@app.route("/main", methods=["GET", "POST"])
-@app.route("/", methods=["GET", "POST"])
+@application.route("/main", methods=["GET", "POST"])
+@application.route("/", methods=["GET", "POST"])
 def main():
     if request.method == "GET":
         return render_template("main.html", title='главная')
@@ -97,8 +97,8 @@ if __name__ == "__main__":
         os.mkdir("db")
         db_session.global_init('db/master_paste.db')
     from mess import mg
-    app.register_blueprint(mg)
+    application.register_blueprint(mg)
     # from gevent import pywsgi
     # http_server = pywsgi.WSGIServer(('0.0.0.0', 8080), app, keyfile='privateKey.key', certfile='certificate.crt')
     # http_server.serve_forever()
-    app.run(host='0.0.0.0', debug=True, port=port, ssl_context=('certificate.crt', 'privateKey.key'))  # ssl_context="adhoc"
+    application.run(host='0.0.0.0', debug=True, port=port, ssl_context=('certificate.crt', 'privateKey.key'))  # ssl_context="adhoc"

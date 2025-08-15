@@ -96,7 +96,15 @@ function sing_out_of_chat(){
 
 function set_recipient(id_chat, is_primary, name, status) {
     var st_chat = document.getElementById("chat_id").value
+    try{
     document.getElementById("chat"+ id_chat).style.background =  "#f1f1f1";
+    } catch (error) {
+        setTimeout(function() {
+        var chat2 = document.getElementById("chat"+ id_chat);
+        chat2.style.background =  "#f1f1f1";
+        document.getElementById('name_chat').innerText = chat2.textContent;
+            }, 3000);
+}
     if (st_chat){
     document.getElementById("chat"+ st_chat).style.background =  "#CCCCCC";
     }
@@ -365,6 +373,7 @@ function create_chat(list_members, name, is_primary){
           // update chats list
           get_chats('email');
           document.getElementById("global_menu_d").style.display = 'none';
+          set_recipient(json["chat_id"], json["is_primary"], json["name"], 1);
         },
     error: function(err) {
         console.error(err);
@@ -628,7 +637,7 @@ function create_group (){
           // update chats list
           get_chats('email');
           document.getElementById("global_menu_d").style.display = 'none';
-
+          set_recipient(json["chat_id"], json["is_primary"], json["name"], 1);
         },
     error: function(err) {
         console.error(err);

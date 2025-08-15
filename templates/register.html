@@ -41,8 +41,22 @@
             </p>
         {% endfor %}
     </p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+     <input id="cbtn" type="checkbox" onclick="sogl()">
+        <label for="submit">Согласие на обработку персональных данных</label>
+    <p id="submit" style="display:none;">{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     {{message}}
 </form>
 </div>
+<script language="JavaScript">
+    function sogl(){
+        var c_btn = document.getElementById("cbtn");
+        var s_btn = document.getElementById("submit");
+        if (c_btn.checked){
+        s_btn.style.display = "block";
+        } else{
+        s_btn.style.display = "none";
+        }
+
+    }
+</script>
 {% endblock %}
