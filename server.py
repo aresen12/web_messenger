@@ -16,7 +16,6 @@ application = Flask(__name__)
 
 application.config['SECRET_KEY'] = 'certificate'
 hash_password = '7cb8fa366d774761d198d3dc6244740c'
-port = 8080
 login_manager = LoginManager()
 login_manager.init_app(application)
 
@@ -98,7 +97,4 @@ if __name__ == "__main__":
         db_session.global_init('db/master_paste.db')
     from mess import mg
     application.register_blueprint(mg)
-    # from gevent import pywsgi
-    # http_server = pywsgi.WSGIServer(('0.0.0.0', 8080), app, keyfile='privateKey.key', certfile='certificate.crt')
-    # http_server.serve_forever()
-    application.run(host='0.0.0.0', debug=True, port=port, ssl_context=('certificate.crt', 'privateKey.key'))  # ssl_context="adhoc"
+    application.run(host='0.0.0.0')
