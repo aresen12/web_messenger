@@ -102,7 +102,7 @@ function set_recipient(id_chat, is_primary, name, status) {
         setTimeout(function() {
         var chat2 = document.getElementById("chat"+ id_chat);
         chat2.style.background =  "#f1f1f1";
-        document.getElementById('name_chat').innerText = chat2.textContent;
+        document.getElementById('name_chat').innerText = chat2.innerText;
             }, 3000);
 }
     if (st_chat){

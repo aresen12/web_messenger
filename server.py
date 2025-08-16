@@ -1,6 +1,5 @@
 import datetime
 import os
-
 from flask import Flask, request, render_template, redirect
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user
@@ -11,9 +10,9 @@ from data.message import Message
 from data.chat import Chat
 from data.File import File
 from data.black_list import Black
+from mess import mg
 
 application = Flask(__name__)
-
 application.config['SECRET_KEY'] = 'certificate'
 hash_password = '7cb8fa366d774761d198d3dc6244740c'
 login_manager = LoginManager()
@@ -33,8 +32,12 @@ def load_user(user_id):
 def logout():
     logout_user()
     return redirect("/")
-    
-    
+
+
+db_session.global_init('db/master_paste.db')
+application.register_blueprint(mg)
+
+
 @application.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -81,20 +84,4 @@ def main():
 
     
 if __name__ == "__main__":
-    try:
-        os.chdir("static/img/data")
-        os.chdir("..")
-        os.chdir("..")
-        os.chdir("..")
-        db_session.global_init('db/master_paste.db')
-    except Exception:
-        os.chdir("static/img")
-        os.mkdir("bg_users")
-        os.mkdir("data")
-        os.chdir("..")
-        os.chdir("..")
-        os.mkdir("db")
-        db_session.global_init('db/master_paste.db')
-    from mess import mg
-    application.register_blueprint(mg)
-    application.run(host='0.0.0.0')
+    application.run(host='0.0.0.0', debug=True)

@@ -129,7 +129,7 @@ function open_menu_mess(id_mess){
     globalThis.menu_id = "m" + id_mess;
     var ul = '';
     var curr_m = document.getElementById("m" + id_mess);
-    if (document.getElementById(id_mess).className == "alert alert-success my-message") {
+    if (document.getElementById(id_mess).className == "alert my-message") {
         curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
         <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li>\
         <li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';
