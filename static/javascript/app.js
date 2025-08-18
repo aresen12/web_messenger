@@ -96,6 +96,9 @@ function sing_out_of_chat(){
 
 function set_recipient(id_chat, is_primary, name, status) {
     var st_chat = document.getElementById("chat_id").value
+    if (st_chat){
+        socket.emit('leave', {room: st_chat});
+    }
     try{
     document.getElementById("chat"+ id_chat).style.background =  "#f1f1f1";
     } catch (error) {
@@ -140,12 +143,13 @@ function set_recipient(id_chat, is_primary, name, status) {
         document.getElementById("settings_btn").style.display = 'none';
         document.getElementById("btn_down").style.visibility = 'visible';
     }
-
+    socket.emit('join', {room: id_chat});
 }
 
 
 function exit_chat(){
     var st_chat = document.getElementById("chat_id").value
+    socket.emit('leave', {room: st_chat});
     if (st_chat){
     document.getElementById("chat"+ st_chat).style.background =  "#CCCCCC";
     };
@@ -164,6 +168,7 @@ function exit_chat(){
 
     }
 }
+
 
 
 setSelectionRange = function(input, selectionStart, selectionEnd) {
@@ -200,26 +205,7 @@ function submit_form() {
     } else {
         var text = document.getElementById("about").value;
         if ($('form input[type=file]').val() == '' && text.trim() != ""){
-            var html_m = document.getElementById("html_m").value;
-            $.ajax({
-            url: '/m/send_message',
-            type: 'POST',
-            dataType: 'json',
-            contentType:'application/json',
-            data: JSON.stringify({
-             "chat_id":document.getElementById("chat_id").value,
-             "new_text": text,
-             "html": html_m}),
-            success: function(json){
-                gener_html(json["id"], text, json["time"], html_m, "",  0, 0, "");
-                scroll();
-                go();
-            },
-            error: function(err) {
-                console.error(err);
-
-            }
-            });
+            send_io_mess();
             close_edit();
     }else {
         var b = x.submit();
@@ -736,7 +722,7 @@ function get_chats (id_div){
                 contentType:'application/json',
                 success: function(json2){
                 t_id = 0;
-                if (json2["user"][0] != id){
+                if (json2["user"][0] != id_user){
                     t_id = json2["user"][0]
                 } else{
                     t_id = json2["user"][1]
@@ -940,7 +926,7 @@ function injectEmojisToList(e) {
     }
 
 
-setInterval(get_new_m, 10000);
+//setInterval(get_new_m, 10000);
 
 
 function send_img(){
@@ -965,3 +951,44 @@ function set_read(chat_id){
         }
     });
 }
+
+
+$( '#about' ).focus(function() { if (mobile) {}});
+$( '#about' ).blur(function() {});
+
+
+            // Connect to SocketIO server
+const socket = io();
+
+            // Handle form submission
+function send_io_mess() {
+                const input = document.getElementById('about');
+                const chat_id = document.getElementById('chat_id').value;
+                const message = input.value;
+                const html2 = document.getElementById('html_m');
+                const html_m = html2.value;
+                if (message) {
+                    // Send message to server
+//                    socket.emit('message', message);
+                    socket.emit('room_message', {room: chat_id, message: message, html: html_m });
+                    input.value = '';
+                    html2.value = '';
+                }
+}
+socket.on('create_chat', data) => {
+    
+}
+            // Listen for messages from server
+socket.on('message', (data) => {
+                const messagesDiv = document.getElementById('content');
+                var other = 1;
+                if (id_user == data["id_sender"]){
+                var other = 0;
+            }
+                gener_html(data["id_m"], data["message"], data["time"], data["html"], data["file"], other, data["read"], data["name"])
+//                const messageItem = document.createElement('div');
+//                messageItem.textContent = message;
+//                messagesDiv.appendChild(messageItem);
+                // Auto-scroll to the bottom
+
+});

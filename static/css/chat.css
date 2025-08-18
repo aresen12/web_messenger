@@ -234,6 +234,9 @@ scrollbar-width: thin;
     width:30vw;
 
 }
+.text120 {
+width:180px;
+}
 @media screen and (width < 981px) and (pointer:none), (pointer:coarse) {
     .html {font-size: 20px;}
     .container-mess {position:relative;left:5vw; width:100vw;}
@@ -242,6 +245,7 @@ scrollbar-width: thin;
     width:100vw;
     font-size: 30px;
     }
+    .text120{font-size:50px; width:40vw;}
 
 
 

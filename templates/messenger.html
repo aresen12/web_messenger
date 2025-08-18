@@ -14,7 +14,7 @@
     </div>
     <div style="position:absolute; bottom:100px; left: 25vw;" id="menu_create_div">
         <div class="context-menu-open" id="how_create" style="display:none;bottom:40px; ">
-            <ul style="width:180px;">
+            <ul class="text120" >
                 <li onclick="show_global_menu('global_menu_d', {{current_user.id}})">Создать группу</li>
                 <li onclick="show_create_primary_chat({{current_user.id}})">Добавить контакт</li>
             </ul>
@@ -136,7 +136,7 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-            var id = {{current_user.id}};
+            const id_user = {{current_user.id}};
 </script>
 <div class="form-group">
     <div id="edit-label" class="alert-secondary label-edit" style="display:none;"></div>
@@ -258,6 +258,9 @@
             </button>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 <script src="/static/javascript/app.js"></script>
 <script src="/static/javascript/UI.js"></script>
+
 {% endblock %}
