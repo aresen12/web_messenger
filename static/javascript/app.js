@@ -105,7 +105,7 @@ function set_recipient(id_chat, is_primary, name, status) {
         setTimeout(function() {
         var chat2 = document.getElementById("chat"+ id_chat);
         chat2.style.background =  "#f1f1f1";
-        document.getElementById('name_chat').innerText = chat2.innerText;
+        document.getElementById('name_chat').textContent = chat2.innerText;
             }, 3000);
 }
     if (st_chat){
@@ -123,7 +123,7 @@ function set_recipient(id_chat, is_primary, name, status) {
         menu.innerHTML += '<li onclick="sing_out_of_chat()">Покинуть чат</li>';
     };
     document.getElementById("chat_id").value = id_chat;
-    document.getElementById('name_chat').innerText = name;
+    document.getElementById('name_chat').textContent = name;
     var x = document.getElementById("background-img");
     var y = document.getElementById("email");
     var button = document.getElementById("button");
@@ -262,7 +262,6 @@ document.addEventListener('keydown', function(event) {
 
 
 function show(){
-    globalThis.position = document.getElementById("about").selectionStart;
     if (document.getElementById("chat_id").value != "") {
       $.ajax({
     url: '/m/get_json_mess',
@@ -322,30 +321,6 @@ function notification (text, chat_name) {
               }
             })();
 }
-
-
-function get_new_m (){
-if (document.getElementById("chat_id") && document.getElementById("chat_id").value != "") {
-    $.ajax({
-    url: '/m/get_new',
-    type: 'POST',
-    dataType: 'json',
-    contentType:'application/json',
-    data: JSON.stringify({"id": document.getElementById("chat_id").value}),
-    success: function(json){
-          if (json["summ_id"] != document.getElementById("summ_id").value){
-            show();
-            if (vis){
-                set_read(document.getElementById("chat_id").value);
-            }
-          }
-          },
-    error: function(err) {
-        console.error(err);
-    }
-});}
-}
-
 
 
 function create_chat(list_members, name, is_primary){
@@ -706,13 +681,15 @@ function send_of(chat_id, id_m, name_chat){
 
 
 function get_chats (id_div){
-    html_ = "";
     $.ajax({
         url: '/m/get_chats',
         type: 'GET',
         dataType: 'json',
         contentType:'application/json',
         success: function(json){
+            if (json["chats"].length == 0){
+                document.getElementById(id_div).innerHTML = '<h2>Для того чтобы создать чат нажмите на синий плюс.</h2>'
+            }
            for (let i = 0; i < json["chats"].length; i++){
            if (json["chats"][i]["primary_chat"]){
              $.ajax({
@@ -732,11 +709,7 @@ function get_chats (id_div){
                     type: 'GET',
                     dataType: 'json',
                     success: function(json3){
-                    get_read(json["chats"][i]["id"]);
-                    html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] + "', '" + json["chats"][i]["primary_chat"] +  "',\
-                     '" + json3["user"] + "', " + json["chats"][i]["status"] + ')"' + '">' + json3["user"] +'<div class="r-n"\
-                     id="rn' + json["chats"][i]["id"] + '"></div></button>';
-                    document.getElementById(id_div).innerHTML = html_;
+                        gener_chat(id_div, json["chats"][i]["id"], json3["user"], json["chats"][i]["status"], json["chats"][i]["primary_chat"])
                     },
                     error: function(err) {
                         console.error(err);
@@ -748,17 +721,8 @@ function get_chats (id_div){
         }
     });
             }else{
-                html_ += '<button id="chat'+ json["chats"][i]["id"] +'" class="a-email" onclick="set_recipient(' + "'" +json["chats"][i]["id"] +"'\
-                , '" + json["chats"][i]["primary_chat"] +  "', '" +  json["chats"][i]["name"] + "', \
-                " + json["chats"][i]["status"] + ')">' + json["chats"][i]["name"] +'<div class="r-n"\
-                 id="rn' + json["chats"][i]["id"] + '"></div></button>';
-                document.getElementById(id_div).innerHTML = html_;
+                gener_chat(id_div, json["chats"][i]["id"], json["chats"][i]["name"], json["chats"][i]["status"], json["chats"][i]["primary_chat"]);
            }
-           }
-           if (html_ != ""){
-                document.getElementById(id_div).innerHTML = html_;
-           } else {
-                 document.getElementById(id_div).innerHTML = '<h2>Для того чтобы создать чат нажмите на синий плюс.</h2>'
            }
             },
         error: function(err) {
@@ -766,6 +730,24 @@ function get_chats (id_div){
         }
 });
 }
+
+
+function gener_chat(id_div, chat_id, name_chat, status, primary){
+    const cont = document.getElementById(id_div);
+    get_read(chat_id);
+    const btn = document.createElement('button');
+    btn.id = 'chat'+ chat_id;
+    btn.classList = "a-email";
+    btn.textContent = name_chat;
+    btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status})`);
+    const rn = document.createElement('div');
+    rn.classList = "r-n";
+    rn.id = 'rn' + chat_id;
+    btn.appendChild(rn);
+    cont.appendChild(btn);
+}
+
+
 
 function get_chats_gl (id_div, id_m){
     html_ = "";
@@ -926,9 +908,6 @@ function injectEmojisToList(e) {
     }
 
 
-//setInterval(get_new_m, 10000);
-
-
 function send_img(){
     submit_form();
     document.getElementById("send2_btn").style.display = "none";
@@ -975,9 +954,7 @@ function send_io_mess() {
                     html2.value = '';
                 }
 }
-socket.on('create_chat', data) => {
-    
-}
+
             // Listen for messages from server
 socket.on('message', (data) => {
                 const messagesDiv = document.getElementById('content');
@@ -985,10 +962,52 @@ socket.on('message', (data) => {
                 if (id_user == data["id_sender"]){
                 var other = 0;
             }
-                gener_html(data["id_m"], data["message"], data["time"], data["html"], data["file"], other, data["read"], data["name"])
+                gener_html(data["id_m"], data["message"], data["time"], data["html"], data["file2"], other, data["read"], data["name"])
 //                const messageItem = document.createElement('div');
 //                messageItem.textContent = message;
 //                messagesDiv.appendChild(messageItem);
                 // Auto-scroll to the bottom
 
+});
+
+socket.on('create_chat', (data) => {
+    alert('refresh page');
+    gener_chat("email", data["chat_id"], data["name"], 1, data["is_primary"]);
+});
+
+socket.on('join_event', (data) => {
+    console.log("в сети")
+    if (id_user != data["id_user"]){
+        const div_ = document.getElementById("ident");
+        div_.textContent = "(в сети)";
+    }
+
+
+});
+
+socket.on('leave_event', (data) => {
+    if (id_user != data["id_user"]){
+        const div_ = document.getElementById("ident");
+        div_.textContent = "";
+    }
+});
+
+
+socket.on('connect', (data) => {
+    chat_id = document.getElementById("chat_id");
+    if (chat_id.value != ""){
+        socket.emit('join', {room: chat_id.value});
+    }
+});
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+ (async () => {
+    try {
+        await Notification.requestPermission();
+    } catch (error){
+        console.log(error);
+   }
+   })
 });

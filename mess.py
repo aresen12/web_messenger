@@ -9,6 +9,7 @@ from data.message import Message, get_summ_id
 from data.chat import Chat, get_chats
 from data.File import File, get_files
 from data.black_list import Black
+from flask_socketio import emit
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
@@ -52,13 +53,19 @@ def m_st():
             db_sess.commit()
             file_db.chat_id = chat_id
             mess.img = file_db.id
+        file_name = mess.img
+        text = mess.message
+
         mess.chat_id = chat_id
         db_sess.add(mess)
         db_sess.commit()
         id_m = mess.id
         t_ = mess.get_time()
         db_sess.close()
-        return {"id": id_m, "time": t_}
+        emit('message', {"message": text, "time": t_, "id_m": id_m,
+                         "file": file_name, "html": html_text, "name": current_user.name,
+                         "read": 0, "id_sender": current_user.id}, to=chat_id, namespace="/")
+        return {"log": True}
 
 
 @mg.route("/create_chat", methods=["POST"])
@@ -80,7 +87,29 @@ def create_chat():
     db_sess.add(chat)
     db_sess.commit()
     chat_id = chat.id
-    db_sess.close()
+    if chat.primary_chat:
+        members = chat.members.split()
+        del members[members.index(str(current_user.id))]
+        if len(members) != 0:
+            name = db_sess.query(User.name).filter(User.id == members[0]).first()
+            try:
+                emit("create_chat", {"chat_id": str(chat_id),
+                                     "name": name, "is_primary": data["primary"]},
+                     to=f"u{members[0]}")
+            except Exception:
+                print("ERROR")
+    else:
+        members = chat.members.split()
+        c_id = str(current_user.id)
+        for member in members:
+            if c_id != member:
+                try:
+                    emit("create_chat", {"chat_id": str(chat_id),
+                                         "name": chat.name, "is_primary": data["primary"]},
+                         to=f"u{member}")
+                except Exception:
+                    print("ERROR")
+        db_sess.close()
     print(chat_id)
     return {"chat_id": str(chat_id), "name": data["name"], "is_primary": data["primary"]}
 

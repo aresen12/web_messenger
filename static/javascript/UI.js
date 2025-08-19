@@ -74,9 +74,9 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
     audio = ["mp3", "flac", "m4a"]
     video = ["mp4", "mov"]
     if (other) {
-        messageItem.classList = 'alert alert-info message-other';
+        messageItem.classList = 'message-other';
     } else{
-        messageItem.classList = 'alert my-message';
+        messageItem.classList = 'my-message';
     };
     const message_text = document.createElement('p');
     message_text.textContent = text;
@@ -89,10 +89,11 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
     messageItem.role = "alert";
     var onclick = "";
     if (mobile){
-        messageItem.onclick = open_menu_mess("m"+ id_m);
+        messageItem.setAttribute("onclick", `open_menu_mess('m${id_m}')`);
     }
     console.log(file_, "file")
     if (file_){
+        console.log(file_);
         var ras = file_[1].split(".");
         ras = ras[ras.length - 1];
         if (imges.includes(ras)){
@@ -106,41 +107,63 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
             messageItem.appendChild(button);
         } else {
              if (audio.includes(ras)){
-                var w = window.innerWidth * 0.187;
-                    if (mobile){
+                 var w = window.innerWidth * 0.187;
+                 if (mobile){
                         w = window.innerWidth * 0.57;
-                    };
-
-                 messageItem.innerHTML += '<audio style="width:' + w + 'px;" controls class="audio" src="/static/img/' + file_[1] + '">' + file_[0] + '</audio>';
+                 };
+                 const audio2 = document.createElement("audio");
+                 audio2.classList = "audio";
+                 audio2.src = '/static/img/' + file_[1];
+                 audio2.textContent = file_[0];
+                 audio2.style.width = w + 'px';
+                 audio2.controls = 'controls';
+                 messageItem.appendChild(audio2);
+                 console.log("test");
             }else {
                 if (video.includes(ras)){
                     var w = window.innerWidth * 0.18;
                     if (mobile){
                         w = window.innerWidth * 0.57;
                     };
-                    messageItem.innerHTML += '<video width="' + w +'px" controls class="audio" src="/static/img/' + file_[1] + '">' + file_[0] + '</video>';
+                    const video = document.createElement("video");
+                    video.classList = "audio";
+                    video.controls = 'controls';
+                     video.src = '/static/img/' + file_[1];
+                  video.textContent = file_[0];
+                     video.style.width = w + 'px';
+                 messageItem.appendChild(video);
                 } else{
-                    messageItem.innerHTML += '<a class="my-a" download="' + file_[0] + '" href="/static/img/' + file_[1] + '">' + file_[0] + '</a>';
+                    const a_ = document.createElement('a');
+                    a_.classList = "my-a";
+                    a_.href = '/static/img/' + file_[1];
+                    a_.textContent = file_[0];
+                    a_.setAttribute('download', file_[0]);
+                    messageItem.appendChild(a_);
                 }
         }
     }
     };
      const time_div = document.createElement('p');
      time_div.classList = "time-mess";
-     time_div.textContent = time + " " + name_sender;
+     if (other){
+        time_div.textContent = time + " " + name_sender;
+     }else{
+        time_div.textContent = time;
+     }
      messageItem.appendChild(time_div);
     if (read){
         time_div.innerHTML += '<button type="button" class="info-btn "\
-         data-bs-toggle="tooltip" data-bs-placement="top" title="прочитано">✓✓</button>';
+         data-bs-toggle="tooltip" data-bs-placement="top" title="прочитано">ᨒ</button>';
     } else{
         time_div.innerHTML += '<button type="button" class="info-btn "\
-         data-bs-toggle="tooltip" data-bs-placement="top" title="доставлено">✓</button>';
+         data-bs-toggle="tooltip" data-bs-placement="top" title="доставлено">ᨈ</button>';
     }
     const menu_con = document.createElement("div");
     menu_con.style.display = "none";
     menu_con.classList.add("context-menu-open");
     menu_con.id = "mm" + id_m;
     messageItem.appendChild(menu_con);
+    messageItem.id = 'm' + id_m;
 //    document.getElementById("content").innerHTML += new_mess;
     messagesDiv.appendChild(messageItem);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -157,7 +180,7 @@ function open_menu_mess(id_mess){
     globalThis.menu_id = "m" + id_mess;
     var ul = '';
     var curr_m = document.getElementById("m" + id_mess);
-    if (document.getElementById(id_mess).className == "alert my-message") {
+    if (document.getElementById(id_mess).className == " my-message") {
         curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
         <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li>\
         <li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';

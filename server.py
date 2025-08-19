@@ -7,7 +7,7 @@ from data import db_session
 from data.user import User
 from forms.register_form import RegisterForm
 from flask_socketio import SocketIO, emit
-from flask_socketio import join_room, leave_room
+from flask_socketio import join_room, leave_room, rooms
 from data.message import Message
 from data.chat import Chat
 from data.File import File
@@ -88,18 +88,18 @@ def main():
 
 @socketio.on('join')
 def on_join(data):
-    username = current_user.email
     room = data['room']
+    users = rooms()
+    print(users)
     join_room(room)
-    emit('message', f'{username} has joined the room {room}', to=room)
+    emit('join_event', {"id_user": current_user.id, "users": users}, to=room)
 
 
 @socketio.on('leave')
 def on_leave(data):
-    username = current_user.email
     room = data['room']
     leave_room(room)
-    emit('message', f'{username} has left the room {room}', to=room)
+    emit('leave_event', {"id_user": current_user.id}, to=room)
 
 
 @socketio.on('room_message')
@@ -120,30 +120,30 @@ def room_message(data):
         db_sess.commit()
         id_m = mess.id
         t_ = mess.get_time()
+        file2 = mess.img
+        print(file2)
         db_sess.close()
         emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
-                         "file": "", "html": data["html"], "name": current_user.name, "read": 0, "id_sender": id_sender}, to=data['room'])
-
-
-@socketio.on('message')
-def handle_message(data):
-    print('Received message: ' + data)
-    emit('message', data, broadcast=True)
+                         "file2": file2, "html": data["html"], "name": current_user.name,
+                         "read": 0, "id_sender": id_sender}, to=data['room'])
 
 
 @socketio.on('connect')
 def handle_connect():
     if current_user.is_authenticated:
-        pass
+        join_room(f'u{current_user.id}')
     print('Client connected')
 
 
 @socketio.on('disconnect')
 def handle_disconnect():
+    if current_user.is_authenticated:
+        print("auth")
+        leave_room(f'u{current_user.id}')
     print('Client disconnected')
 
 
 if __name__ == "__main__":
     # application.run(host='0.0.0.0', debug=True)
-    socketio.run(application, )
+    socketio.run(application, host='0.0.0.0', debug=True)
 

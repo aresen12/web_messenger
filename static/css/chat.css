@@ -1,4 +1,4 @@
-.time-mess {font-size:10pt;float:left;
+.time-mess {font-size:10pt;
     margin:0px;
     padding: 0px;
 }
@@ -29,7 +29,10 @@
     left:3vw;
     width:20vw;
     text-overflow:clip;
-
+    background:#CFF4FC;
+    color:#055160;
+    border-radius: 5px;
+    padding-left: 4px;
 }
 
 
@@ -72,7 +75,8 @@
     left:40vw;
     background-color: #D1E7DD;
     color:#0F5132;
-
+    border-radius: 5px;
+    padding-left: 4px;
 }
 .my-message:visited {background-color:blue; }
 
@@ -167,7 +171,7 @@ position:fixed;bottom:0vh; padding-down:0;}
 
  .a-email { color:black;
  background-color:#cccccc;
- border:none;
+ border:1px solid gray;
  min-height:40px;
  text-decoration:none;
    width:30vw;
@@ -184,6 +188,7 @@ position:fixed;bottom:0vh; padding-down:0;}
 .text-in-mess {
     overflow:none;
     overflow-y:hidden;
+    margin:0px;
 }
 
 
