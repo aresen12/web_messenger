@@ -34,8 +34,24 @@
     border-radius: 5px;
     padding-left: 4px;
 }
+.pinned {
+    background:#F1F1F1;
+    width:100%;
+    color:#6495ed;
 
-
+}
+.pinned-btn{
+    background:#F1F1F1;
+    width:90%;
+    color:#6495ed;
+    border-left: 6px solid #6495ed;
+    margin-left: 6px;
+    border-radius:3px;
+    margin-top:2px;
+    margin-bottom:3px;
+    margin-right:0px;
+    text-align:left;
+}
 .audio {
     width: 18 vw;
     object-fit: cover;
@@ -70,7 +86,7 @@
     }
 .my-message {
     position:relative;
-    width:20vw;
+    max-width:20vw;
     position:relative;
     left:40vw;
     background-color: #D1E7DD;
@@ -78,19 +94,23 @@
     border-radius: 5px;
     padding-left: 4px;
 }
-.my-message:visited {background-color:blue; }
+
 
 .mess-admin {
     position:relative;
     width: 70vw;
     left:0vw;
     height:70vh;
-    overflow-y: scroll;
     margin:0;
+}
+
+.content-div{
+    max-height: 100%;
+    overflow-y: scroll;
     -webkit-overflow-scrolling:touch;
     scrollbar-width: thin;
-  scrollbar-color: hsl(0 0% 50%);
-}
+    scrollbar-color: hsl(0 0% 50%);
+  }
 
 
 .edit-btn {
@@ -168,8 +188,16 @@ position:fixed;bottom:0vh; padding-down:0;}
     border-radius:5px;
     width: 200px;
     }
+.n-c{
+display: table-cell;
+    margin-left:5px;
+     padding-top:5px;
+    }
 
- .a-email { color:black;
+
+ .a-email {
+    display: flex;
+  color:black;
  background-color:#cccccc;
  border:1px solid gray;
  min-height:40px;
@@ -350,7 +378,7 @@ width:180px;
     box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.54);
     background-color: white;
     border-radius: 4px;
-    padding: 4px;
+    padding: 2px;
 }
 
 

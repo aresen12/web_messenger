@@ -66,6 +66,7 @@ def reqister():
                                    message="Пароли не совпадают")
         db_sess = db_session.create_session()
         if db_sess.query(User).filter(User.email == form.email.data).first():
+            db_sess.close()
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Такой пользователь уже есть")
@@ -75,6 +76,7 @@ def reqister():
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
+        db_sess.close()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
@@ -125,7 +127,7 @@ def room_message(data):
         db_sess.close()
         emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
                          "file2": file2, "html": data["html"], "name": current_user.name,
-                         "read": 0, "id_sender": id_sender}, to=data['room'])
+                         "read": 0, "id_sender": id_sender, "pinned": mess.pinned}, to=data['room'])
 
 
 @socketio.on('connect')

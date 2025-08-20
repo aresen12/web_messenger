@@ -114,6 +114,18 @@ def create_chat():
     return {"chat_id": str(chat_id), "name": data["name"], "is_primary": data["primary"]}
 
 
+@mg.route("/pinned", methods=["POST"])
+def pinned():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    mess = db_sess.query(Message).filter(Message.id == data["mess_id"]).first()
+    mess.pinned = True
+    db_sess.commit()
+    db_sess.close()
+    # добавить socketio
+    return {"log":True}
+
+
 @mg.route("/edit_message", methods=["POST"])
 def edit_mess():
     data = request.get_json()
@@ -362,11 +374,12 @@ def get_json_message():
         for m in messages:
             summ += m.id
             if m.id_sender != js["current_user"] and not m.read:
-                # m.read = 1
-                # f = True
+                m.read = 1
+                f = True
                 pass
             js["messages"].append({"id": m.id, "read": m.read, "html_m": m.html_m, "text": m.message, 'time': m.time,
-                                   "file": m.img, "id_sender": m.id_sender, "name_sender": m.name_sender})
+                                   "file": m.img, "id_sender": m.id_sender, "name_sender": m.name_sender,
+                                   "pinned": m.pinned})
         if f:
             db_sess.commit()
         db_sess.close()

@@ -64,10 +64,27 @@ document.getElementById("background-img").style.height =  window.innerHeight - n
 document.getElementById("form").style.display = "none";
 
 
-function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
+function add_pinned(id_mess){
+    const pin_div = document.getElementById("pinned");
+                if (pin_div.innerHTML == ""){
+                    btn = document.createElement("button");
+                    btn.textContent += document.getElementById("text" + id_mess).textContent.trim()
+                    btn.id = "pin_btn";
+                    btn.classList = "info-btn pinned-btn";
+                    btn.setAttribute("onclick", `go_pin('${id_mess}')`);
+                    pin_div.appendChild(btn);
+                    document.getElementById("list_pin").value += " " + id_mess;
+                } else {
+                    document.getElementById("list_pin").value += " " + id_mess;
+                }
+}
+//<button type="button" class="btn-close" aria-label="Close"></button>
+
+function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, pinned) {
      if (other && !read && !vis){
                 notification(text, document.getElementById('name_chat').innerText);
             }
+
      const messagesDiv = document.getElementById('content');
      const messageItem = document.createElement('div');
     imges = ["bmp", "jpg", "png", "svg"]
@@ -91,9 +108,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
     if (mobile){
         messageItem.setAttribute("onclick", `open_menu_mess('m${id_m}')`);
     }
-    console.log(file_, "file")
     if (file_){
-        console.log(file_);
         var ras = file_[1].split(".");
         ras = ras[ras.length - 1];
         if (imges.includes(ras)){
@@ -118,7 +133,6 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
                  audio2.style.width = w + 'px';
                  audio2.controls = 'controls';
                  messageItem.appendChild(audio2);
-                 console.log("test");
             }else {
                 if (video.includes(ras)){
                     var w = window.innerWidth * 0.18;
@@ -166,8 +180,32 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender) {
     messageItem.id = 'm' + id_m;
 //    document.getElementById("content").innerHTML += new_mess;
     messagesDiv.appendChild(messageItem);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+     scrollToBottom("content");
+     if(pinned){
+        add_pinned(id_m);
+     }
+}
 
+var autoScroll = true;
+
+document.getElementById('content').addEventListener('scroll', function() {
+    var scrollTop = this.scrollTop;
+    var scrollHeight = this.scrollHeight;
+    var height = this.clientHeight;
+
+//    if (autoScroll) {
+//        if (scrollTop &lt; scrollHeight - height) {
+//            autoScroll = false;
+//        }
+//    } else {
+//        if (scrollTop + height &gt;= scrollHeight) {
+//            autoScroll = true;
+//        }
+//    }
+});
+function scrollToBottom(elementId) {
+    var div = document.getElementById(elementId);
+    div.scrollTop = div.scrollHeight;
 }
 
 
@@ -180,12 +218,12 @@ function open_menu_mess(id_mess){
     globalThis.menu_id = "m" + id_mess;
     var ul = '';
     var curr_m = document.getElementById("m" + id_mess);
-    if (document.getElementById(id_mess).className == " my-message") {
-        curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
+    if (document.getElementById(id_mess).className == "my-message") {
+        curr_m.innerHTML = '<ul><li onclick="pinned(' + id_mess.slice(1) + ')">закрепить</li><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
         <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li>\
         <li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';
     } else {
-        curr_m.innerHTML = '<ul><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li>\
+        curr_m.innerHTML = '<ul><li onclick="pinned(' + id_mess.slice(1) + ')">закрепить</li><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li>\
         <li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
         <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';
     }
@@ -199,6 +237,33 @@ if (mobile){
     document.getElementById("plus_svg").setAttribute("width", "100px");
     };
 
+
+function go_pin(id_mess){
+    var mess = document.getElementById('m' + id_mess);
+    mess.style.background = "#6666ff";
+    setTimeout(function() {
+    if (mess.className == "my-message"){
+        mess.style.background = "#D1E7DD";
+    } else{
+        mess.style.background = "#CFF4FC";
+    }
+}, 2000);
+    window.location.hash = "#m" + id_mess;
+    var list_pin = document.getElementById("list_pin").value.trim().split(" ");
+    for (let i = 0; i < list_pin.length; i++){
+        if (list_pin[i] == id_mess){
+            const btn = document.getElementById('pin_btn');
+            if (i + 1 < list_pin.length){
+                btn.textContent = document.getElementById('text' + list_pin[i + 1]).textContent;
+                btn.setAttribute('onclick', `go_pin('${list_pin[i + 1]}')`);
+            } else {
+                btn.textContent = document.getElementById('text' + list_pin[0]).textContent;
+                btn.setAttribute('onclick', `go_pin('${list_pin[0]}')`);
+            }
+        }
+    }
+
+}
 
 function set_bg(num) {
     if (mobile){

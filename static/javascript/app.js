@@ -238,8 +238,6 @@ document.querySelector('#bg_form').addEventListener('submit', function(e) {
 document.addEventListener('keydown', function(event) {
     var x = document.querySelector('form');
     var about = document.getElementById("about");
-    globalThis.position = about.selectionStart
-    console.log(enter_flag);
     if (enter_flag) {
         if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
         globalThis.position = about.selectionStart + 1;
@@ -290,10 +288,9 @@ function show(){
                 date = time[0];
                 cont.innerHTML += '<div class="date_k">' + time2[2]+ "." + time2[1] + "." + time2[0] + '</div>';
             };
-            gener_html(c_m["id"], c_m["text"], time[1].split(".")[0], c_m["html_m"], file, other, c_m['read'], c_m["name_sender"]);
+            gener_html(c_m["id"], c_m["text"], time[1].split(".")[0], c_m["html_m"], file, other, c_m['read'], c_m["name_sender"], c_m["pinned"]);
         }
         cont.innerHTML += '<div id="pos"><div id="pos2"></div></div>';
-        scroll();
         go()
         },
     error: function(err) {
@@ -309,7 +306,7 @@ function notification (text, chat_name) {
                 const permission = await Notification.requestPermission();
                 if (Notification.permission === 'denied') {
                 }
-                console.log(permission);
+
                 const options = {
                   body: text,
                   icon:
@@ -687,8 +684,12 @@ function get_chats (id_div){
         dataType: 'json',
         contentType:'application/json',
         success: function(json){
+
             if (json["chats"].length == 0){
                 document.getElementById(id_div).innerHTML = '<h2>Для того чтобы создать чат нажмите на синий плюс.</h2>'
+                return 0
+            } else {
+                document.getElementById(id_div).innerHTML = "";
             }
            for (let i = 0; i < json["chats"].length; i++){
            if (json["chats"][i]["primary_chat"]){
@@ -738,13 +739,29 @@ function gener_chat(id_div, chat_id, name_chat, status, primary){
     const btn = document.createElement('button');
     btn.id = 'chat'+ chat_id;
     btn.classList = "a-email";
-    btn.textContent = name_chat;
     btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status})`);
     const rn = document.createElement('div');
     rn.classList = "r-n";
     rn.id = 'rn' + chat_id;
+    const icon_chat = document.createElement('div');
+    icon_chat.id = "icon_chat" + chat_id;
+    icon_chat.style.width = "40px";
+    const name_chat_div = document.createElement('div');
+    name_chat_div.id = "n_c" + chat_id;
+    name_chat_div.textContent = name_chat;
+    name_chat_div.classList = "n-c";
+    btn.appendChild(icon_chat);
+    btn.appendChild(name_chat_div);
     btn.appendChild(rn);
     cont.appendChild(btn);
+    const svg =
+            d3.select("#icon_chat" + chat_id).
+            append('svg').
+            attr('height', '40').
+            attr('width', '40')
+            var circle = svg.append("circle") .attr("cx", 20) .attr("cy", 20) .attr("r", 20) .attr("fill", "#6495ed");
+var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circle.attr("cy") - 3) .attr("dy", "0.35em") .text(name_chat[0]);
+
 }
 
 
@@ -758,7 +775,6 @@ function get_chats_gl (id_div, id_m){
         contentType:'application/json',
         success: function(json){
            for (let i = 0; i < json["chats"].length; i++){
-            console.log(json["chats"][i]["primary_chat"]);
                if (json["chats"][i]["primary_chat"]){
                  $.ajax({
                     url: '/m/get_chat_user/' + json["chats"][i]["id"],
@@ -878,7 +894,6 @@ function show_users(){
 
 function copyToClipboard(id_m) {
 var t = document.getElementById("text" + id_m).textContent.trim();
-    console.log(t);
     navigator.clipboard.writeText(t);
 
 
@@ -934,7 +949,22 @@ function set_read(chat_id){
 
 $( '#about' ).focus(function() { if (mobile) {}});
 $( '#about' ).blur(function() {});
-
+function pinned(id_mess){
+    chat_id = document.getElementById("chat_id").value;
+    $.ajax({
+        url: '/m/pinned',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"chat_id":chat_id, "mess_id": id_mess}),
+        success: function(json){
+                add_pinned(id_mess);
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}
 
             // Connect to SocketIO server
 const socket = io();
@@ -953,6 +983,7 @@ function send_io_mess() {
                     input.value = '';
                     html2.value = '';
                 }
+
 }
 
             // Listen for messages from server
@@ -962,7 +993,7 @@ socket.on('message', (data) => {
                 if (id_user == data["id_sender"]){
                 var other = 0;
             }
-                gener_html(data["id_m"], data["message"], data["time"], data["html"], data["file2"], other, data["read"], data["name"])
+                gener_html(data["id_m"], data["message"], data["time"], data["html"], data["file2"], other, data["read"], data["name"], data["pinned"])
 //                const messageItem = document.createElement('div');
 //                messageItem.textContent = message;
 //                messagesDiv.appendChild(messageItem);
@@ -976,7 +1007,6 @@ socket.on('create_chat', (data) => {
 });
 
 socket.on('join_event', (data) => {
-    console.log("в сети")
     if (id_user != data["id_user"]){
         const div_ = document.getElementById("ident");
         div_.textContent = "(в сети)";
@@ -993,12 +1023,18 @@ socket.on('leave_event', (data) => {
 });
 
 
-socket.on('connect', (data) => {
+socket.on('connect', () => {
     chat_id = document.getElementById("chat_id");
     if (chat_id.value != ""){
         socket.emit('join', {room: chat_id.value});
     }
 });
+
+
+socket.on('disconnect', () => {
+    alert("disconnect");
+});
+
 
 
 

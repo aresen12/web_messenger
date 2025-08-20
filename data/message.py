@@ -18,6 +18,7 @@ class Message(SqlAlchemyBase, UserMixin, SerializerMixin):
     chat_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     img = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     html_m = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="")
+    pinned = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     def __repr__(self):
         return f"{self.message} {self.time}"
