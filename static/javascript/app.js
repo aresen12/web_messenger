@@ -8,6 +8,8 @@ var mobile = false;
 var vis = true;
 var position = 0;
 
+random_colors = ["#59a83d", "#6495ed", "#fab700", "#ffb28b", "#b37fb3"]
+
 
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
     var x = document.getElementById("background-img");
@@ -100,16 +102,17 @@ function set_recipient(id_chat, is_primary, name, status) {
         socket.emit('leave', {room: st_chat});
     }
     try{
-    document.getElementById("chat"+ id_chat).style.background =  "#f1f1f1";
+        document.getElementById("chat"+ id_chat).style.background =  "#6699cc";
     } catch (error) {
         setTimeout(function() {
         var chat2 = document.getElementById("chat"+ id_chat);
         chat2.style.background =  "#f1f1f1";
+
         document.getElementById('name_chat').textContent = chat2.innerText;
             }, 3000);
 }
     if (st_chat){
-    document.getElementById("chat"+ st_chat).style.background =  "#CCCCCC";
+    document.getElementById("chat"+ st_chat).style.background =  "white";
     }
     document.getElementById("content").innerHTML = '<h2 class="update">Загрузка...<h2>';
     if (status == 1){
@@ -124,6 +127,7 @@ function set_recipient(id_chat, is_primary, name, status) {
     };
     document.getElementById("chat_id").value = id_chat;
     document.getElementById('name_chat').textContent = name;
+    document.getElementById("icon_c_chat").innerHTML = document.getElementById("icon_chat" + id_chat).innerHTML;
     var x = document.getElementById("background-img");
     var y = document.getElementById("email");
     var button = document.getElementById("button");
@@ -151,7 +155,7 @@ function exit_chat(){
     var st_chat = document.getElementById("chat_id").value
     socket.emit('leave', {room: st_chat});
     if (st_chat){
-    document.getElementById("chat"+ st_chat).style.background =  "#CCCCCC";
+        document.getElementById("chat"+ st_chat).style.background =  "white";
     };
     document.getElementById("content").innerHTML = "";
     document.getElementById('name_chat').innerText = "";
@@ -759,7 +763,7 @@ function gener_chat(id_div, chat_id, name_chat, status, primary){
             append('svg').
             attr('height', '40').
             attr('width', '40')
-            var circle = svg.append("circle") .attr("cx", 20) .attr("cy", 20) .attr("r", 20) .attr("fill", "#6495ed");
+            var circle = svg.append("circle") .attr("cx", 20) .attr("cy", 20) .attr("r", 20) .attr("fill", random_colors[Math.floor(Math.random() * random_colors.length)]);
 var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circle.attr("cy") - 3) .attr("dy", "0.35em") .text(name_chat[0]);
 
 }

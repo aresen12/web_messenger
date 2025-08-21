@@ -95,7 +95,16 @@
     padding-left: 4px;
 }
 
+.name-chat-div {width:100%;}
+.kazbek-logo {}
+.chat-header {
 
+    display:flex;
+}
+.menu-chat-div-all{
+position: relative;
+    right: 5px;
+}
 .mess-admin {
     position:relative;
     width: 70vw;
@@ -198,7 +207,8 @@ display: table-cell;
  .a-email {
     display: flex;
   color:black;
- background-color:#cccccc;
+  background:white;
+
  border:1px solid gray;
  min-height:40px;
  text-decoration:none;
@@ -229,6 +239,7 @@ display: table-cell;
     overflow-y:auto;
     scrollbar-width: thin;
     scrollbar-color: hsl(0 0% 50%);
+
  }
  .r-n {
     display:inline-block;
@@ -410,7 +421,6 @@ width:180px;
     left:2vw;
     border:1px solid gray;
 
-    background:#f1f1f1;
     width: 30vw;
 }
 

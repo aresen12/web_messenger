@@ -126,6 +126,13 @@ def pinned():
     return {"log":True}
 
 
+@mg.route("/last_m", methods=["POST"])
+def last_m():
+
+    # добавить socketio
+    return {"log": True}
+
+
 @mg.route("/edit_message", methods=["POST"])
 def edit_mess():
     data = request.get_json()
