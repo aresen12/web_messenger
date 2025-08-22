@@ -68,7 +68,7 @@ function edit_post(id_mess, text){
     contentType:'application/json',
     data: JSON.stringify({"id":id_mess, "new_text": text}),
     success: function(json){
-        show();
+    socket.emit("edit_mess", {new_text: text, id_m: id_mess, room: document.getElementById("chat_id").value});
         close_edit();
     },
     error: function(err) {
@@ -139,6 +139,7 @@ function set_recipient(id_chat, is_primary, name, status) {
     globalThis.global_distans = distance;
     document.getElementById('chat_id').innerText = id_chat;
     if (mobile){
+        document.getElementById("chat_header").style.display = "flex";
         x.style.display = "block";
         var button = document.getElementById("button").style.visibility = 'visible';
         var cont = document.getElementById("container-mess");
@@ -749,7 +750,6 @@ function gener_chat(id_div, chat_id, name_chat, status, primary){
     rn.id = 'rn' + chat_id;
     const icon_chat = document.createElement('div');
     icon_chat.id = "icon_chat" + chat_id;
-    icon_chat.style.width = "40px";
     const name_chat_div = document.createElement('div');
     name_chat_div.id = "n_c" + chat_id;
     name_chat_div.textContent = name_chat;
@@ -758,12 +758,17 @@ function gener_chat(id_div, chat_id, name_chat, status, primary){
     btn.appendChild(name_chat_div);
     btn.appendChild(rn);
     cont.appendChild(btn);
+    var icon_size = 40;
+    if (mobile){
+        icon_size = 80;
+    }
+    icon_chat.style.width = icon_size + "px";
     const svg =
             d3.select("#icon_chat" + chat_id).
             append('svg').
-            attr('height', '40').
-            attr('width', '40')
-            var circle = svg.append("circle") .attr("cx", 20) .attr("cy", 20) .attr("r", 20) .attr("fill", random_colors[Math.floor(Math.random() * random_colors.length)]);
+            attr('height', `${icon_size}`).
+            attr('width', `${icon_size}`)
+            var circle = svg.append("circle") .attr("cx", icon_size / 2) .attr("cy", icon_size / 2) .attr("r", icon_size / 2) .attr("fill", random_colors[Math.floor(Math.random() * random_colors.length)]);
 var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circle.attr("cy") - 3) .attr("dy", "0.35em") .text(name_chat[0]);
 
 }
@@ -1026,6 +1031,11 @@ socket.on('leave_event', (data) => {
     }
 });
 
+
+socket.on('edit_mess', (data) => {
+   document.getElementById("text" + data["id_mess"]).textContent = data["new_text"];
+   console.log("edit soc")
+});
 
 socket.on('connect', () => {
     chat_id = document.getElementById("chat_id");

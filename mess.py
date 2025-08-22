@@ -1,6 +1,6 @@
 import os
 from flask import (
-    Blueprint, redirect, render_template, request
+    Blueprint, redirect, render_template, request,
 )
 from data import db_session
 from data.user import User
@@ -10,9 +10,9 @@ from data.chat import Chat, get_chats
 from data.File import File, get_files
 from data.black_list import Black
 from flask_socketio import emit
+from events_io import edit_event, socketio
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
-
 
 @mg.route("/", methods=["GET", "POST"])
 def m_st():
@@ -139,18 +139,10 @@ def edit_mess():
     db_sess = db_session.create_session()
     mess = db_sess.query(Message).filter(Message.id == data["id"]).first()
     if mess.id_sender == current_user.id:
-        new_m = Message()
-        new_m.message = data["new_text"]
-        new_m.chat_id = mess.chat_id
-        new_m.name_sender = mess.name_sender
-        new_m.id_sender = mess.id_sender
-        new_m.html_m = mess.html_m
-        new_m.time = mess.time
-        new_m.read = 0
-        db_sess.add(new_m)
-        db_sess.delete(mess)
-    db_sess.commit()
-    db_sess.close()
+        mess.message = data["new_text"]
+        mess.read = 0
+        db_sess.commit()
+        db_sess.close()
     return {"log": True}
 
 

@@ -1,25 +1,25 @@
 import datetime
 import os
+import sys
+
 from flask import Flask, request, render_template, redirect
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data import db_session
 from data.user import User
 from forms.register_form import RegisterForm
-from flask_socketio import SocketIO, emit
-from flask_socketio import join_room, leave_room, rooms
 from data.message import Message
 from data.chat import Chat
 from data.File import File
 from data.black_list import Black
 from mess import mg
-
+from events_io import socketio
 application = Flask(__name__)
 application.config['SECRET_KEY'] = 'certificate'
-socketio = SocketIO(application, cors_allowed_origins="*")
 hash_password = '7cb8fa366d774761d198d3dc6244740c'
 login_manager = LoginManager()
 login_manager.init_app(application)
+socketio.init_app(application)
 
 
 @login_manager.user_loader
@@ -88,61 +88,12 @@ def main():
         return render_template("main.html", title='главная')
 
 
-@socketio.on('join')
-def on_join(data):
-    room = data['room']
-    users = rooms()
-    print(users)
-    join_room(room)
-    emit('join_event', {"id_user": current_user.id, "users": users}, to=room)
 
 
-@socketio.on('leave')
-def on_leave(data):
-    room = data['room']
-    leave_room(room)
-    emit('leave_event', {"id_user": current_user.id}, to=room)
-
-
-@socketio.on('room_message')
-def room_message(data):
-    db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).filter(Chat.id == data["room"]).first()
-    chat:Chat
-    if str(current_user.id) in chat.members.split():
-        mess = Message()
-        mess.message = data['message']
-        mess.read = 0
-        mess.html_m = data["html"]
-        mess.id_sender = current_user.id
-        id_sender = mess.id_sender
-        mess.chat_id = data["room"]
-        mess.name_sender = current_user.name
-        db_sess.add(mess)
-        db_sess.commit()
-        id_m = mess.id
-        t_ = mess.get_time()
-        file2 = mess.img
-        print(file2)
-        db_sess.close()
-        emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
-                         "file2": file2, "html": data["html"], "name": current_user.name,
-                         "read": 0, "id_sender": id_sender, "pinned": mess.pinned}, to=data['room'])
-
-
-@socketio.on('connect')
-def handle_connect():
-    if current_user.is_authenticated:
-        join_room(f'u{current_user.id}')
-    print('Client connected')
-
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    if current_user.is_authenticated:
-        print("auth")
-        leave_room(f'u{current_user.id}')
-    print('Client disconnected')
+@application.route("/stop_messenger")
+def stop_app():
+    sys.exit(0)
+    return {"log":True}
 
 
 if __name__ == "__main__":
