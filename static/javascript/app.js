@@ -153,11 +153,12 @@ function set_recipient(id_chat, is_primary, name, status) {
 
 
 function exit_chat(){
-    var st_chat = document.getElementById("chat_id").value
+    var st_chat = document.getElementById("chat_id").value;
     socket.emit('leave', {room: st_chat});
     if (st_chat){
         document.getElementById("chat"+ st_chat).style.background =  "white";
     };
+    document.getElementById('icon_c_chat').innerHTML = "";
     document.getElementById("content").innerHTML = "";
     document.getElementById('name_chat').innerText = "";
     document.getElementById('chat_id').value = "";
@@ -243,7 +244,7 @@ document.querySelector('#bg_form').addEventListener('submit', function(e) {
 document.addEventListener('keydown', function(event) {
     var x = document.querySelector('form');
     var about = document.getElementById("about");
-    if (enter_flag) {
+    if (enter_flag && !mobile) {
         if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
         globalThis.position = about.selectionStart + 1;
         about.value = about.value + "\n";

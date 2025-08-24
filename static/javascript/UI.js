@@ -184,6 +184,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
      scrollToBottom("content");
      if(pinned){
         add_pinned(id_m);
+        messagesDiv.style.height = "100%";
      }
 }
 

@@ -109,19 +109,23 @@ position: relative;
     position:relative;
     width: 70vw;
     left:0vw;
-    height:70vh;
+    height:100%;
+    max-height: 70vh;
     margin:0;
 }
 
 .content-div{
+
     height: 100%;
+    max-height:70vh;
+    flex-shrink:4;
     overflow-y: scroll;
     -webkit-overflow-scrolling:touch;
     scrollbar-width: thin;
     scrollbar-color: hsl(0 0% 50%);
   }
 
-
+.chat-cont{ height: 100vh;}
 .edit-btn {
 background:#199cff;
 border: none;
@@ -135,7 +139,10 @@ color:white;
     left:40px;
 }
 .form-group {
-margin:none; margin-top: 10px;}
+margin:none; margin-top: 10px;
+position:fixed;
+bottom: 0px;
+}
 
 .form2 {
     width:68vw;
@@ -283,13 +290,13 @@ width:180px;
 @media screen and (width < 981px) and (pointer:none), (pointer:coarse) {
     .html {font-size: 20px;}
     .container-mess {width:100vw;}
-    .form2 {font-size:50px;}
+    .form2 {font-size:50px;width:100vw;}
     .settings {
     width:100vw;
     font-size: 30px;
     }
     .text120{font-size:50px; width:40vw;}
-..form-group {}
+.form-group {width:100vw;}
 
     .global-menu {
         font-size: 30px;
@@ -321,6 +328,9 @@ width:180px;
     border:none;
     border: 3px solid gray;
     }
+    .chat-header {
+    height: 90px;
+    }
     .content-email {
     width:98vw;
     font-size:20pt;}
@@ -336,6 +346,12 @@ width:180px;
         left:3vw;
         font-size: 25pt;
         width:60vw;
+        }
+    .my-message {
+        position:relative;
+        left:3vw;
+        font-size: 25pt;
+        max-width:60vw;
         }
 
     .time-mess {
@@ -355,7 +371,7 @@ width:180px;
     .mess-admin {
         position:relative;
         width:90vw;
-        height:90vh;
+
     }
 
 
