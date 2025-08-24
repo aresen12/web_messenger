@@ -133,6 +133,20 @@ def last_m():
     return {"log": True}
 
 
+@mg.route("/get_files_menu", methods=["POST"])
+def get_files_menu():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    files = db_sess.query(File).filter(File.chat_id == data["chat_id"]).all()
+    json_res = []
+    for file in files:
+        file: File
+        mess_id = db_sess.query(Message.id).filter(Message.img == file.id).first()
+        json_res.append({"name": file.name, "mess_id": mess_id[0]})
+    db_sess.close()
+    return json_res
+
+
 @mg.route("/edit_message", methods=["POST"])
 def edit_mess():
     data = request.get_json()

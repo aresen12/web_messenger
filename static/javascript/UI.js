@@ -11,6 +11,32 @@ function showDiv(Div, div2) {
 }
 
 
+function add_border(div1, div2, btn1, btn2){
+    var x = document.getElementById(div1);
+    var y = document.getElementById(div2);
+    var btn1 = document.getElementById(btn1);
+    var btn2 = document.getElementById(btn2);
+    if(x.style.display=="none") {
+        x.style.display = "block";
+        btn2.style.borderBottom = "none";
+        btn1.style.borderBottom = "3px solid #6495ED";
+        y.style.display = "none";
+
+    } else {
+        x.style.display = "none";
+        btn1.style.borderBottom = "3px solid #6495ED";
+        btn2.style.borderBottom = "none";
+        y.style.display = "block";
+    }
+}
+
+
+function show_in_chat(mess_id){
+    show_global_menu("global_menu_d", 1);
+    answer_color("m"+ mess_id)
+}
+
+
 if (document.cookie){
     var button = document.getElementById("bg"+  getCookie("bg"));
     button.click();

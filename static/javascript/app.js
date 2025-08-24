@@ -859,6 +859,53 @@ function add_in_chat_new(){
 }
 
 
+function add_users_label(users, con_users){
+    for (let i = 0; i < users.length; i++){
+             $.ajax({
+                url: '/m/get_user/' + users[i],
+                type: 'GET',
+                dataType: 'json',
+                contentType:'application/json',
+                success: function(json_data){
+                    con_users.innerHTML += '<label class="add-menu">'+ json_data["user"]+ '(' +json_data["email"] + ')' + '</label><br>';
+                    },
+                error: function(err) {
+                    console.error(err);
+                }
+            });
+            };
+}
+
+
+function add_files_label(files_div){
+    $.ajax({
+        url: '/m/get_files_menu',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
+        success: function(json_data){
+            if (json_data.length == 0){
+                files_div.textContent = "Файлы не найдены";
+            };
+            for (let i = 0; i < json_data.length; i++){
+                var file_label = document.createElement('button');
+                file_label.textContent = json_data[i]["name"];
+                file_label.classList = "add-menu";
+                file_label.setAttribute("onclick", `show_in_chat("${json_data[i]['mess_id']}")`)
+//                file_label.href = '/static/img' + json_data[i]["src"]
+                files_div.appendChild(file_label);
+                files_div.appendChild(document.createElement("br"));
+           }
+                    },
+                error: function(err) {
+                    console.error(err);
+                }
+            });
+
+}
+
+
 function show_users(){
     if (document.getElementById("chat_id").value != ""){
         $.ajax({
@@ -869,25 +916,32 @@ function show_users(){
             success: function(json){
             var global_menu = document.getElementById("global_menu");
             document.getElementById("global_menu_d").style.display = "flex";
-            global_menu.innerHTML = '<h2>Управление чатом</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button><br>';
-            global_menu.innerHTML += '<div id="users"><div id="con_users"></div><div id="edit_users"></div></div>';
-            var users_div = document.getElementById("con_users");
-            users_div.innerHTML += '<h3>Участники</h3>';
-            for (let i = 0; i < json["user"].length; i++){
-             $.ajax({
-                url: '/m/get_user/' + json["user"][i],
-                type: 'GET',
-                dataType: 'json',
-                contentType:'application/json',
-                success: function(json_data){
-                    users_div.innerHTML += '<label class="add-menu">'+ json_data["user"]+ '(' +json_data["email"] + ')' + '</label><br>';
-
-                    },
-                error: function(err) {
-                    console.error(err);
-                }
-            });
-            };
+            global_menu.innerHTML = '<h2>Управление чатом</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id_user   + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button><br>';
+            const users_div = document.createElement("div");
+            users_div.id = "users";
+            const con_users = document.createElement("div");
+            con_users.id = "con_users";
+            const user_btn = document.createElement('button');
+            user_btn.textContent = "Участники";
+            user_btn.id = "border_btn1";
+            user_btn.style.borderBottom = "3px solid #6495ED";
+            user_btn.setAttribute("onclick", 'add_border("users", "files",  "border_btn1",  "border_btn2")');
+            user_btn.classList = "info-btn";
+            const file_btn = document.createElement('button');
+            file_btn.textContent = "файлы";
+            file_btn.id = "border_btn2";
+            file_btn.setAttribute("onclick", 'add_border("users", "files",  "border_btn1",  "border_btn2")');
+            file_btn.classList = "info-btn";
+            users_div.appendChild(con_users);
+            global_menu.appendChild(user_btn);
+            global_menu.appendChild(file_btn);
+            global_menu.appendChild(users_div);
+            files_div = document.createElement("div");
+            files_div.id = "files";
+            files_div.style.display = 'none';
+            global_menu.appendChild(files_div);
+            add_users_label(json["user"], con_users);
+            add_files_label(files_div);
             if (! json["primary_chat"]){
                 var users_div_edit = document.getElementById("edit_users");
                 users_div_edit.innerHTML += '<button onclick="add_in_chat_new()" class="edit-btn">Добавить участника</button>';
