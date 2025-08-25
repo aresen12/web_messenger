@@ -33,7 +33,7 @@ function add_border(div1, div2, btn1, btn2){
 
 function show_in_chat(mess_id){
     show_global_menu("global_menu_d", 1);
-    answer_color("m"+ mess_id)
+    answer_color("m"+ mess_id);
 }
 
 
