@@ -8,6 +8,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from data import db_session
 from data.user import User
 from forms.register_form import RegisterForm
+from api import api
 from data.message import Message
 from data.chat import Chat
 from data.File import File
@@ -39,6 +40,7 @@ def logout():
 
 db_session.global_init('db/master_paste.db')
 application.register_blueprint(mg)
+application.register_blueprint(api)
 
 
 @application.route('/login', methods=['GET', 'POST'])
