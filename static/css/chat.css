@@ -288,6 +288,7 @@ scrollbar-width: thin;
 width:180px;
 }
 @media screen and (width < 981px) and (pointer:none), (pointer:coarse) {
+     .add-menu{width:100vw;}
     .html {font-size: 20px;}
     .container-mess {width:100vw;}
     .form2 {font-size:50px;width:100vw;}
@@ -306,12 +307,7 @@ width:180px;
         margin-left:2.5vw;
         }
 
-    .add-menu {
-    position:relative;
-        max-width: 100%;
-        width: 100%;
 
-    }
 
     .info-btn {
         font-size: 35px;
@@ -433,11 +429,10 @@ width:180px;
 
 
 .add-menu {
+    width: 97%;
     position:relative;
     left:2vw;
     border:1px solid gray;
-
-    width: 30vw;
 }
 
 

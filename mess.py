@@ -14,6 +14,7 @@ from events_io import edit_event, socketio
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
+
 @mg.route("/", methods=["GET", "POST"])
 def m_st():
     if request.method == 'GET':
@@ -123,7 +124,7 @@ def pinned():
     db_sess.commit()
     db_sess.close()
     # добавить socketio
-    return {"log":True}
+    return {"log": True}
 
 
 @mg.route("/last_m", methods=["POST"])
@@ -157,6 +158,36 @@ def edit_mess():
         mess.read = 0
         db_sess.commit()
         db_sess.close()
+    return {"log": True}
+
+
+@mg.route("/send_voice/<chat_id>", methods=["POST"])
+def send_voice(chat_id):
+    db_sess = db_session.create_session()
+    f = request.files['voice']
+    print(f.filename)
+    os.chdir('static/img/data')
+    dd = len(os.listdir())
+    os.chdir("..")
+    os.chdir("..")
+    os.chdir("..")
+    file = open(f"static/img/data/{dd}.mp3", mode="wb")
+    file.write(f.read())
+    file.close()
+    file_db = File()
+    file_db.chat_id = chat_id
+    file_db.path = f"data/{dd}.mp3"
+    file_db.name = "voice.mp3"
+    mess = Message()
+    mess.name_sender = current_user.name
+    mess.id_sender = current_user.id
+    mess.chat_id = chat_id
+    db_sess.add(file_db)
+    db_sess.commit()
+    mess.img = file_db.id
+    db_sess.add(mess)
+    db_sess.commit()
+    db_sess.close()
     return {"log": True}
 
 
@@ -281,8 +312,6 @@ def del_chat():
         return {"log": True}
     except PermissionError:
         return {"log": False, "error": "Permission error"}
-    except Exception:
-        return {"log": False}
 
 
 @mg.route("/block_chat", methods=["POST"])
