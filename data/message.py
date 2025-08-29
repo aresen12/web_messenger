@@ -45,3 +45,16 @@ def get_summ_id(chat_id):
     for _ in res:
         s += _[0]
     return s
+
+
+def new_mess(message, id_sender, name_sender, chat_id, html, file_id="", read=False, pinned_m=False):
+    mess = Message()
+    mess.message = message
+    mess.chat_id = chat_id
+    mess.id_sender = id_sender
+    mess.name_sender = name_sender
+    mess.pinned = pinned_m
+    mess.read = read
+    mess.img = file_id
+    mess.html_m = html
+    return mess

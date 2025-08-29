@@ -353,7 +353,7 @@ function edit_prof_html(){
         contentType:'application/json',
         success: function(json){
             menu.innerHTML = '<h2>Редактировать профиль</h2><button onclick="show_global_menu(' + "'global_menu_d'" + '\
-            , ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
+            , ' + id_user + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
             menu.innerHTML += '<div class="edit-cont" id="p_group" style="display:none;"></div>';
             menu.innerHTML  += '<div class="edit-cont" id="edit_cont"><label>Имя</label><br><input id="name_edit"\
              name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br></div>';

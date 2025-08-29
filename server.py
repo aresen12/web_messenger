@@ -1,7 +1,7 @@
 import datetime
 import os
 import sys
-
+from keys import api_key
 from flask import Flask, request, render_template, redirect
 from forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -13,6 +13,7 @@ from data.message import Message
 from data.chat import Chat
 from data.File import File
 from data.black_list import Black
+from flask_cors import CORS
 from mess import mg
 from events_io import socketio
 application = Flask(__name__)
@@ -20,7 +21,7 @@ application.config['SECRET_KEY'] = 'certificate'
 hash_password = '7cb8fa366d774761d198d3dc6244740c'
 login_manager = LoginManager()
 login_manager.init_app(application)
-socketio.init_app(application)
+
 
 
 @login_manager.user_loader
@@ -28,6 +29,7 @@ def load_user(user_id):
     db_sess = db_session.create_session()
     rs = db_sess.get(User, user_id)
     db_sess.close()
+    # print(rs)
     return rs
     
     
@@ -41,6 +43,23 @@ def logout():
 db_session.global_init('db/master_paste.db')
 application.register_blueprint(mg)
 application.register_blueprint(api)
+socketio.init_app(application)
+CORS(application, supports_credentials=True)
+
+
+@application.route("/login_device", methods=["POST", "GET"])
+def login_device():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.email == data["user_name"]).first()
+    if user and user.check_password(data["password"]):
+        login_user(user, remember=True, duration=datetime.timedelta(hours=24*90), force=True)
+            # print(current_user)
+        return {"log": True, "name": current_user.name, "id_user": current_user.id, "api_key": api_key,
+                "username": current_user.email}
+    else:
+        db_sess.close()
+        return {"log": "Bad password"}
 
 
 @application.route('/login', methods=['GET', 'POST'])

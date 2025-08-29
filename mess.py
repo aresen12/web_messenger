@@ -5,12 +5,11 @@ from flask import (
 from data import db_session
 from data.user import User
 from flask_login import current_user
-from data.message import Message, get_summ_id
+from data.message import Message, get_summ_id, new_mess
 from data.chat import Chat, get_chats
 from data.File import File, get_files
 from data.black_list import Black
 from flask_socketio import emit
-from events_io import edit_event, socketio
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
@@ -27,16 +26,13 @@ def m_st():
         if request.form["about"].strip() == "" and f.filename == "":
             return redirect('/m')
         db_sess = db_session.create_session()
-        mess = Message()
-        db_sess.query(User).filter(User.email == current_user.email)
-        mess.name_sender = current_user.name
-        mess.id_sender = current_user.id
-        mess.message = request.form["about"]
-        chat_id = request.form["chat_id"]
-        mess.read = 0
-        html_text = request.form["html_m"]
-        if html_text.strip() != "":
-            mess.html_m = html_text
+        if current_user.is_authenticated:
+            c_user = db_sess.query(User).filter(User.email == current_user.email).first()
+        else:
+            c_user = db_sess.query(User).filter(User.email == request.form["id_user"]).first()
+        mess = new_mess(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
+                        chat_id=request.form["chat_id"], html=request.form["html_m"])
+        c_user: User
         if f.filename != "":
             file_db = File()
             file_db.name = f.filename
@@ -52,20 +48,15 @@ def m_st():
             file_db.path = f"data/{dd}.{ex}"
             db_sess.add(file_db)
             db_sess.commit()
-            file_db.chat_id = chat_id
+            file_db.chat_id = request.form["chat_id"]
             mess.img = file_db.id
-        file_name = mess.img
-        text = mess.message
-
-        mess.chat_id = chat_id
         db_sess.add(mess)
         db_sess.commit()
-        id_m = mess.id
         t_ = mess.get_time()
         db_sess.close()
-        emit('message', {"message": text, "time": t_, "id_m": id_m,
-                         "file": file_name, "html": html_text, "name": current_user.name,
-                         "read": 0, "id_sender": current_user.id}, to=chat_id, namespace="/")
+        emit('message', {"message": mess.message, "time": t_, "id_m": mess.id,
+                         "file": mess.img, "html": request.form["html_m"], "name": mess.name_sender,
+                         "read": 0, "id_sender": mess.id_sender}, to=request.form["chat_id"], namespace="/")
         return {"log": True}
 
 
@@ -293,6 +284,7 @@ def delete_chat(id_):
 
 @mg.route("/get_chats")
 def mg_get_chats():
+    # return {"test":True}
     return {"chats": get_chats()}
 
 
@@ -426,7 +418,10 @@ def get_json_message():
             db_sess.commit()
         db_sess.close()
         js["summ_id"] = summ
+        print(js)
         return js
+        # return {"log": True}
+    return {"log": "NOT auth"}
 
 
 @mg.route("/get_not_read", methods=["POST"])

@@ -503,14 +503,14 @@ function get_users (id){
         document.getElementById("global_menu").innerHTML="";
         var html = '<h2>Создать чаты</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
         for (let i = 0; i < json["users"].length; i++){
-            if (json["c_user"] != json["users"][i][2]){
+            if (id_user != json["users"][i][2]){
                html = html + '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2]+ ", 'list_members'" + ')">' + json["users"][i][0] + '</label><br>';
             }
         }
         var menu = document.getElementById("global_menu");
         menu.innerHTML = html;
         menu.innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><br><div class="add-menu" id="name_new_chat_group"><label>Имя чата</label><br><input id="name_new_chat"></div>';
-        menu.innerHTML += '<input id="list_members" style="display:none;" value="' + json["c_user"] + '">';
+        menu.innerHTML += '<input id="list_members" style="display:none;" value="' + id_user+ '">';
             },
         error: function(err) {
             console.error(err);
@@ -529,8 +529,8 @@ function get_users_primary (id){
         document.getElementById("global_menu").innerHTML="";
         var html = '<h2>Создать чат с пользователем</h2><button onclick="' + "show_global_menu('global_menu_d',  0)" +'" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
         for (let i = 0; i < json["users"].length; i++){
-            if (json["c_user"] != json["users"][i][2]){
-               html = html + '<label class="add-menu" onclick="create_chat('+ "'"+ json["users"][i][2] + ' ' + json["c_user"] + "', '', 1" + ')">' + json["users"][i][0] + '</label><br>';
+            if (id_user!= json["users"][i][2]){
+               html = html + '<label class="add-menu" onclick="create_chat('+ "'"+ json["users"][i][2] + ' ' + id_user+ "', '', 1" + ')">' + json["users"][i][0] + '</label><br>';
             }
         }
         var menu = document.getElementById("global_menu");
@@ -845,7 +845,7 @@ function add_in_chat_new(){
     success: function(json){
             var sp = document.getElementById("list_c_u").value.split(" ");
             for (let i = 0; i < json["users"].length; i++){
-                if (json["users"][i][2] in sp || json["c_user"] == json["users"][i][2]){
+                if (json["users"][i][2] in sp || id_user == json["users"][i][2]){
                 } else{
                 add_new_users.innerHTML += '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2]+ ", 'list_of_new_u'" + ')">' + json["users"][i][0] + '</label><br>';
             }
@@ -1011,8 +1011,6 @@ function set_read(chat_id){
 }
 
 
-$( '#about' ).focus(function() { if (mobile) {}});
-$( '#about' ).blur(function() {});
 function pinned(id_mess){
     chat_id = document.getElementById("chat_id").value;
     $.ajax({
@@ -1031,7 +1029,7 @@ function pinned(id_mess){
 }
 
             // Connect to SocketIO server
-const socket = io();
+const socket = io.connect('http://0.0.0.0:5000');
 
             // Handle form submission
 function send_io_mess() {

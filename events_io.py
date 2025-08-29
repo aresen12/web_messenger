@@ -2,9 +2,10 @@ from flask_login import current_user
 from flask_socketio import emit, SocketIO, join_room, leave_room, rooms
 from data import db_session
 from data.chat import Chat
-from data.message import Message
+from data.message import Message, new_mess
+from data.user import User
 socketio = SocketIO(cors_allowed_origins="*")
-
+from keys import api_key
 
 @socketio.on('join')
 def on_join(data):
@@ -12,14 +13,23 @@ def on_join(data):
     users = rooms()
     print(users)
     join_room(room)
-    emit('join_event', {"id_user": current_user.id, "users": users}, to=room)
+    print(current_user)
+    if current_user.is_authenticated:
+        emit('join_event', {"id_user": current_user.id, "users": users}, to=room)
+    else:
+        print(data)
+        emit('join_event', {"id_user": data["id_user"], "users": users}, to=room)
 
 
 @socketio.on('leave')
 def on_leave(data):
     room = data['room']
     leave_room(room)
-    emit('leave_event', {"id_user": current_user.id}, to=room)
+    if current_user.is_authenticated:
+        emit('leave_event', {"id_user": current_user.id}, to=room)
+    else:
+        emit('leave_event', {"id_user": data["id_user"]}, to=room)
+
 
 
 @socketio.on('edit_mess')
@@ -32,26 +42,39 @@ def edit_event(data):
 def room_message(data):
     db_sess = db_session.create_session()
     chat = db_sess.query(Chat).filter(Chat.id == data["room"]).first()
-    chat:Chat
-    if str(current_user.id) in chat.members.split():
-        mess = Message()
-        mess.message = data['message']
-        mess.read = 0
-        mess.html_m = data["html"]
-        mess.id_sender = current_user.id
-        id_sender = mess.id_sender
-        mess.chat_id = data["room"]
-        mess.name_sender = current_user.name
+    chat: Chat
+    if current_user.is_authenticated:
+        if str(current_user.id) in chat.members.split():
+            mess = Message()
+            mess.message = data['message']
+            mess.read = 0
+            mess.html_m = data["html"]
+            mess.id_sender = current_user.id
+            id_sender = mess.id_sender
+            mess.chat_id = data["room"]
+            mess.name_sender = current_user.name
+            db_sess.add(mess)
+            db_sess.commit()
+            id_m = mess.id
+            t_ = mess.get_time()
+            file2 = mess.img
+            print(file2)
+            db_sess.close()
+            emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
+                             "file2": file2, "html": data["html"], "name": current_user.name,
+                             "read": 0, "id_sender": id_sender, "pinned": mess.pinned}, to=data['room'])
+    elif data["api_key"] == api_key:
+        c_user = db_sess.query(User).filter(User.id == data['id_user']).first()
+        mess = new_mess(message=data['message'], html=data["html"], id_sender=data["id_user"], chat_id=data["room"],
+                        name_sender=c_user.name)
         db_sess.add(mess)
         db_sess.commit()
         id_m = mess.id
         t_ = mess.get_time()
-        file2 = mess.img
-        print(file2)
         db_sess.close()
         emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
-                         "file2": file2, "html": data["html"], "name": current_user.name,
-                         "read": 0, "id_sender": id_sender, "pinned": mess.pinned}, to=data['room'])
+                         "file2": mess.img, "html": data["html"], "name": mess.name_sender,
+                         "read": 0, "id_sender": data["id_user"], "pinned": mess.pinned}, to=data['room'])
 
 
 @socketio.on('connect')
