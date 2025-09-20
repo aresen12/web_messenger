@@ -23,13 +23,11 @@ login_manager = LoginManager()
 login_manager.init_app(application)
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     rs = db_sess.get(User, user_id)
     db_sess.close()
-    # print(rs)
     return rs
     
     
@@ -54,7 +52,6 @@ def login_device():
     user = db_sess.query(User).filter(User.email == data["user_name"]).first()
     if user and user.check_password(data["password"]):
         login_user(user, remember=True, duration=datetime.timedelta(hours=24*90), force=True)
-            # print(current_user)
         return {"log": True, "name": current_user.name, "id_user": current_user.id, "api_key": api_key,
                 "username": current_user.email}
     else:
@@ -109,15 +106,11 @@ def main():
         return render_template("main.html", title='главная')
 
 
-
-
 @application.route("/stop_messenger")
 def stop_app():
     sys.exit(0)
-    return {"log":True}
 
 
 if __name__ == "__main__":
-    # application.run(host='0.0.0.0', debug=True)
-    socketio.run(application, host='0.0.0.0', debug=True)
+    socketio.run(application, host='0.0.0.0', debug=True, )
 

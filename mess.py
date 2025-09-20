@@ -418,9 +418,7 @@ def get_json_message():
             db_sess.commit()
         db_sess.close()
         js["summ_id"] = summ
-        print(js)
         return js
-        # return {"log": True}
     return {"log": "NOT auth"}
 
 

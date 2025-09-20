@@ -1029,7 +1029,8 @@ function pinned(id_mess){
 }
 
             // Connect to SocketIO server
-const socket = io.connect('http://0.0.0.0:5000');
+const socket = io.connect();
+
 
             // Handle form submission
 function send_io_mess() {
@@ -1039,6 +1040,7 @@ function send_io_mess() {
                 const html2 = document.getElementById('html_m');
                 const html_m = html2.value;
                 if (message) {
+                    console.log("test");
                     // Send message to server
 //                    socket.emit('message', message);
                     socket.emit('room_message', {room: chat_id, message: message, html: html_m });

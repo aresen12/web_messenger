@@ -7,13 +7,13 @@ from data.user import User
 socketio = SocketIO(cors_allowed_origins="*")
 from keys import api_key
 
+
 @socketio.on('join')
 def on_join(data):
     room = data['room']
     users = rooms()
     print(users)
     join_room(room)
-    print(current_user)
     if current_user.is_authenticated:
         emit('join_event', {"id_user": current_user.id, "users": users}, to=room)
     else:
@@ -29,7 +29,6 @@ def on_leave(data):
         emit('leave_event', {"id_user": current_user.id}, to=room)
     else:
         emit('leave_event', {"id_user": data["id_user"]}, to=room)
-
 
 
 @socketio.on('edit_mess')
@@ -58,7 +57,6 @@ def room_message(data):
             id_m = mess.id
             t_ = mess.get_time()
             file2 = mess.img
-            print(file2)
             db_sess.close()
             emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
                              "file2": file2, "html": data["html"], "name": current_user.name,
