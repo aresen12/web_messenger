@@ -1028,84 +1028,6 @@ function pinned(id_mess){
     });
 }
 
-            // Connect to SocketIO server
-const socket = io.connect();
-
-
-            // Handle form submission
-function send_io_mess() {
-                const input = document.getElementById('about');
-                const chat_id = document.getElementById('chat_id').value;
-                const message = input.value;
-                const html2 = document.getElementById('html_m');
-                const html_m = html2.value;
-                if (message) {
-                    console.log("test");
-                    // Send message to server
-//                    socket.emit('message', message);
-                    socket.emit('room_message', {room: chat_id, message: message, html: html_m });
-                    input.value = '';
-                    html2.value = '';
-                }
-
-}
-
-            // Listen for messages from server
-socket.on('message', (data) => {
-                const messagesDiv = document.getElementById('content');
-                var other = 1;
-                if (id_user == data["id_sender"]){
-                var other = 0;
-            }
-                gener_html(data["id_m"], data["message"], data["time"], data["html"], data["file2"], other, data["read"], data["name"], data["pinned"])
-//                const messageItem = document.createElement('div');
-//                messageItem.textContent = message;
-//                messagesDiv.appendChild(messageItem);
-                // Auto-scroll to the bottom
-
-});
-
-socket.on('create_chat', (data) => {
-    alert('refresh page');
-    gener_chat("email", data["chat_id"], data["name"], 1, data["is_primary"]);
-});
-
-socket.on('join_event', (data) => {
-    if (id_user != data["id_user"]){
-        const div_ = document.getElementById("ident");
-        div_.textContent = "(в сети)";
-    }
-
-
-});
-
-socket.on('leave_event', (data) => {
-    if (id_user != data["id_user"]){
-        const div_ = document.getElementById("ident");
-        div_.textContent = "";
-    }
-});
-
-
-socket.on('edit_mess', (data) => {
-   document.getElementById("text" + data["id_mess"]).textContent = data["new_text"];
-   console.log("edit soc")
-});
-
-socket.on('connect', () => {
-    chat_id = document.getElementById("chat_id");
-    if (chat_id.value != ""){
-        socket.emit('join', {room: chat_id.value});
-    }
-});
-
-
-socket.on('disconnect', () => {
-    alert("disconnect");
-});
-
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
  (async () => {
@@ -1116,3 +1038,21 @@ document.addEventListener('DOMContentLoaded', () => {
    }
    })
 });
+
+
+
+function submit_username_tg(){
+    $.ajax({
+        url: '/m/set_username_tg',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"username": document.getElementById("tg_input").value}),
+        success: function(json){
+            document.getElementById("global_menu_d").style.display = "none";
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}

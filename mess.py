@@ -5,11 +5,12 @@ from flask import (
 from data import db_session
 from data.user import User
 from flask_login import current_user
-from data.message import Message, get_summ_id, new_mess
+from data.message import Message, new_mess
 from data.chat import Chat, get_chats
 from data.File import File, get_files
 from data.black_list import Black
 from flask_socketio import emit
+from data.bot_db import BotDB
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
@@ -182,24 +183,25 @@ def send_voice(chat_id):
     return {"log": True}
 
 
-@mg.route("/send_message", methods=["POST"])
-def send_message():
-    data = request.get_json()
-    db_sess = db_session.create_session()
-    mess = Message()
-    mess.message = data["new_text"]
-    mess.read = 0
-    mess.html_m = data["html"]
-    mess.id_sender = current_user.id
-    mess.chat_id = data["chat_id"]
-    mess.name_sender = current_user.name
-    db_sess.add(mess)
-    db_sess.commit()
-    id_m = mess.id
-    t_ = mess.get_time()
-    db_sess.close()
-    return {"id": id_m, "time": t_}
-
+# @mg.route("/send_message", methods=["POST"])
+# def send_message():
+#     data = request.get_json()
+#     db_sess = db_session.create_session()
+#     mess = Message()
+#     mess.message = data["new_text"]
+#     mess.read = 0
+#     mess.html_m = data["html"]
+#     mess.id_sender = current_user.id
+#     mess.chat_id = data["chat_id"]
+#     mess.name_sender = current_user.name
+#     chat_mem = db_sess.query(Chat.members).filter().first()
+#     db_sess.add(mess)
+#     db_sess.commit()
+#     id_m = mess.id
+#     t_ = mess.get_time()
+#     db_sess.close()
+#     return {"id": id_m, "time": t_}
+# кажется устарело нужно проверить
 
 @mg.route("/sing_out_chat", methods=["POST"])
 def sing_out_chat():
@@ -330,16 +332,6 @@ def block_chat():
     return {"log": True}
 
 
-@mg.route("/get_new", methods=["POST"])
-def get_new():
-    data = request.get_json()
-    if current_user.is_authenticated:
-        chat_id = data["id"]
-        message = get_summ_id(chat_id)
-        return {"summ_id": message}
-    return {"summ_id": 0}
-
-
 @mg.route("/c_get_user")
 def c_get_user():
     if current_user.is_authenticated:
@@ -349,6 +341,24 @@ def c_get_user():
         u = {"id": user.id, "name": user.name, "email": user.email}
         return {"user": u}
     return {"user": None}
+
+
+@mg.route("/set_username_tg", methods=["POST"])
+def ser_username_tg():
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        data = request.get_json()
+        user = db_sess.query(BotDB).filter(BotDB.id_user == current_user.id).first()
+        if user is None:
+            user = BotDB()
+            user.id_user = current_user.id
+            db_sess.add(user)
+            db_sess.commit()
+        user.user_name = data["username"]
+        db_sess.commit()
+        db_sess.close()
+        return {"log": True}
+    return {"log": False}
 
 
 @mg.route("/edit_name_chat", methods=["POST"])

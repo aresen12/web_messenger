@@ -5,7 +5,10 @@ from data.chat import Chat
 from data.message import Message, new_mess
 from data.user import User
 socketio = SocketIO(cors_allowed_origins="*")
-from keys import api_key
+from keys import api_key, bot_key
+from data.bot_db import BotDB
+import telebot
+from telebot import TeleBot
 
 
 @socketio.on('join')
@@ -37,6 +40,18 @@ def edit_event(data):
     emit("edit_mess", {"new_text": data["new_text"], "id_mess": data["id_m"], }, to=room)
 
 
+def send_all(db_sess, chat_members, text):
+    db_sess: db_session
+    bot = TeleBot(bot_key)
+    if text == "":
+        text = "Возможно у вас новыее сообщения"
+    for user_id in chat_members.split():
+        chat = db_sess.query(BotDB.chat_id_tg, BotDB.notification).filter(BotDB.id_user == user_id).first()
+        print(chat)
+        if not (chat is None or chat[0] is None) and chat[1]:
+            bot.send_message(chat[0], text)
+
+
 @socketio.on('room_message')
 def room_message(data):
     db_sess = db_session.create_session()
@@ -57,6 +72,8 @@ def room_message(data):
             id_m = mess.id
             t_ = mess.get_time()
             file2 = mess.img
+            chat_mem = db_sess.query(Chat.members).filter(Chat.id == data["room"]).first()
+            send_all(db_sess, chat_mem[0], data['message'])
             db_sess.close()
             emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
                              "file2": file2, "html": data["html"], "name": current_user.name,

@@ -442,7 +442,24 @@ function answer_color (src){
     } else{
         mess.style.background = "#CFF4FC";
     }
-
-    // do your thing!
 }, 2000);
+}
+
+
+function set_username_tg(){
+    var global_menu_d = document.getElementById("global_menu_d");
+    global_menu_d.style.display = "block";
+    var global_menu = document.getElementById("global_menu");
+    global_menu.innerHTML = `<button onclick="show_global_menu('global_menu_d', 1)" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>`;
+    var btn1 = document.createElement("button");
+    btn1.textContent = "Добавить/изменить";
+    btn1.setAttribute("onclick", "submit_username_tg()");
+    btn1.classList = "edit-btn";
+    var input_tg = document.createElement("input");
+    input_tg.id = "tg_input";
+    var h1_tg = document.createElement("label");
+    h1_tg.textContent = "Напишите свой username в текстовое поле ниже, а затем напишите нашему тг боту @Kazbek_messenger_bot";
+    global_menu.appendChild(h1_tg);
+    global_menu.appendChild(input_tg);
+    global_menu.appendChild(btn1);
 }

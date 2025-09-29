@@ -13,6 +13,7 @@ from data.message import Message
 from data.chat import Chat
 from data.File import File
 from data.black_list import Black
+from data.bot_db import BotDB
 from flask_cors import CORS
 from mess import mg
 from events_io import socketio
