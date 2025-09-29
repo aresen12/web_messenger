@@ -40,15 +40,23 @@ def edit_event(data):
     emit("edit_mess", {"new_text": data["new_text"], "id_mess": data["id_m"], }, to=room)
 
 
-def send_all(db_sess, chat_members, text):
+def send_all(db_sess, chat_members, text, c_id, name, prim):
     db_sess: db_session
     bot = TeleBot(bot_key)
+    if prim:
+        chat_members: str
+        a = chat_members.split()
+        del a[a.index(str(c_id))]
+        user_name = db_sess.query(User.name).filter(User.id == a[0]).first()
+        text = f"{user_name[0]}\n" + text
+    else:
+        text = f"{name}\n" + text
     if text == "":
         text = "Возможно у вас новыее сообщения"
     for user_id in chat_members.split():
         chat = db_sess.query(BotDB.chat_id_tg, BotDB.notification).filter(BotDB.id_user == user_id).first()
         print(chat)
-        if not (chat is None or chat[0] is None) and chat[1]:
+        if not (chat is None or chat[0] is None or str(c_id) == user_id) and chat[1]:
             bot.send_message(chat[0], text)
 
 
@@ -72,8 +80,8 @@ def room_message(data):
             id_m = mess.id
             t_ = mess.get_time()
             file2 = mess.img
-            chat_mem = db_sess.query(Chat.members).filter(Chat.id == data["room"]).first()
-            send_all(db_sess, chat_mem[0], data['message'])
+            chat_mem = db_sess.query(Chat.members, Chat.name, Chat.primary_chat).filter(Chat.id == data["room"]).first()
+            send_all(db_sess, chat_mem[0], data['message'], current_user.id, chat_mem[1], chat_mem[2])
             db_sess.close()
             emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
                              "file2": file2, "html": data["html"], "name": current_user.name,
