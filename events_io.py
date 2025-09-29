@@ -46,7 +46,7 @@ def send_all(db_sess, chat_members, text, c_id, name, prim):
     if prim:
         chat_members: str
         a = chat_members.split()
-        del a[a.index(str(c_id))]
+        del a[not (a.index(str(c_id)))]
         user_name = db_sess.query(User.name).filter(User.id == a[0]).first()
         text = f"{user_name[0]}\n" + text
     else:
