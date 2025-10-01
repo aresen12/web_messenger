@@ -292,6 +292,8 @@ width:180px;
     margin-left:5px;
     font-size:30px;
 }
+
+.log-img {height:70px;}
 @media screen and (width < 981px) and (pointer:none), (pointer:coarse) {
     .log-img {height:10vh;}
     .log-name {font-size:40px;}
