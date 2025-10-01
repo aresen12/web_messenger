@@ -690,7 +690,6 @@ function get_chats (id_div){
         dataType: 'json',
         contentType:'application/json',
         success: function(json){
-
             if (json["chats"].length == 0){
                 document.getElementById(id_div).innerHTML = '<h2>Для того чтобы создать чат нажмите на синий плюс.</h2>'
                 return 0
@@ -737,43 +736,6 @@ function get_chats (id_div){
         }
 });
 }
-
-
-function gener_chat(id_div, chat_id, name_chat, status, primary){
-    const cont = document.getElementById(id_div);
-    get_read(chat_id);
-    const btn = document.createElement('button');
-    btn.id = 'chat'+ chat_id;
-    btn.classList = "a-email";
-    btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status})`);
-    const rn = document.createElement('div');
-    rn.classList = "r-n";
-    rn.id = 'rn' + chat_id;
-    const icon_chat = document.createElement('div');
-    icon_chat.id = "icon_chat" + chat_id;
-    const name_chat_div = document.createElement('div');
-    name_chat_div.id = "n_c" + chat_id;
-    name_chat_div.textContent = name_chat;
-    name_chat_div.classList = "n-c";
-    btn.appendChild(icon_chat);
-    btn.appendChild(name_chat_div);
-    btn.appendChild(rn);
-    cont.appendChild(btn);
-    var icon_size = 40;
-    if (mobile){
-        icon_size = 80;
-    }
-    icon_chat.style.width = icon_size + "px";
-    const svg =
-            d3.select("#icon_chat" + chat_id).
-            append('svg').
-            attr('height', `${icon_size}`).
-            attr('width', `${icon_size}`)
-            var circle = svg.append("circle") .attr("cx", icon_size / 2) .attr("cy", icon_size / 2) .attr("r", icon_size / 2) .attr("fill", random_colors[Math.floor(Math.random() * random_colors.length)]);
-var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circle.attr("cy") - 3) .attr("dy", "0.35em") .text(name_chat[0]);
-
-}
-
 
 
 function get_chats_gl (id_div, id_m){

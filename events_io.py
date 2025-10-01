@@ -4,11 +4,10 @@ from data import db_session
 from data.chat import Chat
 from data.message import Message, new_mess
 from data.user import User
+from keys import api_key
+from bot_def import send_all
+
 socketio = SocketIO(cors_allowed_origins="*")
-from keys import api_key, bot_key
-from data.bot_db import BotDB
-import telebot
-from telebot import TeleBot
 
 
 @socketio.on('join')
@@ -38,26 +37,6 @@ def on_leave(data):
 def edit_event(data):
     room = data['room']
     emit("edit_mess", {"new_text": data["new_text"], "id_mess": data["id_m"], }, to=room)
-
-
-def send_all(db_sess, chat_members, text, c_id, name, prim):
-    db_sess: db_session
-    bot = TeleBot(bot_key)
-    if prim:
-        chat_members: str
-        a = chat_members.split()
-        del a[not (a.index(str(c_id)))]
-        user_name = db_sess.query(User.name).filter(User.id == a[0]).first()
-        text = f"{user_name[0]}\n" + text
-    else:
-        text = f"{name}\n" + text
-    if text == "":
-        text = "Возможно у вас новыее сообщения"
-    for user_id in chat_members.split():
-        chat = db_sess.query(BotDB.chat_id_tg, BotDB.notification).filter(BotDB.id_user == user_id).first()
-        print(chat)
-        if not (chat is None or chat[0] is None or str(c_id) == user_id) and chat[1]:
-            bot.send_message(chat[0], text)
 
 
 @socketio.on('room_message')
