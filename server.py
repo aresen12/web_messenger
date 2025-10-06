@@ -1,5 +1,5 @@
 import datetime
-import os
+import random
 import sys
 from keys import api_key
 from flask import Flask, request, render_template, redirect
@@ -14,9 +14,13 @@ from data.chat import Chat
 from data.File import File
 from data.black_list import Black
 from data.bot_db import BotDB
+import hashlib
+from data.reset_passwords import DCode
 from flask_cors import CORS
 from mess import mg
 from events_io import socketio
+from bot_def import send_random_key
+
 application = Flask(__name__)
 application.config['SECRET_KEY'] = 'certificate'
 hash_password = '7cb8fa366d774761d198d3dc6244740c'
@@ -99,7 +103,45 @@ def reqister():
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
-     
+
+@application.route("/reset_password")
+def reset_pass_def():
+    return render_template("reset_password.html")
+
+
+@application.route("/send_code_tg", methods=["POST"])
+def send_code_tg_server():
+    data = request.get_json()
+    code = random.randint(100000, 999999)
+    db_sess = db_session.create_session()
+    user_id = db_sess.query(User.id).filter(User.email == data["login"]).first()
+    test = send_random_key(user_id, code)
+    code_status, message = test[0], test[1]
+    db_sess.close()
+    return {"status": code_status, "message": message}
+
+
+@application.route("/check_code_and_login", methods=["POST"])
+def check_code_and_login():
+    data = request.get_json()
+    code = data["dcode"]
+    new_password = data["new_password"]
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.email == data["login"]).first()
+    dcode = db_sess.query(DCode).filter(DCode.id_user == user.id).first()
+    if dcode.check_password(code):
+        user.set_password(new_password)
+        db_sess.delete(dcode)
+        db_sess.commit()
+        db_sess.close()
+        return {"status": 200}
+    db_sess.close()
+    return {"status": 500}
+
+
+# потом дописать и код возврата!!!!
+
+
 @application.route("/main", methods=["GET", "POST"])
 @application.route("/", methods=["GET", "POST"])
 def main():
