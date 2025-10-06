@@ -14,7 +14,6 @@ from data.chat import Chat
 from data.File import File
 from data.black_list import Black
 from data.bot_db import BotDB
-import hashlib
 from data.reset_passwords import DCode
 from flask_cors import CORS
 from mess import mg
