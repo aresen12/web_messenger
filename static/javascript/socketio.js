@@ -27,12 +27,8 @@ socket.on('message', (data) => {
                 if (id_user == data["id_sender"]){
                 var other = 0;
             }
+            console.log("вроде тут")
                 gener_html(data["id_m"], data["message"], data["time"], data["html"], data["file2"], other, data["read"], data["name"], data["pinned"])
-//                const messageItem = document.createElement('div');
-//                messageItem.textContent = message;
-//                messagesDiv.appendChild(messageItem);
-                // Auto-scroll to the bottom
-
 });
 
 socket.on('create_chat', (data) => {

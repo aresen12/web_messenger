@@ -34,6 +34,8 @@ def m_st():
         mess = new_mess(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
                         chat_id=request.form["chat_id"], html=request.form["html_m"])
         c_user: User
+        x = ""
+        name = ""
         if f.filename != "":
             file_db = File()
             file_db.name = f.filename
@@ -47,6 +49,8 @@ def m_st():
             file.write(f.read())
             file.close()
             file_db.path = f"data/{dd}.{ex}"
+            x = file_db.path
+            name = file_db.name
             db_sess.add(file_db)
             db_sess.commit()
             file_db.chat_id = request.form["chat_id"]
@@ -56,7 +60,7 @@ def m_st():
         t_ = mess.get_time()
         db_sess.close()
         emit('message', {"message": mess.message, "time": t_, "id_m": mess.id,
-                         "file": mess.img, "html": request.form["html_m"], "name": mess.name_sender,
+                         "file2": [name, x], "html": request.form["html_m"], "name": mess.name_sender,
                          "read": 0, "id_sender": mess.id_sender}, to=request.form["chat_id"], namespace="/")
         return {"log": True}
 

@@ -215,6 +215,7 @@ function submit_form() {
             close_edit();
     }else {
         var b = x.submit();
+        console.log(b);
     }
      x.reset();
    document.getElementById("imageName").innerHTML = "";
