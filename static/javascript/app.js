@@ -879,6 +879,17 @@ function show_users(){
             var global_menu = document.getElementById("global_menu");
             document.getElementById("global_menu_d").style.display = "flex";
             global_menu.innerHTML = '<h2>Управление чатом</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id_user   + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button><br>';
+            if (!json["primary_chat"]){
+                var div = document.createElement("div");
+                var btn_add = document.createElement("button");
+                btn_add.classList = "edit-btn";
+                btn_add.textContent = "Добавить участника";
+                btn_add.setAttribute("onclick", "add_in_chat_new()");
+                div.appendChild(btn_add);
+                div.innerHTML += '<div><label>Имя чата</label><br><input class="add-menu" id="new_chat_name" value="' + document.getElementById("name_chat").innerText + '"><br><button onclick="edit_name_chat()" class="edit-btn">изменить</button></div>';
+                div.innerHTML += '<input id="list_c_u" value="'+ json["user"].join(" ") + '" style="display:none;">'
+                global_menu.appendChild(div);
+            }
             const users_div = document.createElement("div");
             users_div.id = "users";
             const con_users = document.createElement("div");
@@ -904,12 +915,6 @@ function show_users(){
             global_menu.appendChild(files_div);
             add_users_label(json["user"], con_users);
             add_files_label(files_div);
-            if (! json["primary_chat"]){
-                var users_div_edit = document.getElementById("edit_users");
-                users_div_edit.innerHTML += '<button onclick="add_in_chat_new()" class="edit-btn">Добавить участника</button>';
-                users_div_edit.innerHTML += '<div><label>Имя чата</label><br><input class="add-menu" id="new_chat_name" value="' + document.getElementById("name_chat").innerText + '"><br><button onclick="edit_name_chat()" class="edit-btn">изменить</button></div>';
-                users_div_edit.innerHTML += '<input id="list_c_u" value="'+ json["user"].join(" ") + '" style="display:none;">'
-            }
             },
             error: function(err) {
                 console.error(err);
@@ -917,6 +922,7 @@ function show_users(){
         });
     };
 }
+
 
 function copyToClipboard(id_m) {
 var t = document.getElementById("text" + id_m).textContent.trim();
