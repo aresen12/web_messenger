@@ -16,7 +16,7 @@ def url(message):
     if user is None:
         btn2 = types.InlineKeyboardButton(text='Наш сайт', url='https://kaz-m.ru/m')
         markup.add(btn2)
-        bot.send_message(message.from_user.id, "Ваше username не заррегиструрованно."
+        bot.send_message(message.from_user.id, "Ваше username не заррегистрированно."
                                                " Проверьте корректность заполнения формы на сайте", reply_markup=markup)
     else:
         if user.notification:
@@ -29,4 +29,9 @@ def url(message):
     bot.send_message(message.from_user.id, "По кнопке ниже можно перейти в мессенджер", reply_markup=markup)
 
 
-bot.polling(none_stop=True, interval=0)
+# для автоматического перезапуска
+while True:
+    try:
+        bot.polling(none_stop=True, interval=0)
+    except Exception:
+        continue
