@@ -61,7 +61,7 @@ def login_device():
         return render_template('login_android.html',
                                message="Неправильный логин или пароль",
                                form=form)
-    return render_template('login.html', title='Авторизация', form=form)
+    return render_template('login_android.html', title='Авторизация', form=form)
 
 
 @application.route('/login', methods=['GET', 'POST'])
