@@ -96,6 +96,24 @@ function sing_out_of_chat(){
 }
 
 
+function un_pinned(mess_id){
+    $.ajax({
+    url: '/m/un_pinned',
+    type: 'POST',
+    dataType: 'json',
+    contentType:'application/json',
+    data: JSON.stringify({"mess_id": mess_id}),
+    success: function(json){
+//        Добавить ui refresh
+    },
+    error: function(err) {
+        console.error(err);
+    }
+});
+}
+
+
+
 function set_recipient(id_chat, is_primary, name, status) {
     var st_chat = document.getElementById("chat_id").value
     if (st_chat){

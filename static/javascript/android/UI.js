@@ -131,9 +131,6 @@ function gener_chat(id_div, chat_id, name_chat, status, primary){
     btn.appendChild(rn);
     cont.appendChild(btn);
     var icon_size = 40;
-    if (mobile){
-        icon_size = 120;
-    }
     icon_chat.style.width = icon_size + "px";
     const svg =
             d3.select("#icon_chat" + chat_id).

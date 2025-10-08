@@ -51,16 +51,17 @@ CORS(application, supports_credentials=True)
 
 @application.route("/login_device", methods=["POST", "GET"])
 def login_device():
-    data = request.get_json()
-    db_sess = db_session.create_session()
-    user = db_sess.query(User).filter(User.email == data["user_name"]).first()
-    if user and user.check_password(data["password"]):
-        login_user(user, remember=True, duration=datetime.timedelta(hours=24*90), force=True)
-        return {"log": True, "name": current_user.name, "id_user": current_user.id, "api_key": api_key,
-                "username": current_user.email}
-    else:
-        db_sess.close()
-        return {"log": "Bad password"}
+    form = LoginForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.email == form.username.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data, duration=datetime.timedelta(hours=24 * 90))
+            return redirect("/api/android")
+        return render_template('login.html',
+                               message="Неправильный логин или пароль",
+                               form=form)
+    return render_template('login.html', title='Авторизация', form=form)
 
 
 @application.route('/login', methods=['GET', 'POST'])

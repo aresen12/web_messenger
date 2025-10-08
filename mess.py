@@ -123,6 +123,18 @@ def pinned():
     return {"log": True}
 
 
+@mg.route("/un_pinned", methods=["POST"])
+def an_pinned():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    mess = db_sess.query(Message).filter(Message.id == data["mess_id"]).first()
+    mess.pinned = False
+    db_sess.commit()
+    db_sess.close()
+    # добавить socketio
+    return {"log": True}
+
+
 @mg.route("/last_m", methods=["POST"])
 def last_m():
 
