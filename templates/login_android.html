@@ -1,0 +1,30 @@
+{% extends "login_android_base.html" %}
+
+{% block content %}
+    <h1 class="login-h1">Авторизация</h1>
+    <form action="" method="post" class="login-form">
+        {{ form.hidden_tag() }}
+        <p class="login-p">
+            {{ form.username.label }}<br>
+            {{ form.username(class="form-control", type="username") }}<br>
+            {% for error in form.username.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p class="login-p">
+            {{ form.password.label }}<br>
+            {{ form.password(class="form-control", type="password") }}<br>
+            {% for error in form.password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p class="login-p">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p  class="login-p" >{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <a class="btn btn-primary info-btn" href="/reset_password">Востановить пароль</a>
+        <div>{{ message }}</div>
+    </form>
+{% endblock %}

@@ -58,7 +58,7 @@ def login_device():
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data, duration=datetime.timedelta(hours=24 * 90))
             return redirect("/api/android")
-        return render_template('login.html',
+        return render_template('login_android.html',
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
@@ -155,5 +155,5 @@ def stop_app():
 
 
 if __name__ == "__main__":
-    socketio.run(application, host='0.0.0.0', debug=True, )
+    socketio.run(application, host='0.0.0.0', debug=True, allow_unsafe_werkzeug=True)
 
