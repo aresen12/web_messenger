@@ -328,11 +328,8 @@ width:180px;
 
     .a-email {width:100vw;
     border:none;
-    border: 3px solid gray;
     }
-    .chat-header {
-    height: 90px;
-    }
+
     .content-email {
     width:98vw;
    }

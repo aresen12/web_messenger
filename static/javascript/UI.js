@@ -351,6 +351,14 @@ function set_bg_my(num) {
 }
 
 document.addEventListener('click', (e) => {
+    if (menu_id != ""){
+        var div = document.querySelector('#' + menu_id.slice(1));
+        var t = e.composedPath().includes(div);
+        if (!t){
+            document.getElementById(menu_id).style.display = "none";
+            globalThis.menu_id = "";
+        }
+    }
     var div = document.querySelector('#menu_create_div');
     var withinBoundaries = e.composedPath().includes(div);
     var div2 = document.querySelector('#menu_chat_div_all');

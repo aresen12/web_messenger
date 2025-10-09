@@ -115,6 +115,8 @@ function un_pinned(mess_id){
 
 
 function set_recipient(id_chat, is_primary, name, status) {
+    document.getElementById("pinned").innerHTML = "";
+   document.getElementById("menu_chat_div_all").style.display = "block";
     var st_chat = document.getElementById("chat_id").value
     if (st_chat){
         socket.emit('leave', {room: st_chat});
@@ -172,6 +174,8 @@ function set_recipient(id_chat, is_primary, name, status) {
 
 function exit_chat(){
     var st_chat = document.getElementById("chat_id").value;
+    document.getElementById("menu_chat_div_all").style.display = "none";
+    document.getElementById("pinned").innerHTML = "";
     socket.emit('leave', {room: st_chat});
     if (st_chat){
         document.getElementById("chat"+ st_chat).style.background =  "white";

@@ -51,6 +51,8 @@ CORS(application, supports_credentials=True)
 
 @application.route("/login_device", methods=["POST", "GET"])
 def login_device():
+    if current_user.is_authenticated:
+        return redirect("/api/android")
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
