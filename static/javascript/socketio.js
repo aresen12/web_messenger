@@ -69,3 +69,10 @@ socket.on('connect', () => {
 socket.on('disconnect', () => {
     alert("disconnect");
 });
+
+
+socket.on('message_other', (data) => {
+    if (document.getElementById("chat_id").value != data["chat_id"]){
+        notification(data["text"], "");
+}
+});

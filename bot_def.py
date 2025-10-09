@@ -5,6 +5,7 @@ from data.bot_db import BotDB
 from data import db_session
 from data.reset_passwords import DCode
 
+
 def send_all(db_sess, chat_members, text, c_id, name, prim):
     db_sess: db_session
     bot = TeleBot(bot_key)

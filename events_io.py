@@ -39,6 +39,23 @@ def edit_event(data):
     emit("edit_mess", {"new_text": data["new_text"], "id_mess": data["id_m"], }, to=room)
 
 
+def send_all2(db_sess, chat_members, text, c_id, name, prim, chat_id):
+    db_sess: db_session
+    if prim:
+        chat_members: str
+        a = chat_members.split()
+        del a[not (a.index(str(c_id)))]
+        user_name = db_sess.query(User.name).filter(User.id == a[0]).first()
+        text = f"{user_name[0]}\n" + text
+    else:
+        text = f"{name}\n" + text
+    if text == "":
+        text = "Возможно у вас новыее сообщения"
+    for user_id in chat_members.split():
+        if not (str(c_id) == user_id):
+            emit("message_other", {"text": text, "chat_id": chat_id}, to="u" + user_id)
+
+
 @socketio.on('room_message')
 def room_message(data):
     db_sess = db_session.create_session()
@@ -59,8 +76,9 @@ def room_message(data):
             id_m = mess.id
             t_ = mess.get_time()
             file2 = mess.img
-            chat_mem = db_sess.query(Chat.members, Chat.name, Chat.primary_chat).filter(Chat.id == data["room"]).first()
-            send_all(db_sess, chat_mem[0], data['message'], current_user.id, chat_mem[1], chat_mem[2])
+            chat_info = db_sess.query(Chat.members, Chat.name, Chat.primary_chat).filter(Chat.id == data["room"]).first()
+            send_all(db_sess, chat_info[0], data['message'], current_user.id, chat_info[1], chat_info[2])
+            send_all2(db_sess, chat_info[0], data['message'], current_user.id, chat_info[1], chat_info[2], data["room"])
             db_sess.close()
             emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
                              "file2": file2, "html": data["html"], "name": current_user.name,
