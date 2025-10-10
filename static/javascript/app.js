@@ -104,7 +104,14 @@ function un_pinned(mess_id){
     contentType:'application/json',
     data: JSON.stringify({"mess_id": mess_id}),
     success: function(json){
-//        Добавить ui refresh
+         var list_pin = document.getElementById("list_pin").value.trim().split(" ");
+         if (list_pin.length == 1){
+            document.getElementById("pinned").innerHTML = "";
+         } else {
+            go_pin(mess_id);
+            list_pin.splice(list_pin.indexOf(mess_id));
+            document.getElementById("list_pin").value = list_pin.join(" ");
+         }
     },
     error: function(err) {
         console.error(err);
@@ -1047,3 +1054,4 @@ function submit_username_tg(){
         }
     });
 }
+

@@ -4,13 +4,11 @@ from flask import (
 )
 from data import db_session
 from data.user import User
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, logout_user
 from flask_socketio import emit
-from data.message import Message, new_mess
-from data.chat import Chat, get_chats
-from data.File import File, get_files
-from data.black_list import Black
-import datetime
+from data.message import new_mess
+from data.chat import get_chats
+from data.File import File
 from keys import api_key
 api = Blueprint('api', __name__, url_prefix='/api')
 
