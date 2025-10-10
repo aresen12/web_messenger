@@ -211,6 +211,7 @@ bottom: 0px;
 
 
  .a-email {
+ padding:3px;
     display: flex;
   color:black;
   background:white;
@@ -239,9 +240,10 @@ bottom: 0px;
 .content-email {
     position:relative;
     top:1;
+    max-height:80vh;
     width:30vw;
     min-width: 160px;
-     overflow: hidden;
+     overflow-x: hidden;
     overflow-y:auto;
     scrollbar-width: thin;
     scrollbar-color: hsl(0 0% 50%);
