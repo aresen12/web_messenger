@@ -34,7 +34,6 @@ $.ajax({
       processData: false,
       contentType: false
     }).done(function(data) {
-      console.log(data);
     });
     });
     });

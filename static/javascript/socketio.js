@@ -67,11 +67,13 @@ socket.on('connect', () => {
 
 
 socket.on('disconnect', () => {
-    alert("disconnect");
+//    alert("disconnect");
 });
 
 
 socket.on('message_other', (data) => {
+    var rn = document.getElementById("rn" + data["chat_id"]);
+    rn.innerText =  Number(rn.innerText) + 1;
     if (document.getElementById("chat_id").value != data["chat_id"]){
         notification(data["text"], "");
 }

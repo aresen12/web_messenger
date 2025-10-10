@@ -195,7 +195,14 @@ def send_voice(chat_id):
     mess.img = file_db.id
     db_sess.add(mess)
     db_sess.commit()
+    t_ = mess.get_time()
+    name = file_db.name
+    x = file_db.path
     db_sess.close()
+    emit('message', {"message": mess.message, "time": t_, "id_m": mess.id,
+                     "file2": [name, x], "html": "", "name": mess.name_sender,
+                     "read": 0, "id_sender": mess.id_sender}, to=chat_id, namespace="/")
+
     return {"log": True}
 
 
