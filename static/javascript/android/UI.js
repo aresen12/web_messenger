@@ -317,12 +317,15 @@ function go_pin(id_mess){
     for (let i = 0; i < list_pin.length; i++){
         if (list_pin[i] == id_mess){
             const btn = document.getElementById('pin_btn');
+            var btn_close = document.getElementById("close_pin");
             if (i + 1 < list_pin.length){
                 btn.textContent = document.getElementById('text' + list_pin[i + 1]).textContent;
                 btn.setAttribute('onclick', `go_pin('${list_pin[i + 1]}')`);
+                btn_close.setAttribute('onclick', `un_pinned('${list_pin[i + 1]}')`);
             } else {
                 btn.textContent = document.getElementById('text' + list_pin[0]).textContent;
                 btn.setAttribute('onclick', `go_pin('${list_pin[0]}')`);
+                btn_close.setAttribute('onclick', `un_pinned('${list_pin[0]}')`);
             }
         }
     }
