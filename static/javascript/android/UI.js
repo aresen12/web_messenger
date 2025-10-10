@@ -94,15 +94,19 @@ document.getElementById("form").style.display = "none";
 function add_pinned(id_mess){
     const pin_div = document.getElementById("pinned");
                 if (pin_div.innerHTML == ""){
-
-                    btn = document.createElement("button");
+btn = document.createElement("button");
                     btn.textContent += document.getElementById("text" + id_mess).textContent.trim()
                     btn.id = "pin_btn";
                     btn.classList = "info-btn pinned-btn";
                     btn.setAttribute("onclick", `go_pin('${id_mess}')`);
-
                     pin_div.appendChild(btn);
+                    var btn_close = document.createElement("button");
+                    btn_close.classList = "btn-close";
+                    btn_close.setAttribute("aria-label", "Close");
+                    btn_close.setAttribute("onclick", `un_pinned("${id_mess}")`);
+                    btn_close.id = "close_pin";
                     document.getElementById("list_pin").value += " " + id_mess;
+                    pin_div.appendChild(btn_close);
                 } else {
                     document.getElementById("list_pin").value += " " + id_mess;
                 }
