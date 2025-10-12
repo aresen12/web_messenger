@@ -2,9 +2,8 @@ from flask_login import current_user
 from flask_socketio import emit, SocketIO, join_room, leave_room, rooms
 from data import db_session
 from data.chat import Chat
-from data.message import Message, new_mess
+from data.message import Message, new_mess, new_emoji
 from data.user import User
-from keys import api_key
 from bot_def import send_all
 
 socketio = SocketIO(cors_allowed_origins="*")
@@ -83,18 +82,6 @@ def room_message(data):
             emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
                              "file2": file2, "html": data["html"], "name": current_user.name,
                              "read": 0, "id_sender": id_sender, "pinned": mess.pinned}, to=data['room'])
-    elif data["api_key"] == api_key:
-        c_user = db_sess.query(User).filter(User.id == data['id_user']).first()
-        mess = new_mess(message=data['message'], html=data["html"], id_sender=data["id_user"], chat_id=data["room"],
-                        name_sender=c_user.name)
-        db_sess.add(mess)
-        db_sess.commit()
-        id_m = mess.id
-        t_ = mess.get_time()
-        db_sess.close()
-        emit('message', {"message": data['message'], "time": t_, "id_m": id_m,
-                         "file2": mess.img, "html": data["html"], "name": mess.name_sender,
-                         "read": 0, "id_sender": data["id_user"], "pinned": mess.pinned}, to=data['room'])
 
 
 @socketio.on('connect')
@@ -110,3 +97,15 @@ def handle_disconnect():
         print("auth")
         leave_room(f'u{current_user.id}')
     print('Client disconnected')
+
+
+@socketio.on("emoji")
+def send_emoji(data):
+    print(data)
+    db_sess = db_session.create_session()
+    mess = new_emoji(data["value"], data["id_mess"], data["chat_id"], current_user.id, current_user.name)
+    emit('emoji_client', {"id_mess": data["id_mess"], "name": mess.name_sender,
+                          "id_sender": mess.id_sender}, to=data["chat_id"])
+    db_sess.add(mess)
+    db_sess.commit()
+    db_sess.close()

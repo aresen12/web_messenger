@@ -305,7 +305,6 @@ function show(){
     data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
     success: function(json_mess){
         var cont = document.getElementById("content");
-        cont.innerHTML = '<input id="summ_id" value="' + json_mess['summ_id'] + '" style="display:none;">';
         var date = "";
         for (let i = 0; i < json_mess["messages"].length; i++){
             var c_m = json_mess["messages"][i];
@@ -324,7 +323,11 @@ function show(){
                 date = time[0];
                 cont.innerHTML += '<div class="date_k">' + time2[2]+ "." + time2[1] + "." + time2[0] + '</div>';
             };
+            if (c_m["type"] != 2){
             gener_html(c_m["id"], c_m["text"], time[1].split(".")[0], c_m["html_m"], file, other, c_m['read'], c_m["name_sender"], c_m["pinned"]);
+        } else {
+            gener_emoji(c_m["id"],  c_m["html_m"], other, c_m["text"]);
+        }
         }
         cont.innerHTML += '<div id="pos"><div id="pos2"></div></div>';
         go()

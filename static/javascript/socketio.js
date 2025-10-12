@@ -2,6 +2,11 @@
 const socket = io.connect();
 
 
+function set_emoji(id_mess, text_mess){
+    var chat_id =  document.getElementById("chat_id").value;
+    socket.emit('emoji', {chat_id: chat_id, id_mess: id_mess, value: "" + text_mess });
+}
+
             // Handle form submission
 function send_io_mess() {
                 const input = document.getElementById('about');
@@ -35,6 +40,13 @@ socket.on('create_chat', (data) => {
     alert('refresh page');
     gener_chat("email", data["chat_id"], data["name"], 1, data["is_primary"]);
 });
+
+
+socket.on('emoji_client', (data) => {
+    alert('refresh page');
+});
+
+
 
 socket.on('join_event', (data) => {
     if (id_user != data["id_user"]){

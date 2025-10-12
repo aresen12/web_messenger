@@ -19,6 +19,7 @@ class Message(SqlAlchemyBase, UserMixin, SerializerMixin):
     img = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     html_m = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="")
     pinned = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    type = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=1)
 
     def __repr__(self):
         return f"{self.message} {self.time}"
@@ -57,4 +58,15 @@ def new_mess(message, id_sender, name_sender, chat_id, html, file_id="", read=Fa
     mess.read = read
     mess.img = file_id
     mess.html_m = html
+    return mess
+
+
+def new_emoji(text, id_mess, chat_id, id_sender, name_sender):
+    mess = Message()
+    mess.type = 2
+    mess.message = text
+    mess.html_m = id_mess
+    mess.chat_id = chat_id
+    mess.id_sender = id_sender
+    mess.name_sender = name_sender
     return mess

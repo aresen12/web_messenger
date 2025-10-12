@@ -150,6 +150,30 @@ var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circl
 }
 
 
+function gener_emoji(id_mess, html_m, other, text){
+    var em_div = document.getElementById("em" + html_m);
+    if (em_div.textContent.includes(text)){
+       var list_em = em_div.textContent.split(" ");
+       em_div.innerText = "";
+       var text_em = "";
+        for (let f = 0; f < list_em.length; f++){
+            if (list_em[f].includes(text)){
+                if (f.length > 1){
+                    text_em += text + (Number(list_em[f][1]) + 1) + " ";
+                } else {
+                   text_em += text + "2 ";
+                }
+            } else{
+                text_em += list_em[f] + " ";
+            }
+        }
+        em_div.innerText = text_em;
+    } else {
+        em_div.textContent += text;
+    }
+}
+
+
 
 function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, pinned) {
      if (other && !read && !vis){
@@ -172,8 +196,11 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
     message_text.id = 'text' + id_m;
     const html_text = document.createElement('p');
     html_text.innerHTML = html_m;
+    var em_div = document.createElement("div");
+    em_div.id = "em" + id_m;
     messageItem.appendChild(html_text);
     messageItem.appendChild(message_text);
+    messageItem.appendChild(em_div);
     messageItem.role = "alert";
     var onclick = "";
     if (mobile){
@@ -282,23 +309,42 @@ function scrollToBottom(elementId) {
 
 
 function open_menu_mess(id_mess){
+    var name_functions = ["answer", "send", "pinned", "delete_mess", "copyToClipboard"];
+    var titles = ["ответить", "переслать", "закрепить", "удалить", "скопировать"];
+    var emoji = ["🔥", "👍", "😃"];
+    var ul = document.createElement("ul");
     if (globalThis.menu_id != ""){
         try{
         document.getElementById(menu_id).style.display = "none";
         } catch(err) {}
     };
-    globalThis.menu_id = "m" + id_mess;
-    var ul = '';
-    var curr_m = document.getElementById("m" + id_mess);
-    if (document.getElementById(id_mess).className == "my-message") {
-        curr_m.innerHTML = '<ul><li onclick="pinned(' + id_mess.slice(1) + ')">закрепить</li><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li><li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
-        <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="edit(' + id_mess.slice(1) + ')">Редактировать</li>\
-        <li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';
-    } else {
-        curr_m.innerHTML = '<ul><li onclick="pinned(' + id_mess.slice(1) + ')">закрепить</li><li onclick="copyToClipboard(' + id_mess.slice(1) + ')">Копировать</li>\
-        <li onclick="delete_mess(' + id_mess.slice(1) + ')">Удалить</li>\
-        <li onclick="answer(' + id_mess.slice(1) + ')">Ответить</li><li onclick="send(' + id_mess.slice(1) + ')">Переслать</li></ul>';
+    for (let i = 0; i < name_functions.length; i++){
+        var li = document.createElement("li");
+        li.textContent = titles[i];
+        li.setAttribute("onclick", `${name_functions[i]}(${id_mess.slice(1)})`);
+        ul.appendChild(li);
     }
+    if (document.getElementById(id_mess).className == "my-message") {
+        var li = document.createElement("li");
+        li.textContent = "редактировать";
+        li.setAttribute("onclick", `edit(${id_mess.slice(1)})`);
+        ul.appendChild(li);
+    }
+    const emoji_div2 = document.createElement("div");
+    for (let i = 0; i < emoji.length; i++){
+        var btn_emoji = document.createElement("button");
+        btn_emoji.classList = "info-btn";
+        btn_emoji.textContent = emoji[i];
+        btn_emoji.setAttribute("onclick", `set_emoji(${id_mess.slice(1)}, '${emoji[i]}')`);
+        emoji_div2.appendChild(btn_emoji);
+    }
+    if (id_mess[0] == "e"){
+        id_mess = id_mess.substring(1, id_mess.length);
+    }
+    const curr_m = document.getElementById("m" + id_mess);
+    curr_m.appendChild(emoji_div2);
+    curr_m.appendChild(ul);
+    globalThis.menu_id = "m" + id_mess;
     showdiv1("m" + id_mess);
 }
 

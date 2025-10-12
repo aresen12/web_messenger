@@ -3,9 +3,12 @@ status chat
 2 - deleted chat
 3 - block chat
 
+
+type message
+1 - обычное
+2 - эмоции
 Схема получения сообщений
-    Запрос текущей суммы id сообщений в чате. (get_new_m)
-    Далее если сумма не совпала, вызов функции (show)
+    через сокет
 
 gener_html(id, text, time, html_m, file, other);
 set_recipient(id_chat, is_primary, name, status);

@@ -5,7 +5,7 @@ from flask import (
 from data import db_session
 from data.user import User
 from flask_login import current_user
-from data.message import Message, new_mess
+from data.message import Message, new_mess, new_emoji
 from data.chat import Chat, get_chats
 from data.File import File, get_files
 from data.black_list import Black
@@ -205,26 +205,6 @@ def send_voice(chat_id):
 
     return {"log": True}
 
-
-# @mg.route("/send_message", methods=["POST"])
-# def send_message():
-#     data = request.get_json()
-#     db_sess = db_session.create_session()
-#     mess = Message()
-#     mess.message = data["new_text"]
-#     mess.read = 0
-#     mess.html_m = data["html"]
-#     mess.id_sender = current_user.id
-#     mess.chat_id = data["chat_id"]
-#     mess.name_sender = current_user.name
-#     chat_mem = db_sess.query(Chat.members).filter().first()
-#     db_sess.add(mess)
-#     db_sess.commit()
-#     id_m = mess.id
-#     t_ = mess.get_time()
-#     db_sess.close()
-#     return {"id": id_m, "time": t_}
-# кажется устарело нужно проверить
 
 @mg.route("/sing_out_chat", methods=["POST"])
 def sing_out_chat():
@@ -446,11 +426,10 @@ def get_json_message():
                 pass
             js["messages"].append({"id": m.id, "read": m.read, "html_m": m.html_m, "text": m.message, 'time': m.time,
                                    "file": m.img, "id_sender": m.id_sender, "name_sender": m.name_sender,
-                                   "pinned": m.pinned})
+                                   "pinned": m.pinned, "type": m.type})
         if f:
             db_sess.commit()
         db_sess.close()
-        js["summ_id"] = summ
         return js
     return {"log": "NOT auth"}
 
