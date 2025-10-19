@@ -41,9 +41,10 @@ socket.on('create_chat', (data) => {
     gener_chat("email", data["chat_id"], data["name"], 1, data["is_primary"]);
 });
 
-
+//, html_m, other, text
 socket.on('emoji_client', (data) => {
-    alert('refresh page');
+//    пока id не работает
+    gener_emoji(data["id_emoji"], data["id_mess"], 1, data['value'])
 });
 
 
@@ -90,3 +91,19 @@ socket.on('message_other', (data) => {
         notification(data["text"], "");
 }
 });
+
+
+
+socket.on('send_offer', (data) => {
+
+});
+
+
+
+socket.on('send_call', (data) => {
+//    убирает повторный вызов для инициатора звонка
+    if (!document.getElementById("local_video")){
+        gener_UI_call(2);
+    }
+});
+

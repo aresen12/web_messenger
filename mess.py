@@ -20,7 +20,7 @@ def m_st():
     if request.method == 'GET':
         if current_user.is_authenticated:
             chats = get_chats()
-            return render_template("messenger.html", title='Kazbek', chats=chats, my_bg=current_user.id)
+            return render_template("messenger.html", device="", title='Kazbek', chats=chats, my_bg=current_user.id)
         return redirect("/login")
     else:
         f = request.files["img"]

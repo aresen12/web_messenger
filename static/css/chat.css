@@ -95,16 +95,20 @@
     padding-left: 4px;
 }
 
-.name-chat-div {width:100%;}
+.name-chat-div {width:90%;}
 .kazbek-logo {}
 .chat-header {
 
     display:flex;
 }
 .menu-chat-div-all{
+    width: 200px;
 position: relative;
     right: 5px;
+
 }
+
+.btn-three-point{position:relative;top:0px;right: 0px;}
 .mess-admin {
     position:relative;
     width: 70vw;
@@ -203,6 +207,11 @@ bottom: 0px;
     width: 200px;
     }
 
+
+.call-kill {
+    background: red;
+    border-radius: 40px;
+}
 
 .n-c{
     margin-left:5px;
@@ -336,7 +345,7 @@ width:180px;
     border: 3px solid gray;
     }
     .chat-header {
-    height: 90px;
+    height: 125px;
     }
     .content-email {
     width:98vw;

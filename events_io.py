@@ -101,11 +101,15 @@ def handle_disconnect():
 
 @socketio.on("emoji")
 def send_emoji(data):
-    print(data)
     db_sess = db_session.create_session()
     mess = new_emoji(data["value"], data["id_mess"], data["chat_id"], current_user.id, current_user.name)
-    emit('emoji_client', {"id_mess": data["id_mess"], "name": mess.name_sender,
-                          "id_sender": mess.id_sender}, to=data["chat_id"])
+    emit('emoji_client', {"id_emoji": mess.id, "id_mess": data["id_mess"], "name": mess.name_sender,
+                          "id_sender": mess.id_sender, "value": data["value"]}, to=data["chat_id"])
     db_sess.add(mess)
     db_sess.commit()
     db_sess.close()
+
+
+@socketio.on("send_call")
+def send_call(data):
+    emit("send_call", data, to=data["chat_id"])

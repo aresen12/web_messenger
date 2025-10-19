@@ -27,7 +27,8 @@ def android_base():
     if request.method == 'GET':
         if current_user.is_authenticated:
             chats = get_chats()
-            return render_template("messenger_android.html", title='Kazbek', chats=chats, my_bg=current_user.id)
+            return render_template("messenger.html", device="android", title='Kazbek', chats=chats,
+                                   my_bg=current_user.id)
         return redirect("/login")
     else:
         f = request.files["img"]
