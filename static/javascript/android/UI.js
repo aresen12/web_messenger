@@ -1,5 +1,4 @@
 var f = document.getElementById("form").offsetHeight;
-//document.getElementById("chat_header").style.display = "block";
 var nav = document.getElementById("chat_header").offsetHeight;
 var m_c =   document.getElementById("container-mess");
 var email_cont = document.getElementById("email");
@@ -7,8 +6,12 @@ var email_cont = document.getElementById("email");
 m_c.style.top = nav;
 //email_cont.style.top = nav;
 //email_cont.style.height = window.innerHeight - f - nav + "px";
+if (nav == 0){
+    nav = 90;
+    m_c.style.top = nav;
+}
 document.getElementById("background-img").style.height =  window.innerHeight - nav + "px";
-document.getElementById("background-img").style.top = "90px";
+document.getElementById("background-img").style.top = nav + "px";
 document.getElementById("form").style.display = "none";
 
 // вот это оставить
@@ -61,6 +64,8 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
     } else{
         messageItem.classList = 'my-message';
     };
+    var em_div = document.createElement("div");
+    em_div.id = "em" + id_m;
     const message_text = document.createElement('p');
     message_text.textContent = text;
     message_text.classList = "text-in-mess";
@@ -69,6 +74,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
     html_text.innerHTML = html_m;
     messageItem.appendChild(html_text);
     messageItem.appendChild(message_text);
+    messageItem.appendChild(em_div);
     messageItem.role = "alert";
     var onclick = "";
     messageItem.setAttribute("onclick", `open_menu_mess('m${id_m}')`);

@@ -2,12 +2,17 @@ var f = document.getElementById("form").offsetHeight;
 var nav = document.getElementById("chat_header").offsetHeight;
 var m_c =   document.getElementById("container-mess");
 var email_cont = document.getElementById("email");
+//m_c.style.height =  window.innerHeight - f - nav + "px";
 m_c.style.top = nav;
+//email_cont.style.top = nav;
+//email_cont.style.height = window.innerHeight - f - nav + "px";
+if (nav == 0){
+    nav = 125;
+    m_c.style.top = nav;
+}
 document.getElementById("background-img").style.height =  window.innerHeight - nav + "px";
 document.getElementById("background-img").style.top = nav + "px";
 document.getElementById("form").style.display = "none";
-
-//<button type="button" class="btn-close" aria-label="Close"></button>
 
 
 function gener_chat(id_div, chat_id, name_chat, status, primary){
