@@ -1,34 +1,39 @@
+var offer = null;
+let my_peer = null;
 var mediaConstraints = {
   audio: true, // We want an audio track
   video: true, // ...and we want a video track
 };
 
-async function invite(evt, peerA) {
-    const offer = await peerA.createOffer();
- await peerA.setLocalDescription(offer);
- console.log( peerA.localDescription)
-
+async function invite(evt) {
+    const chat_id = document.getElementById("chat_id").value;
+    const offer = await globalThis.my_peer.createOffer();
+ await globalThis.my_peer.setLocalDescription(offer);
+    socket.emit('send_call_to_user', {chat_id: chat_id, data: {"offer": globalThis.my_peer.localDescription}});
  navigator.mediaDevices
       .getUserMedia(mediaConstraints)
       .then(function (localStream) {
         document.getElementById("local_video").srcObject = localStream;
         localStream
           .getTracks()
-          .forEach((track) => peerA.addTrack(track, localStream));
+          .forEach((track) => globalThis.my_peer.addTrack(track, localStream));
       })
       .catch(handleGetUserMediaError);
 }
 
 
 function send_call(){
-    alert("В разработке! только для разработчиков");
-    var peerA = new RTCPeerConnection();
+//    alert("В разработке! только для разработчиков");
     var chat_id = document.getElementById("chat_id");
     gener_UI_call(1);
-    offer = invite(chat_id, peerA);
-    var data = {"offer": offer};
-    socket.emit('send_call', {chat_id: chat_id, data:data });
-
+    globalThis.my_peer = new RTCPeerConnection();
+    // Listen for connectionstatechange on the local RTCPeerConnection
+globalThis.my_peer.addEventListener('connectionstatechange', event => {
+    if (peerConnection.connectionState === 'connected') {
+        // Peers connected!
+    }
+});
+    offer = invite(chat_id);
 }
 
 
@@ -52,7 +57,7 @@ function handleGetUserMediaError(e) {
 
 // type 1 исходящий
 //type 2 входящий
-function gener_UI_call(type){
+function gener_UI_call(type, offer){
     document.getElementById("global_menu_d").style.display = "block";
     var global_menu = document.getElementById("global_menu");
     global_menu.innerHTML = "";
@@ -71,6 +76,7 @@ function gener_UI_call(type){
         var btn_accept = document.createElement("button");
         btn_accept.setAttribute("onclick", `accept_call()`);
         btn_accept.classList = 'info-btn';
+        btn_accept.id = "accept_call_btn";
         btn_accept.innerHTML  = `<svg width="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -88,6 +94,7 @@ function gener_UI_call(type){
                 </path> </g></svg>`
         global_menu.appendChild(btn_accept);
         button_kill.setAttribute("onclick", "nAccepted()");
+        button_kill.id = "kill_call_btn";
     } else{
         button_kill.setAttribute("onclick", "kill_call()");
     }
@@ -102,19 +109,64 @@ function leave_call_UI(){
 
 function kill_call(){
     leave_call_UI();
-    var chat_id = document.getElementById("chat_id");
+    var chat_id = document.getElementById("chat_id").value;
     var data = {};
     socket.emit('kill_call', {chat_id: chat_id, data:data });
 }
 
-function send_candidate(){
+function send_candidate(candidate, number){
+    console.log(number, "2");
+    var chat_id = document.getElementById("chat_id").value;
+    socket.emit("send_candidate" + number, {chat_id: chat_id, data: candidate, current_user: id_user});
+}
 
+
+
+function nAccepted(){
+    document.getElementById("global_menu_d").style.display = "none";
+    global_menu = document.getElementById("global_menu");
 }
 
 
 async function accept_call(){
+    var chat_id = document.getElementById("chat_id").value;
     var peerB = new RTCPeerConnection();
-    await peerB.createAnswer()
-    await peerB.setLocalDescription(answer)
+    navigator.mediaDevices
+      .getUserMedia(mediaConstraints)
+      .then(function (localStream) {
+        document.getElementById("local_video").srcObject = localStream;
+        localStream
+          .getTracks()
+          .forEach((track) => peerB.addTrack(track, localStream));
+      })
+      .catch(handleGetUserMediaError);
+
+    await peerB.setRemoteDescription(globalThis.offer);
+    var answer =  await peerB.createAnswer();
+    var offer2 = await peerB.setLocalDescription(answer);
+    socket.emit('send_offer2', {chat_id: chat_id, "offer" : offer2});
+    globalThis.my_peer = peerB
+    return offer2;
+
+
+}
+
+
+async function playAudio() {
+  var audio = new Audio('/static/ringtons/diazinon.mp3');
+  audio.type = 'audio/wav';
+  try {
+    await audio.play();
+    document.querySelector('#kill_call_btn').addEventListener('click', function(){
+        audio.pause();
+    });
+    document.querySelector('#accept_call_btn').addEventListener('click', function(){
+        audio.pause();
+    });
+
+    console.log('Playing...');
+  } catch (err) {
+    console.log('Failed to play...' + err);
+  }
 
 }

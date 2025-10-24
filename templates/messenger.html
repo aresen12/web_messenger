@@ -70,7 +70,7 @@
     </div>
     <div id="settings" class="settings" style="display:none;">
         <div style="display:flex;">
-            <h2 style="width:200px;">{{current_user.name}}</h2><a class="info-btn" href="/logout">
+            <h2 style="width:200px;" id="name_user">{{current_user.name}}</h2><a class="info-btn" href="/logout">
             <svg fill="#000000" height="30px" width="64px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 384.971 384.971" xml:space="preserve"
                  stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -192,7 +192,7 @@
                 </ul>
             </div>
 <!--            display none  чтобы выложить изменения в продукт сразу раскоментировать!-->
-            <button style="display:none;" class="info-btn" onclick="send_call()">
+            <button  class="info-btn" onclick="send_call()">
                 <svg width="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -317,7 +317,7 @@
  11.5882V13.647C17 16.5143 14.4072 19 11 19C10.1545 19 9.3592 18.8469 8.64123 18.573z" fill="#758CA3"/>
     <path d="M9.4569 17.7573L16 11.2142V13C16 15.7614 13.7614 18 11 18C10.4615 18 9.9429 17.9149 9.4569 17.7573z" fill="#758CA3"/>
 </svg></button>
-            <button id="start" class="info-btn">
+            <button id="start" class="info-btn" onclick="start_voice()">
                 <?xml version="1.0" encoding="utf-8"?>
 <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M8.01274 11.5354C8.28867 13.3882 9.69144 14.8306 11.4618 15.0818L11.5732 15.0976C11.8593 15.1382 12.1492
@@ -396,6 +396,7 @@
     <script src="/static/javascript/voice_mess.js"></script>
     <script src="/static/javascript/socketio.js"></script>
     <script src="/static/javascript/webrtc.js"></script>
+    <script src='https://meet.jit.si/external_api.js'></script>
 </main>
 </body>
 </html>

@@ -12,3 +12,22 @@ type message
 
 gener_html(id, text, time, html_m, file, other);
 set_recipient(id_chat, is_primary, name, status);
+
+
+
+
+    global_menu.innerHTML += `<div id="meet"></div>`
+
+const domain = 'meet.jit.si';
+const options = {
+    roomName: 'fhghjkjhgfddeyuoiouyutt5467890kazbek' + document.getElementById("chat_id").value,
+    width: "100%",
+    height: "70vh",
+    parentNode: document.querySelector('#meet'),
+    userInfo: {
+//    добавить гыуктфьу
+        email: '',
+        displayName: document.getElementById("name_user").textContent
+    }
+};
+const api = new JitsiMeetExternalAPI(domain, options);

@@ -1,18 +1,20 @@
-navigator.mediaDevices.getUserMedia({ audio: true})
+async function start_voice(){
+    await navigator.mediaDevices.getUserMedia({ audio: true})
     .then(stream => {
         const mediaRecorder = new MediaRecorder(stream);
         let voice = [];
+        mediaRecorder.start();
+            document.getElementById("stop").style.display = "block";
+            document.getElementById("start").style.display = "none";
         document.querySelector('#stop').addEventListener('click', function(){
             mediaRecorder.stop();
             document.getElementById("start").style.display = "block";
             document.getElementById("stop").style.display = "none";
         });
 
-        document.querySelector('#start').addEventListener('click', function(){
-            mediaRecorder.start();
-            document.getElementById("stop").style.display = "block";
-            document.getElementById("start").style.display = "none";
-        });
+//        document.querySelector('#start').addEventListener('click', function(){
+//
+//        });
 
         mediaRecorder.addEventListener("dataavailable",function(event) {
             voice.push(event.data);
@@ -37,3 +39,5 @@ $.ajax({
     });
     });
     });
+
+}
