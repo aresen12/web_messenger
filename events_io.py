@@ -112,25 +112,27 @@ def send_emoji(data):
 
 @socketio.on("send_call_to_user")
 def send_call(data):
-    print(data)
-    emit("send_call", data["data"], to=data["chat_id"])
+    # print(data)
+    emit("send_call", data, to=data["chat_id"])
 
 
-@socketio.on("send_offer2")
-def send_call(data):
+@socketio.on("send_number")
+def send_number(data):
     print(data, "of2")
-    emit("send_offer", {"data": data, "current_user": current_user.id}, to=data["chat_id"])
+    emit("send_call_by_number", {"data": data, "current_user": current_user.id}, to=data["chat_id"])
 
 
-@socketio.on("send_candidate1")
-def send_call(data):
-    print(data, 1)
-    if "data" in data.keys():
-        emit("send_cand_to_user1", data, to=data["chat_id"])
-
-
-@socketio.on("send_candidate2")
-def send_call2(data):
-    print(data, "TESSTTTHJKL;'")
-    emit("send_cand_to_user2", data, to=data["chat_id"])
-
+# @socketio.on("send_candidate1")
+# def send_candidate1(data):
+#     print(data, 1)
+#     if "data" in data.keys():
+#         emit("send_cand_to_user1", data, to=data["chat_id"])
+# # @socketio.on("open")
+# # def open_peer(data):
+# #     emit("open", r)
+#
+# @socketio.on("send_candidate2")
+# def send_candidate2(data):
+#     print(data, "TESSTTTHJKL;'")
+#     emit("send_cand_to_user2", data, to=data["chat_id"])
+#

@@ -1,16 +1,14 @@
-var offer = null;
-let my_peer = null;
-var mediaConstraints = {
-  audio: true, // We want an audio track
-  video: true, // ...and we want a video track
-};
+//var offer = null;
+//let my_peer = null;
+//var mediaConstraints = {
+//  audio: true, // We want an audio track
+//  video: true, // ...and we want a video track
+//};
 
-async function invite(evt) {
-    const chat_id = document.getElementById("chat_id").value;
-    const offer = await globalThis.my_peer.createOffer();
- await globalThis.my_peer.setLocalDescription(offer);
-    socket.emit('send_call_to_user', {chat_id: chat_id, data: {"offer": globalThis.my_peer.localDescription}});
- navigator.mediaDevices
+
+
+async function invite() {
+    navigator.mediaDevices
       .getUserMedia(mediaConstraints)
       .then(function (localStream) {
         document.getElementById("local_video").srcObject = localStream;
@@ -19,21 +17,36 @@ async function invite(evt) {
           .forEach((track) => globalThis.my_peer.addTrack(track, localStream));
       })
       .catch(handleGetUserMediaError);
+    const chat_id = document.getElementById("chat_id").value;
+    const offer = await globalThis.my_peer.createOffer();
+ await globalThis.my_peer.setLocalDescription(offer);
+    socket.emit('send_call_to_user', {chat_id: chat_id, data: {"offer": globalThis.my_peer.localDescription}});
+    globalThis.my_peer.addEventListener('icecandidate', (event) => {
+	if (event.candidate) {
+	    var chat_id = document.getElementById("chat_id").value;
+    socket.emit("send_candidate1", {chat_id: chat_id, data: event.candidate, current_user: id_user});
+		// Отправляем ICE-кандидата другому клиенту через сигналинг
+//		ws.send(clientId, 'new-ice-candidate', );
+	}
+});
 }
 
 
 function send_call(){
 //    alert("В разработке! только для разработчиков");
-    var chat_id = document.getElementById("chat_id");
+    var chat_id = document.getElementById("chat_id").value;
     gener_UI_call(1);
-    globalThis.my_peer = new RTCPeerConnection();
-    // Listen for connectionstatechange on the local RTCPeerConnection
-globalThis.my_peer.addEventListener('connectionstatechange', event => {
-    if (peerConnection.connectionState === 'connected') {
-        // Peers connected!
-    }
-});
-    offer = invite(chat_id);
+    socket.emit('send_call_to_user', {chat_id: chat_id, user_id: id_user});
+//    globalThis.my_peer = new RTCPeerConnection();
+//    // Listen for connectionstatechange on the local RTCPeerConnection
+//    globalThis.my_peer.addEventListener('connectionstatechange', event => {
+//            if (globalThis.my_peer.connectionState === 'connected') {
+//            // Peers connected!
+//            console.log("connected!")
+//
+//        }
+//    });
+//    offer = invite();
 }
 
 
@@ -57,13 +70,15 @@ function handleGetUserMediaError(e) {
 
 // type 1 исходящий
 //type 2 входящий
-function gener_UI_call(type, offer){
+function gener_UI_call(type){
     document.getElementById("global_menu_d").style.display = "block";
     var global_menu = document.getElementById("global_menu");
     global_menu.innerHTML = "";
     status_div = document.createElement("div");
     global_menu.appendChild(status_div);
-    global_menu.innerHTML += '<video id="received_video" autoplay></video><video width="100px" id="local_video" autoplay muted></video>'
+    global_menu.innerHTML += `<video id=myVideo muted="muted" width="400px" height="auto" ></video>
+	<div id=callinfo ></div>
+	<video id=remVideo width="400px" height="auto" ></video>`;
     var button_kill = document.createElement("button");
     button_kill.classList = "info-btn call-kill";
     button_kill.innerHTML += `<svg width="40px" height="40px" viewBox="0 0 24 24" id="end_call" data-name="end call" xmlns="http://www.w3.org/2000/svg">
@@ -101,6 +116,25 @@ function gener_UI_call(type, offer){
     global_menu.appendChild(button_kill)
 }
 
+
+function gener_jitsi(){
+    document.getElementById("global_menu_d").style.display = "flex";
+    global_menu = document.getElementById("global_menu");
+    global_menu.innerHTML = '<div id="meet"></div>';
+    const domain = 'meet.confmeet.net';
+const options = {
+    roomName: 'kjkfghjkl;;loiuytghbnm7654567899xsdl,scn,mxx.',
+    width: '100%',
+    height: 500,
+    parentNode: document.querySelector('#meet'),
+     userInfo: {
+        email: document.getElementById("username").textContent,
+        displayName: document.getElementById("name_user").textContent,
+    }
+};
+const api = new JitsiMeetExternalAPI(domain, options);
+}
+
 function leave_call_UI(){
     document.getElementById("global_menu").innerHTML = "";
     document.getElementById("global_menu_d").style.display = "none";
@@ -114,13 +148,6 @@ function kill_call(){
     socket.emit('kill_call', {chat_id: chat_id, data:data });
 }
 
-function send_candidate(candidate, number){
-    console.log(number, "2");
-    var chat_id = document.getElementById("chat_id").value;
-    socket.emit("send_candidate" + number, {chat_id: chat_id, data: candidate, current_user: id_user});
-}
-
-
 
 function nAccepted(){
     document.getElementById("global_menu_d").style.display = "none";
@@ -130,25 +157,8 @@ function nAccepted(){
 
 async function accept_call(){
     var chat_id = document.getElementById("chat_id").value;
-    var peerB = new RTCPeerConnection();
-    navigator.mediaDevices
-      .getUserMedia(mediaConstraints)
-      .then(function (localStream) {
-        document.getElementById("local_video").srcObject = localStream;
-        localStream
-          .getTracks()
-          .forEach((track) => peerB.addTrack(track, localStream));
-      })
-      .catch(handleGetUserMediaError);
-
-    await peerB.setRemoteDescription(globalThis.offer);
-    var answer =  await peerB.createAnswer();
-    var offer2 = await peerB.setLocalDescription(answer);
-    socket.emit('send_offer2', {chat_id: chat_id, "offer" : offer2});
-    globalThis.my_peer = peerB
-    return offer2;
-
-
+    console.log(document.getElementById("myid").value);
+    socket.emit("send_number", {chat_id: chat_id, number: document.getElementById("myid").value});
 }
 
 

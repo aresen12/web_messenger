@@ -65,6 +65,11 @@ def m_st():
         return {"log": True}
 
 
+@mg.route("/test")
+def test_call():
+    return render_template("test.html")
+
+
 @mg.route("/create_chat", methods=["POST"])
 def create_chat():
     data = request.get_json()

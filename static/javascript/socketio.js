@@ -32,7 +32,6 @@ socket.on('message', (data) => {
                 if (id_user == data["id_sender"]){
                 var other = 0;
             }
-            console.log("вроде тут")
                 gener_html(data["id_m"], data["message"], data["time"], data["html"], data["file2"], other, data["read"], data["name"], data["pinned"])
 });
 
@@ -92,37 +91,53 @@ socket.on('message_other', (data) => {
 }
 });
 
+
 async function get_cand(num){
+    console.log(num, globalThis.my_peer);
     globalThis.my_peer.onicecandidate = evt => {
         send_candidate(evt.candidate?.candidate, num);
-    return 0;
-  };
+        console.log(evt.candidate?.candidate);
+//    return 0;
+  }
 }
+
 
 socket.on('send_offer', (data) => {
     if (data["current_user"] != id_user){
         globalThis.my_peer.setLocalDescription(data["data"]["offer"]);
-        candidate = get_cand(1);
-        console.log(candidate, 1);
+//        candidate = get_cand(1);
+//        console.log(candidate, 1);
 
     }
 });
+
+async function add_cand(candidate_data){
+//.iceCandidate
+    const iceCandidate = new RTCIceCandidate({
+  candidate: candidate_data["candidate"],
+  sdpMLineIndex: 12345, // don't make it up, you get this in onicecandidate
+});
+            await globalThis.my_peer.addIceCandidate(iceCandidate);
+}
 
 
 socket.on('send_cand_to_user1', (data) => {
 
     console.log(data["current_user"] , id_user, "send_cand_to_user1", data["current_user"] != id_user);
     if (data["current_user"] != id_user){
-    socket.emit("send_candidate2", {'chat_id':"s"});
-        candidate = get_cand(2);
-        try{
-            console.log(globalThis.my_peer, data["data"], new RTCIceCandidateInit(data["data"]));
-
-            globalThis.my_peer.addIceCandidate(new RTCIceCandidateInit(data["data"]));
-            console.log("sucsesful");
-        }catch (e){
-            console.log("bad_cand")
-        }
+//    socket.emit("send_candidate2", {'chat_id':"s"});
+//        candidate = get_cand(2);
+//        console.log(data["data"])
+        add_cand(data["data"]);
+//        try{
+//            console.log(globalThis.my_peer, data["data"], new RTCIceCandidateInit(data["data"]));
+//
+//            globalThis.my_peer.addIceCandidate(new RTCIceCandidateInit(data["data"]));
+//            console.log("sucsesful");
+//        }catch (e){
+//            console.log("bad_cand")
+//
+//        }
     } else {
         console.log("повтор")
     }
@@ -132,12 +147,13 @@ socket.on('send_cand_to_user1', (data) => {
 socket.on('send_cand_to_user2', (data) => {
     console.log(data["current_user"] , id_user, "send_cand_to_user2");
     if (data["current_user"] != id_user){
-        try{
-        globalThis.my_peer.addIceCandidate(data["data"]);
-        console.log("sucsesful");
-        }catch (e){
-            console.log("bad_cand");
-        }
+            add_cand(data["data"])
+//        try{
+//        globalThis.my_peer.addIceCandidate(data["data"]);
+//        console.log("sucsesful");
+//        }catch (e){
+//            console.log("bad_cand");
+//        }
         my_peer.onaddstream = function(event) {
     videoElement.srcObject = event.stream;
 };
@@ -148,10 +164,16 @@ socket.on('send_cand_to_user2', (data) => {
 
 socket.on('send_call', (data) => {
 //    убирает повторный вызов для инициатора звонка
-    if (!document.getElementById("local_video")){
-        globalThis.offer = data["offer"];
+    console.log(data);
+    if (data["user_id"] != id_user){
         gener_UI_call(2);
         playAudio();
     }
 });
 
+
+socket.on("send_call_by_number", data => {
+    if (data["current_user"] != id_user){
+    callToNode(data["data"]["number"]);
+    }
+})
