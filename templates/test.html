@@ -1,4 +1,42 @@
-var callOptions={'iceServers': [
+<!--<html>-->
+<!--<body>-->
+<!--<h3 id="show-peer"></h3>-->
+<!--<div style="display: flex;justify-content: space-around;margin: 10px;">-->
+<!--<div style="width: 400px; height:300px;border: 2px solid;" id="ourVideo">Our Video</div>-->
+<!--<div style="width: 400px; height:300px;border: 2px solid;" id="remoteVideo">Remote Video</div> </div>-->
+<!--<input id="peerID" placeholder="Peer ID">-->
+<!--<button onclick="callPeer()">Call Peer</button>-->
+<!--<br>-->
+<!--<button onclick="shareScreen()">Share Screen</button>-->
+<!--</body>-->
+<!--<script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>-->
+<!--<script>-->
+<!--	window.addEventListener('load', (event) => {-->
+<!--	var peer = new Peer()-->
+<!--	peer.on('open', function(id) {-->
+<!--	console.log("id is " + id)-->
+<!--	})-->
+<!--		})-->
+<!--</script>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Peer</title>
+   <script src="/static/javascript/peerjs.min.js"></script>
+</head>
+<body>
+	<p><h3>Мой ID: </h3><span id=myid ></span></p>
+	<input id=otherPeerId type=text placeholder="otherPeerId" > <button onclick="callToNode(document.getElementById('otherPeerId').value)">Вызов</button>
+
+	<br>
+	<video id=myVideo muted="muted" width="400px" height="auto" ></video>
+	<div id=callinfo ></div>
+	<video id=remVideo width="400px" height="auto" ></video>
+<script >
+	var callOptions={'iceServers': [
 		{url: 'stun:95.xxx.xx.x9:3479',
 		username: "user",
 		credential: "xxxxxxxxxx"},
@@ -6,22 +44,19 @@ var callOptions={'iceServers': [
 		username: "user",
 		credential: "xxxxxxxx"}]
 	};
-
-
-peer = new Peer({
+peer= new Peer({
 		host: "kaz-m.ru",
 		port: 9000,
 		path: "/myapp",
 	});
 peer.on('open', function(peerID) {
-			document.getElementById('myid').value=peerID;
+			document.getElementById('myid').innerHTML=peerID;
 		});
 var peercall;
 peer.on('call', function(call) {
 		  // Answer the call, providing our mediaStream
 			peercall=call;
-			callanswer();
-//			document.getElementById('callinfo').innerHTML="Входящий звонок <button onclick='callanswer()' >Принять</button><button onclick='callcancel()' >Отклонить</button>";
+			document.getElementById('callinfo').innerHTML="Входящий звонок <button onclick='callanswer()' >Принять</button><button onclick='callcancel()' >Отклонить</button>";
 		});
 function callanswer() {
 			navigator.mediaDevices.getUserMedia ({ audio: true, video: true }).then(function(mediaStream) {
@@ -64,3 +99,5 @@ function callToNode(peerId) { //вызов
 				  };
 			}).catch(function(err) { console.log(err.name + ": " + err.message); });
 		}
+</script>
+</body>
