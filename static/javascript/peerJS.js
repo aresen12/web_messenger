@@ -9,7 +9,7 @@ var callOptions={'iceServers': [
 
 
 peer = new Peer({
-		host: "http://kaz-m.ru",
+		host: "213.87.128.145",
 		port: 9000,
 		path: "/myapp",
 	});
