@@ -113,14 +113,26 @@ def send_emoji(data):
 @socketio.on("send_call_to_user")
 def send_call(data):
     # print(data)
-    emit("send_call", data, to=data["chat_id"])
+    db_sess = db_session.create_session()
+    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
+    data["name_call"] = current_user.name
+    for member in chat.members.split():
+        if member != current_user.id:
+            emit("send_call", data, to="u" + member)
+    db_sess.close()
 
 
 @socketio.on("send_number")
 def send_number(data):
-    print(data, "of2")
-    emit("send_call_by_number", {"data": data, "current_user": current_user.id}, to=data["chat_id"])
-
+    print(data)
+    db_sess = db_session.create_session()
+    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
+    for member in chat.members.split():
+        if member != str(current_user.id):
+            emit("send_call_by_number", {"data": data, "current_user": current_user.id}, to="u" + member)
+            # emit("send_call", data, to="u" + member)
+    # print(data, "of2")
+    db_sess.close()
 
 # @socketio.on("send_candidate1")
 # def send_candidate1(data):

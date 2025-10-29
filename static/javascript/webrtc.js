@@ -35,18 +35,8 @@ async function invite() {
 function send_call(){
 //    alert("В разработке! только для разработчиков");
     var chat_id = document.getElementById("chat_id").value;
-    gener_UI_call(1);
+    gener_UI_call(1, document.getElementById("n_c" + document.getElementById("chat_id").value).textContent);
     socket.emit('send_call_to_user', {chat_id: chat_id, user_id: id_user});
-//    globalThis.my_peer = new RTCPeerConnection();
-//    // Listen for connectionstatechange on the local RTCPeerConnection
-//    globalThis.my_peer.addEventListener('connectionstatechange', event => {
-//            if (globalThis.my_peer.connectionState === 'connected') {
-//            // Peers connected!
-//            console.log("connected!")
-//
-//        }
-//    });
-//    offer = invite();
 }
 
 
@@ -70,18 +60,33 @@ function handleGetUserMediaError(e) {
 
 // type 1 исходящий
 //type 2 входящий
-function gener_UI_call(type){
+function gener_UI_call(type, name_call, chat_id){
     document.getElementById("global_menu_d").style.display = "block";
     var global_menu = document.getElementById("global_menu");
     global_menu.innerHTML = "";
     status_div = document.createElement("div");
     global_menu.appendChild(status_div);
-    global_menu.innerHTML += `<video id=myVideo muted="muted" width="400px" height="auto" ></video>
-	<div id=callinfo ></div>
-	<video id=remVideo width="400px" height="auto" ></video>`;
+//    var my_video = document.createElement("video");
+//    var other_video = document.createElement("video");
+    var width_video = screen.availWidth;
+    if (mobile){
+        global_menu.innerHTML += `<video id=myVideo muted="muted" width="${width_video * 0.8}px" height="auto" ></video>
+        <div id=callinfo > Звонок ${name_call}</div>
+        <video id=remVideo width="${width_video * 0.4}px" height="auto" ></video>`;
+	} else {
+	    global_menu.innerHTML += `<video id=remVideo width="${width_video * 0.25}px" height="auto" ></video>
+	    <div id=callinfo >Звонок ${name_call}</div>
+	    <video id=myVideo muted="muted" width="${width_video * 0.1}" height="auto" ></video>
+
+        `;
+	}
+	var height = 40;
+	if (mobile){
+	    height = 100;
+	}
     var button_kill = document.createElement("button");
     button_kill.classList = "info-btn call-kill";
-    button_kill.innerHTML += `<svg width="40px" height="40px" viewBox="0 0 24 24" id="end_call" data-name="end call" xmlns="http://www.w3.org/2000/svg">
+    button_kill.innerHTML += `<svg width="${height}px" height="${height}px" viewBox="0 0 24 24" id="end_call" data-name="end call" xmlns="http://www.w3.org/2000/svg">
   <rect id="placer" width="24" height="24" fill="none"/>
   <g id="Group" transform="translate(2 8)">
     <path id="Shape" d="M7.02,15.976,5.746,13.381a.7.7,0,0,0-.579-.407l-1.032-.056a.662.662,0,0,1-.579-.437,9.327,9.327,0,0,1,0-6.5.662.662,0,0,1,.579-.437l1.032-.109a.7.7,0,0,0,.589-.394L7.03,2.446l.331-.662a.708.708,0,0,0,.07-.308.692.692,0,0,0-.179-.467A3,3,0,0,0,4.693.017l-.235.03L4.336.063A1.556,1.556,0,0,0,4.17.089l-.162.04C1.857.679.165,4.207,0,8.585V9.83c.165,4.372,1.857,7.9,4,8.483l.162.04a1.556,1.556,0,0,0,.165.026l.122.017.235.03a3,3,0,0,0,2.558-.993.692.692,0,0,0,.179-.467.708.708,0,0,0-.07-.308Z" transform="translate(18.936 0.506) rotate(90)" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="1.5"/>
@@ -89,10 +94,10 @@ function gener_UI_call(type){
 </svg>`;
     if (type == 2){
         var btn_accept = document.createElement("button");
-        btn_accept.setAttribute("onclick", `accept_call()`);
+        btn_accept.setAttribute("onclick", `accept_call(${chat_id})`);
         btn_accept.classList = 'info-btn';
         btn_accept.id = "accept_call_btn";
-        btn_accept.innerHTML  = `<svg width="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        btn_accept.innerHTML  = `<svg width="${height}px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                 <g id="SVGRepo_iconCarrier"> <path d="M5.13641 12.764L8.15456 9.08664C8.46255 8.69065 8.61655 8.49264
@@ -145,7 +150,8 @@ function kill_call(){
     leave_call_UI();
     var chat_id = document.getElementById("chat_id").value;
     var data = {};
-    socket.emit('kill_call', {chat_id: chat_id, data:data });
+    peercall.close();
+//    socket.emit('kill_call', {chat_id: chat_id, data:data });
 }
 
 
@@ -155,9 +161,10 @@ function nAccepted(){
 }
 
 
-async function accept_call(){
-    var chat_id = document.getElementById("chat_id").value;
+async function accept_call(chat_id){
+//    var chat_id = document.getElementById("chat_id").value;
     console.log(document.getElementById("myid").value);
+    document.getElementById("accept_call_btn").style.display = "none";
     socket.emit("send_number", {chat_id: chat_id, number: document.getElementById("myid").value});
 }
 

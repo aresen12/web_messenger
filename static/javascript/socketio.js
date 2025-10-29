@@ -166,14 +166,14 @@ socket.on('send_call', (data) => {
 //    убирает повторный вызов для инициатора звонка
     console.log(data);
     if (data["user_id"] != id_user){
-        gener_UI_call(2);
+        gener_UI_call(2, data["name_call"], data["chat_id"]);
         playAudio();
     }
 });
 
 
 socket.on("send_call_by_number", data => {
-    if (data["current_user"] != id_user){
+//    if (data["current_user"] != id_user){
     callToNode(data["data"]["number"]);
-    }
+//    }
 })
