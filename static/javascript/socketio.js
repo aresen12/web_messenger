@@ -74,6 +74,7 @@ socket.on('connect', () => {
     chat_id = document.getElementById("chat_id");
     if (chat_id.value != ""){
         socket.emit('join', {room: chat_id.value});
+        get_new_message_id();
     }
 });
 

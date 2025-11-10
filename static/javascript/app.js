@@ -296,7 +296,6 @@ document.addEventListener('keydown', function(event) {
 
 
 function show(){
-    if (document.getElementById("chat_id").value != "") {
       $.ajax({
     url: '/m/get_json_mess',
     type: 'POST',
@@ -306,6 +305,9 @@ function show(){
     success: function(json_mess){
         var cont = document.getElementById("content");
         var date = "";
+        if (json_mess["messages"].length > 0){
+            cont.innerHTML = "";
+        }
         for (let i = 0; i < json_mess["messages"].length; i++){
             var c_m = json_mess["messages"][i];
             if (json_mess["current_user"] == c_m["id_sender"]){
@@ -335,7 +337,7 @@ function show(){
     error: function(err) {
         console.error(err);
     }
-});}
+});
     }
 
 
@@ -345,7 +347,6 @@ function notification (text, chat_name) {
                 const permission = await Notification.requestPermission();
                 if (Notification.permission === 'denied') {
                 }
-
                 const options = {
                   body: text,
                   icon:
@@ -730,38 +731,7 @@ function get_chats (id_div){
                 document.getElementById(id_div).innerHTML = "";
             }
            for (let i = 0; i < json["chats"].length; i++){
-           if (json["chats"][i]["primary_chat"]){
-             $.ajax({
-                url: '/m/get_chat_user/' + json["chats"][i]["id"],
-                type: 'GET',
-                dataType: 'json',
-                contentType:'application/json',
-                success: function(json2){
-                t_id = 0;
-                if (json2["user"][0] != id_user){
-                    t_id = json2["user"][0]
-                } else{
-                    t_id = json2["user"][1]
-                }
-                $.ajax({
-                    url: '/m/get_user/' + t_id,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(json3){
-                        gener_chat(id_div, json["chats"][i]["id"], json3["user"], json["chats"][i]["status"], json["chats"][i]["primary_chat"])
-                    },
-                    error: function(err) {
-                        console.error(err);
-                    }
-                    });
-            },
-        error: function(err) {
-            console.error(err);
-        }
-    });
-            }else{
                 gener_chat(id_div, json["chats"][i]["id"], json["chats"][i]["name"], json["chats"][i]["status"], json["chats"][i]["primary_chat"]);
-           }
            }
             },
         error: function(err) {
@@ -1058,3 +1028,21 @@ function submit_username_tg(){
     });
 }
 
+
+// "/get_new_message_id/<id_mess>/<chat_id>"
+function get_new_message_id(){
+    let mess_id = document.getElementById("last_mess_id").value;
+    let chat_id = document.getElementById("chat_id").value;
+    $.ajax({
+        url: '/m/get_new_message_id/${mess_id}/${chat_id}',
+        type: 'GET',
+        dataType: 'json',
+        contentType:'application/json',
+        success: function(json){
+            document.getElementById("global_menu_d").style.display = "none";
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}

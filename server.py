@@ -68,13 +68,17 @@ def login_device():
 
 @application.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect("/m")
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.username.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data, duration=datetime.timedelta(hours=24*90))
+            db_sess.close()
             return redirect("/m")
+        db_sess.close()
         return render_template('login.html',
                                message="Неправильный логин или пароль",
                                form=form)
@@ -149,11 +153,6 @@ def check_code_and_login():
 def main():
     if request.method == "GET":
         return render_template("main.html", title='главная')
-
-
-@application.route("/stop_messenger")
-def stop_app():
-    sys.exit(0)
 
 
 if __name__ == "__main__":

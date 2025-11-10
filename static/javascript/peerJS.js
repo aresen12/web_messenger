@@ -42,7 +42,7 @@ function callanswer() {
 		  peercall.answer(mediaStream); // отвечаем на звонок и передаем свой медиапоток собеседнику
 		  peercall.on('close', onCallClose); //можно обработать закрытие-обрыв звонка
 		  video.srcObject = mediaStream; //помещаем собственный медиапоток в объект видео (чтоб видеть себя)
-		  document.getElementById('callinfo').innerHTML="Звонок начат... <button onclick='callclose()' >Завершить звонок</button>"; //информируем, что звонок начат, и выводим кнопку Завершить
+//		  document.getElementById('callinfo').innerHTML="Звонок начат... <button onclick='callclose()' >Завершить звонок</button>"; //информируем, что звонок начат, и выводим кнопку Завершить
 		  video.onloadedmetadata = function(e) {//запускаем воспроизведение, когда объект загружен
 			video.play();
 		  };

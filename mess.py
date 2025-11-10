@@ -20,7 +20,8 @@ def m_st():
     if request.method == 'GET':
         if current_user.is_authenticated:
             chats = get_chats()
-            return render_template("messenger.html", device="", title='Kazbek', chats=chats, my_bg=current_user.id)
+            return render_template("messenger.html", device="",
+                                   title='Kazbek', chats=chats, my_bg=current_user.id)
         return redirect("/login")
     else:
         f = request.files["img"]
@@ -502,11 +503,9 @@ def get_json_mess():
             return {"log": "Permission error"}
         messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).all()
         js = {"messages": [], "files": get_files(data["chat_id"], db_sess), "current_user": current_user.id}
-        summ = 0
         f = False
         messages.sort(key=lambda x: x.time)
         for m in range(0, data["cnt"], -1):
-            summ += messages[m].id
             if messages[m].id_sender != js["current_user"] and not m.read:
                 m.read = 1
                 f = True
@@ -517,7 +516,6 @@ def get_json_mess():
         if f:
             db_sess.commit()
         db_sess.close()
-        js["summ_id"] = summ
         return js
 
 
@@ -558,3 +556,17 @@ def set_raed():
         db_sess.commit()
     db_sess.close()
     return {"log": 200}
+
+
+@mg.route("/get_new_message_id/<id_mess>/<chat_id>")
+def get_new_message_id(id_mess, chat_id):
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        messages = db_sess.query(Message).filter(Message.chat_id == chat_id).filter(Message.id > id_mess).all()
+        js = {"message": []}
+        for message in messages:
+            js["message"].append({"id": message.id, "id_sender": message.id_sender,
+                                  "html": message.html_m, "read": message.read, "text": message.message,
+                                  "time": message.get_time(), "pinned": message.pinned})
+        db_sess.close()
+        return js

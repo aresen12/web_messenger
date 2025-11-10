@@ -52,6 +52,7 @@ var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circl
 
 
 function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, pinned) {
+    document.getElementById("last_mess_id").value = id_m;
      if (other && !read && !vis){
                 notification(text, document.getElementById('name_chat').innerText);
             }
