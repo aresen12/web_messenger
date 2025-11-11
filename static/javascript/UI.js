@@ -15,18 +15,24 @@ document.getElementById("background-img").style.top = nav + "px";
 document.getElementById("form").style.display = "none";
 
 
-function gener_chat(id_div, chat_id, name_chat, status, primary){
+function gener_chat(id_div, chat_id, name_chat, status, primary, command){
     const cont = document.getElementById(id_div);
     get_read(chat_id);
     const btn = document.createElement('button');
     btn.id = 'chat'+ chat_id;
     btn.classList = "a-email";
-    btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status})`);
+    if (command == "set_recipient"){
+        btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status})`);
+    } else {
+//        send_of(' + "'" +json["chats"][i]["id"] +"', " + id_m + ", '" + json["chats"][i]["name"] + "'" + ')">' + json["chats"][i]["name"] +
+        btn.setAttribute("onclick",`send_of('${chat_id}', ${command}, '${name_chat}', )`);
+    }
+
     const rn = document.createElement('div');
     rn.classList = "r-n";
     rn.id = 'rn' + chat_id;
     const icon_chat = document.createElement('div');
-    icon_chat.id = "icon_chat" + chat_id;
+    icon_chat.id = "icon_chat" + command + chat_id;
     const name_chat_div = document.createElement('div');
     name_chat_div.id = "n_c" + chat_id;
     name_chat_div.textContent = name_chat;
@@ -41,7 +47,7 @@ function gener_chat(id_div, chat_id, name_chat, status, primary){
     }
     icon_chat.style.width = icon_size + "px";
     const svg =
-            d3.select("#icon_chat" + chat_id).
+            d3.select("#icon_chat" + command + chat_id).
             append('svg').
             attr('height', `${icon_size}`).
             attr('width', `${icon_size}`)

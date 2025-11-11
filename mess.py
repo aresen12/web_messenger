@@ -411,6 +411,13 @@ def edit_password():
     return {"log": True}
 
 
+@mg.route("/get_part_messages")
+def get_part_messages():
+    data = request.get_json()
+    new = []
+    return new
+
+
 @mg.route("/get_json_mess", methods=["POST"])
 def get_json_message():
     if current_user.is_authenticated:

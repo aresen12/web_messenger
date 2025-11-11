@@ -77,7 +77,7 @@ function showImg(Div, name_img){
 }
 
 
-get_chats('email');
+get_chats('email', "set_recipient");
 
 
 function add_pinned(id_mess){

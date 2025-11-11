@@ -86,7 +86,7 @@ function sing_out_of_chat(){
     contentType:'application/json',
     data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
     success: function(json){
-        get_chats('email');
+        get_chats('email', "set_recipient");
         exit_chat();
     },
     error: function(err) {
@@ -149,12 +149,12 @@ function set_recipient(id_chat, is_primary, name, status) {
     }
     var menu = document.getElementById("menu-chat-ul");
     menu.innerHTML = '<li onclick="block_user()">Заблокировать</li><li onclick="delete_chat()">Удалить чат</li><li onclick="search_text()">Поиск</li>';
-    if (is_primary){
+    if (!is_primary){
         menu.innerHTML += '<li onclick="sing_out_of_chat()">Покинуть чат</li>';
     };
     document.getElementById("chat_id").value = id_chat;
     document.getElementById('name_chat').textContent = name;
-    document.getElementById("icon_c_chat").innerHTML = document.getElementById("icon_chat" + id_chat).innerHTML;
+    document.getElementById("icon_c_chat").innerHTML = document.getElementById("icon_chatset_recipient" + id_chat).innerHTML;
     var x = document.getElementById("background-img");
     var y = document.getElementById("email");
     var button = document.getElementById("button");
@@ -305,16 +305,10 @@ function show(){
     success: function(json_mess){
         var cont = document.getElementById("content");
         var date = "";
-        if (json_mess["messages"].length > 0){
-            cont.innerHTML = "";
-        }
+        cont.innerHTML = "";
         for (let i = 0; i < json_mess["messages"].length; i++){
             var c_m = json_mess["messages"][i];
-            if (json_mess["current_user"] == c_m["id_sender"]){
-                var other = 0;
-            } else {
-                other = 1;
-            }
+            var other = !(json_mess["current_user"] == c_m["id_sender"]);
             var file = "";
             if (c_m["file"]){
                 file = json_mess["files"][c_m["file"]];
@@ -369,7 +363,7 @@ function create_chat(list_members, name, is_primary){
     data: JSON.stringify({"name":name, "list_members": list_members, "primary":is_primary}),
     success: function(json){
           // update chats list
-          get_chats('email');
+          get_chats('email', "set_recipient");
           document.getElementById("global_menu_d").style.display = 'none';
           set_recipient(json["chat_id"], json["is_primary"], json["name"], 1);
         },
@@ -439,7 +433,7 @@ $.ajax({
     data: JSON.stringify({"name": document.getElementById("name_edit").value,
      "email": document.getElementById("email_edit").value}),
     success: function(html){
-          get_chats('email');
+          get_chats('email', "set_recipient");
         },
     error: function(err) {
         console.error(err);
@@ -461,7 +455,7 @@ function delete_chat() {
             contentType:'application/json',
             data: JSON.stringify({"id_chat": document.getElementById("chat_id").value}),
             success: function(html){
-                  get_chats('email');
+                  get_chats('email', "set_recipient");
                   exit_chat();
                 },
             error: function(err) {
@@ -483,7 +477,7 @@ function block_user() {
             contentType:'application/json',
             data: JSON.stringify({"id_chat": document.getElementById("chat_id").value}),
             success: function(html){
-                  get_chats("email");
+                  get_chats('email', "set_recipient");
                   exit_chat();
                 },
             error: function(err) {
@@ -586,7 +580,7 @@ function edit_name_chat(){
         contentType:'application/json',
         data: JSON.stringify({"chat_id": document.getElementById('chat_id').value, "new_name": document.getElementById('new_chat_name').value}),
         success: function(html){
-              get_chats('email');
+              get_chats('email', "set_recipient");
             },
         error: function(err) {
             console.error(err);
@@ -633,7 +627,7 @@ function create_group (){
     data: JSON.stringify({"name":name, "list_members": list_members, "primary":is_primary}),
     success: function(json){
           // update chats list
-          get_chats('email');
+          get_chats('email', "set_recipient");
           document.getElementById("global_menu_d").style.display = 'none';
           set_recipient(json["chat_id"], json["is_primary"], json["name"], 1);
         },
@@ -717,7 +711,7 @@ function send_of(chat_id, id_m, name_chat){
 }
 
 
-function get_chats (id_div){
+function get_chats(id_div, command){
     $.ajax({
         url: '/m/get_chats',
         type: 'GET',
@@ -731,7 +725,8 @@ function get_chats (id_div){
                 document.getElementById(id_div).innerHTML = "";
             }
            for (let i = 0; i < json["chats"].length; i++){
-                gener_chat(id_div, json["chats"][i]["id"], json["chats"][i]["name"], json["chats"][i]["status"], json["chats"][i]["primary_chat"]);
+                gener_chat(id_div, json["chats"][i]["id"], json["chats"][i]["name"],
+                 json["chats"][i]["status"], json["chats"][i]["primary_chat"], command);
            }
             },
         error: function(err) {
@@ -741,57 +736,14 @@ function get_chats (id_div){
 }
 
 
-function get_chats_gl (id_div, id_m){
-    html_ = "";
-    $.ajax({
-        url: '/m/get_chats',
-        type: 'GET',
-        dataType: 'json',
-        contentType:'application/json',
-        success: function(json){
-           for (let i = 0; i < json["chats"].length; i++){
-               if (json["chats"][i]["primary_chat"]){
-                 $.ajax({
-                    url: '/m/get_chat_user/' + json["chats"][i]["id"],
-                    type: 'GET',
-                    dataType: 'json',
-                    contentType:'application/json',
-                    success: function(json2){
-                    t_id = 0;
-                    if (json2["user"][0] != id){
-                        t_id = json2["user"][0]
-                    } else{
-                        t_id = json2["user"][1]
-                    }
-                    $.ajax({
-                        url: '/m/get_user/' + t_id,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(json3){
-                            document.getElementById(id_div).innerHTML += '<button " class="a-email" onclick="send_of(' + "'" +json["chats"][i]["id"] + "', " + id_m   + ", '" + json3["user"] + "'" +  ')"' + '">' + json3["user"] +'<div class="r-n"\
-                             id="rn' + json["chats"][i]["id"] + '"></div></button>';
-                    },
-                    error: function(err) {
-                        console.error(err);
-                    }
-                    });
-           },
-            error: function(err) {
-                             console.error(err);
-                              }
-                             });
-       } else {
-                html_ += '<button class="a-email" onclick="send_of(' + "'" +json["chats"][i]["id"] +"', " + id_m + ", '" + json["chats"][i]["name"] + "'" + ')">' + json["chats"][i]["name"] +'<div class="r-n" id="rn' + json["chats"][i]["id"] + '"></div></button>';
-           }
-           }
-           document.getElementById(id_div).innerHTML = html_;
-                document.getElementById(id_div).innerHTML += '<button onclick="show_global_menu(' + "'global_menu_d'" + ', 0)" type="button"\
-                    class="btn-close gl-btn-close" aria-label="Close"></button>'
-            },
-        error: function(err) {
-            console.error(err);
-        }
-});
+function get_chats_gl(id_div, id_m){
+    var global_menu = document.getElementById(id_div);
+    var div = document.createElement("div");
+    div.id = "cont_user_send"
+    global_menu.appendChild(div);
+    get_chats("cont_user_send", id_m);
+    global_menu.innerHTML += '<button onclick="show_global_menu(' + "'global_menu_d'" + ', 0)" type="button"\
+                    class="btn-close gl-btn-close" aria-label="Close"></button>';
 }
 
 
@@ -1039,7 +991,13 @@ function get_new_message_id(){
         dataType: 'json',
         contentType:'application/json',
         success: function(json){
-            document.getElementById("global_menu_d").style.display = "none";
+            console.log(json);
+            for (var j = 0; j < json["message"].length; j++){
+                var mess = json["message"][j];
+                let other = !(mess["id_sender"] == id_user);
+                gener_html(mess[j], mess["text"], mess["time"], mess["html"], mess["file"], other);
+            }
+//id, text, time, html_m, file, other
             },
         error: function(err) {
             console.error(err);
