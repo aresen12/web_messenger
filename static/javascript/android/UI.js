@@ -15,22 +15,42 @@ document.getElementById("background-img").style.top = nav + "px";
 document.getElementById("form").style.display = "none";
 
 // вот это оставить
-function gener_chat(id_div, chat_id, name_chat, status, primary){
+function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_mess){
     const cont = document.getElementById(id_div);
     get_read(chat_id);
     const btn = document.createElement('button');
     btn.id = 'chat'+ chat_id;
     btn.classList = "a-email";
-    btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status})`);
+    if (command == "set_recipient"){
+        btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status})`);
+    } else {
+        btn.setAttribute("onclick",`send_of('${chat_id}', ${command}, '${name_chat}', )`);
+    }
+    let last_mess_div = document.createElement("div");
+    let last_time = document.createElement("div");
+//    last_mess["time"]
+    if (last_mess["time"] != "2023-01-01 00:00:00.0"){
+    last_time.textContent = last_mess["time"].slice(11, 16);;
+    last_time.classList = "time-in-chat";
+    }
+//    last_mess_div.id =
+    if (last_mess["text"] && last_mess["text"].length > 12){
+        last_mess_div.textContent = last_mess["text"].slice(0, 12);
+    } else {
+    last_mess_div.textContent = last_mess["text"];
+    }
+    last_mess_div.classList = "last-mess";
     const rn = document.createElement('div');
     rn.classList = "r-n";
     rn.id = 'rn' + chat_id;
     const icon_chat = document.createElement('div');
-    icon_chat.id = "icon_chat" + chat_id;
+    icon_chat.id = "icon_chat" + command + chat_id;
     const name_chat_div = document.createElement('div');
     name_chat_div.id = "n_c" + chat_id;
     name_chat_div.textContent = name_chat;
     name_chat_div.classList = "n-c";
+     name_chat_div.appendChild(last_time);
+    name_chat_div.appendChild(last_mess_div);
     btn.appendChild(icon_chat);
     btn.appendChild(name_chat_div);
     btn.appendChild(rn);
@@ -38,7 +58,7 @@ function gener_chat(id_div, chat_id, name_chat, status, primary){
     var icon_size = 40;
     icon_chat.style.width = icon_size + "px";
     const svg =
-            d3.select("#icon_chat" + chat_id).
+            d3.select("#icon_chat" + command + chat_id).
             append('svg').
             attr('height', `${icon_size}`).
             attr('width', `${icon_size}`)

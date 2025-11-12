@@ -627,9 +627,9 @@ function create_group (){
     data: JSON.stringify({"name":name, "list_members": list_members, "primary":is_primary}),
     success: function(json){
           // update chats list
-          get_chats('email', "set_recipient");
+          get_chats('email', "set_recipient").then(set_recipient(json["chat_id"], json["is_primary"], json["name"], 1));
           document.getElementById("global_menu_d").style.display = 'none';
-          set_recipient(json["chat_id"], json["is_primary"], json["name"], 1);
+          document.getElementById("global_menu").innerHTML = ""
         },
     error: function(err) {
         console.error(err);
@@ -700,6 +700,7 @@ function send_of(chat_id, id_m, name_chat){
         data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m}),
         success: function(json){
             document.getElementById("global_menu_d").style.display = "none";
+            document.getElementById("global_menu").innerHTML = "";
             set_recipient(chat_id, 0, name_chat,  1)
             },
         error: function(err) {
@@ -720,13 +721,13 @@ function get_chats(id_div, command){
         success: function(json){
             if (json["chats"].length == 0){
                 document.getElementById(id_div).innerHTML = '<h2>Для того чтобы создать чат нажмите на синий плюс.</h2>'
-                return 0
+                return 0;
             } else {
                 document.getElementById(id_div).innerHTML = "";
             }
            for (let i = 0; i < json["chats"].length; i++){
                 gener_chat(id_div, json["chats"][i]["id"], json["chats"][i]["name"],
-                 json["chats"][i]["status"], json["chats"][i]["primary_chat"], command);
+                 json["chats"][i]["status"], json["chats"][i]["primary_chat"], command, json["chats"][i]["last_message"]);
            }
             },
         error: function(err) {
