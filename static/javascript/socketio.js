@@ -2,9 +2,9 @@
 const socket = io.connect();
 
 
-function set_emoji(id_mess, text_mess){
+function set_emoji(id_mess, id_emoji){
     var chat_id =  document.getElementById("chat_id").value;
-    socket.emit('emoji', {chat_id: chat_id, id_mess: id_mess, value: "" + text_mess });
+    socket.emit('emoji', {chat_id: chat_id, id_mess: id_mess, value: id_emoji});
 }
 
             // Handle form submission
@@ -43,7 +43,7 @@ socket.on('create_chat', (data) => {
 //, html_m, other, text
 socket.on('emoji_client', (data) => {
 //    пока id не работает
-    gener_emoji(data["id_emoji"], data["id_mess"], 1, data['value'])
+    gener_emoji(data["id_emoji"], data["id_mess"], 0, data['value'])
 });
 
 

@@ -317,3 +317,11 @@ width:180px;
 }
 
 .log-img {height:70px;}
+
+.emoji{
+     display:inline-block;
+    color: white;
+    border-radius: 10px;
+     width:fit-content;
+     min-width: 25  px;
+}

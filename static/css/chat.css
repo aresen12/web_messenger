@@ -1,10 +1,10 @@
 
 @media screen and (width < 981px) and (pointer:none), (pointer:coarse) {
     .last-mess{
-    font-size: 20px;
+    font-size: 40px;
 }
 .time-in-chat{
- font-size: 20px;
+ font-size: 40px;
 }
     .log-img {height:10vh;}
     .log-name {font-size:40px;}

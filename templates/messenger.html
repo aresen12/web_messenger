@@ -228,6 +228,7 @@
         <div id="content" class="content-div"></div>
         <div class="form-group">
     <div id="edit-label" class="alert-secondary label-edit" style="display:none;"></div>
+             {% if device != "android" %}
     <div class="emojis" id="emojis_menu"
          style="display:none;font-size:15px; position:absolute;bottom:100px; right: 50px; width:20vw">
         <br>
@@ -284,6 +285,7 @@
             <button class="info-btn" onclick="injectEmojisToList(this)">🧸</button>
             <button class="info-btn" onclick="injectEmojisToList(this)">💍</button>
     </div>
+            {% endif %}
             <input style="display:none" id="last_mess_id">
     <iframe name="votar" style="display:none;"></iframe>
     <form id="form" method="post" class="form2" enctype="multipart/form-data" target="votar" contenteditable="false">
@@ -309,7 +311,9 @@
                     <span id="imageName"></span>
                 </label>
             </div>
+            {% if device != "android" %}
             <button class="info-btn" onclick="showdiv1('emojis_menu')">😃</button>
+            {% endif %}
             <button class="info-btn" id="stop" style="display:none;"><?xml version="1.0" encoding="utf-8"?>
 <svg width="40px" height="40px" viewBox="-1 0 24 24" id="meteor-icon-kit__solid-microphone-slash" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 0C8.23858 0 6 2.23858 6 5V13C6 13.7566 6.16807 14.474 6.46891 15.1169L5.60408 15.9817C5.21557 15.2688 5 14.4738 5 13.647V11.5882C5 11.0359 4.55229 10.5882 4 10.5882C3.44772 10.5882 3 11.0359 3 11.5882V13.647C3 15.0496 3.4198 16.344 4.14261
  17.4432L1.29289 20.2929C1.29271 20.2931 1.29308 20.2927 1.29289 20.2929L0.29289 21.2929C-0.097631 21.6834

@@ -32,6 +32,7 @@ def get_chats():
             name = i.name
             if i.primary_chat:
                 id_user = i.members.split()
+                print(id_user, i.members, i.id)
                 del id_user[id_user.index(str(current_user.id))]
                 id_user = id_user[0]
                 name = db_sess.query(User.name).filter(User.id == id_user).first()[0]

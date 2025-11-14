@@ -1,3 +1,4 @@
+const emoji = ["🔥", "👍", "😃"];
 function showDiv(Div, div2) {
     var x = document.getElementById(Div);
     var y = document.getElementById(div2)
@@ -102,27 +103,37 @@ function add_pinned(id_mess){
 }
 
 
-function gener_emoji(id_mess, html_m, other, text){
+function unset_emoji(id_message){
+    delete_mess(id_message);
+}
+
+
+function gener_emoji(id_mess, html_m, other, id_emoji){
     var em_div = document.getElementById("em" + html_m);
-    if (em_div.textContent.includes(text)){
-       var list_em = em_div.textContent.split(" ");
-       em_div.innerText = "";
-       var text_em = "";
-        for (let f = 0; f < list_em.length; f++){
-            if (list_em[f].includes(text)){
-                if (f.length > 1){
-                    text_em += text + (Number(list_em[f][1]) + 1) + " ";
-                } else {
-                   text_em += text + "2 ";
-                }
-            } else{
-                text_em += list_em[f] + " ";
-            }
-        }
-        em_div.innerText = text_em;
-    } else {
-        em_div.textContent += text;
+    em_div.classList = "emoji"
+    if (document.getElementById(html_m + "emoji_btn_id" + id_emoji)){
+        var btn = document.getElementById(html_m + "emoji_btn_id" + id_emoji);
+          if (btn.textContent.length > 1){
+              btn.textContent = emoji[id_emoji] + (Number(btn.textContent[1]) + 1);
+          } else {
+             btn.textContent = emoji[id_emoji] + "2";
+          }
+          if (!other){
+        btn.style.background = "#6699cc";
     }
+    } else {
+        var btn = document.createElement("button");
+        btn.textContent = emoji[id_emoji];
+        btn.classList = "info-btn";
+        btn.setAttribute("onclick", `unset_emoji(${id_mess})`);
+        btn.id = html_m + "emoji_btn_id" + id_emoji;
+        if (!other){
+        btn.style.background = "#6699cc";
+    }
+        em_div.appendChild(btn);
+
+    }
+
 }
 
 
@@ -144,7 +155,6 @@ function scrollToBottom(elementId) {
 function open_menu_mess(id_mess){
     var name_functions = ["answer", "send", "pinned", "delete_mess", "copyToClipboard"];
     var titles = ["ответить", "переслать", "закрепить", "удалить", "скопировать"];
-    var emoji = ["🔥", "👍", "😃"];
     var ul = document.createElement("ul");
     if (globalThis.menu_id != ""){
         try{
@@ -168,13 +178,14 @@ function open_menu_mess(id_mess){
         var btn_emoji = document.createElement("button");
         btn_emoji.classList = "info-btn";
         btn_emoji.textContent = emoji[i];
-        btn_emoji.setAttribute("onclick", `set_emoji(${id_mess.slice(1)}, '${emoji[i]}')`);
+        btn_emoji.setAttribute("onclick", `set_emoji(${id_mess.slice(1)}, ${i})`);
         emoji_div2.appendChild(btn_emoji);
     }
     if (id_mess[0] == "e"){
         id_mess = id_mess.substring(1, id_mess.length);
     }
     const curr_m = document.getElementById("m" + id_mess);
+    curr_m.innerHTML = "";
     curr_m.appendChild(emoji_div2);
     curr_m.appendChild(ul);
     globalThis.menu_id = "m" + id_mess;
