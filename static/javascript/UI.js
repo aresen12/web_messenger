@@ -28,16 +28,26 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
     }
     let last_mess_div = document.createElement("div");
     let last_time = document.createElement("div");
-//    last_mess["time"]
     if (last_mess["time"] != "2023-01-01 00:00:00.0"){
     last_time.textContent = last_mess["time"].slice(11, 16);;
     last_time.classList = "time-in-chat";
     }
-//    last_mess_div.id =
-    if (last_mess["text"] && last_mess["text"].length > 12){
-        last_mess_div.textContent = last_mess["text"].slice(0, 12);
+    if (last_mess["type"] == 2){
+        last_mess_div.textContent = emoji[last_mess["text"]];
     } else {
-    last_mess_div.textContent = last_mess["text"];
+        if (primary){
+            if (last_mess["text"] && last_mess["text"].length > 16){
+                last_mess_div.textContent = last_mess["text"].slice(0, 16) + "...";
+            } else {
+                last_mess_div.textContent = last_mess["text"];
+            }
+    } else {
+        if (last_mess["text"] && last_mess["text"].length > 12){
+                last_mess_div.textContent = last_mess["name_sender"] + ": " + last_mess["text"].slice(0, 12) + "...";
+            } else {
+                last_mess_div.textContent = last_mess["name_sender"] + ": " + last_mess["text"];
+            }
+        }
     }
     last_mess_div.classList = "last-mess";
     const rn = document.createElement('div');
@@ -202,31 +212,4 @@ function set_bg(num) {
     }
     document.cookie = "bg="+ num;
 }
-
-
-document.addEventListener('click', (e) => {
-    if (menu_id != ""){
-        var div = document.querySelector('#' + menu_id.slice(1));
-        var t = e.composedPath().includes(div);
-        if (!t){
-            document.getElementById(menu_id).style.display = "none";
-            globalThis.menu_id = "";
-        }
-    }
-    var div = document.querySelector('#menu_create_div');
-    var withinBoundaries = e.composedPath().includes(div);
-    var div2 = document.querySelector('#menu_chat_div_all');
-    var flag = e.composedPath().includes(div2);
-    if (!withinBoundaries) {
-        document.getElementById("how_create").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
-    };
-    if (!flag) {
-        document.getElementById("menu-chat").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
-    };
-    if (menu_id != "" && mobile != true){
-        document.getElementById(menu_id).style.display = "none";
-        globalThis.menu_id = "";
-      };
-})
-
 

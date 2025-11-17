@@ -574,6 +574,7 @@ def get_new_message_id(id_mess, chat_id):
         for message in messages:
             js["message"].append({"id": message.id, "id_sender": message.id_sender,
                                   "html": message.html_m, "read": message.read, "text": message.message,
-                                  "time": message.get_time(), "pinned": message.pinned})
+                                  "time": message.get_time(), "pinned": message.pinned,
+                                  "name_sender": message.name_sender})
         db_sess.close()
         return js

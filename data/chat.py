@@ -41,13 +41,13 @@ def get_chats():
                 mess = mess2[-1]
                 new.append({"id": i.id, "name": name, "primary_chat": i.primary_chat, "status": i.status,
                             "last_message": {"text": mess.message, "time": mess.time,
-                                             "name_sender": mess.name_sender
+                                             "name_sender": mess.name_sender, "type": mess.type
                                              }})
             else:
                 mess: Message
                 new.append({"id": i.id, "name": name, "primary_chat": i.primary_chat, "status": i.status,
                             "last_message": {"text": "", "time": "2023-01-01 00:00:00.0",
-                                             "name_sender": ""
+                                             "name_sender": "", "type": ''
                                              }})
     new.sort(key=lambda x: x["last_message"]["time"], reverse=True)
     return new

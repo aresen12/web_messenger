@@ -3,8 +3,23 @@ const socket = io.connect();
 
 
 function set_emoji(id_mess, id_emoji){
-    var chat_id =  document.getElementById("chat_id").value;
-    socket.emit('emoji', {chat_id: chat_id, id_mess: id_mess, value: id_emoji});
+    var div = document.getElementById(id_mess + "emoji_btn_id" + id_emoji);
+    if (div) {
+        if (div.style.background != "#6699cc")
+        {
+        document.getElementById(menu_id).style.display = "none";
+    globalThis.menu_id = '';
+        return 500;
+        }
+    }
+//    if (!div || div.style.background != "#6699cc"){
+        var chat_id =  document.getElementById("chat_id").value;
+        socket.emit('emoji', {chat_id: chat_id, id_mess: id_mess, value: id_emoji});
+//    } else {
+//        alert("Вы уже поставили эмоцию!");
+//    }
+    document.getElementById(menu_id).style.display = "none";
+    globalThis.menu_id = '';
 }
 
             // Handle form submission

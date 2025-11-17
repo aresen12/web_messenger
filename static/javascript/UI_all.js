@@ -1,4 +1,8 @@
-const emoji = ["🔥", "👍", "😃"];
+const emoji = ["💘", "❤️", "❤️‍🔥", "😭", "👌", "😨", "👍", "🍌", "🌭", "💋",
+"🤯", "👏", "🍾", "👎", "🔥", "🥰", "😁", "🤔", "😱", "🤬", "😢", "🎉", "🤩", "🤮", "💩", "🙏",
+"🕊️", "🤡", "🥱", "🥴", "😍", "🐳", "🌚", "💯", "😂", "⚡️", "🏆", "💔", "🤨", "😐", "🍓", "🖕",
+ "😈", "😴", "🤓", "👻", "👨‍💻", "🙈", "👀", "😇", "🤝", "✍️", "🤗", "🫡", "🎅", "🎄", "⛄️", "💅",
+"🤪", "🗿", "🆒", "🙉", "🦄", "😘", "💊", "🙊", "😎", "👾", "🤷", "🤷‍♀️", "🤷‍♂️", "😡"];
 function showDiv(Div, div2) {
     var x = document.getElementById(Div);
     var y = document.getElementById(div2)
@@ -113,28 +117,58 @@ function gener_emoji(id_mess, html_m, other, id_emoji){
     em_div.classList = "emoji"
     if (document.getElementById(html_m + "emoji_btn_id" + id_emoji)){
         var btn = document.getElementById(html_m + "emoji_btn_id" + id_emoji);
-          if (btn.textContent.length > 1){
+          if (btn.textContent.length  && Number(btn.textContent[1])){
               btn.textContent = emoji[id_emoji] + (Number(btn.textContent[1]) + 1);
           } else {
              btn.textContent = emoji[id_emoji] + "2";
           }
           if (!other){
-        btn.style.background = "#6699cc";
+            btn.style.background = "#6699cc";
+            btn.setAttribute("onclick", `unset_emoji(${id_mess})`);
     }
     } else {
         var btn = document.createElement("button");
         btn.textContent = emoji[id_emoji];
         btn.classList = "info-btn";
-        btn.setAttribute("onclick", `unset_emoji(${id_mess})`);
         btn.id = html_m + "emoji_btn_id" + id_emoji;
         if (!other){
-        btn.style.background = "#6699cc";
-    }
+            btn.style.background = "#6699cc";
+             btn.setAttribute("onclick", `unset_emoji(${id_mess})`);
+        }
         em_div.appendChild(btn);
-
     }
-
 }
+
+document.addEventListener('click', (e) => {
+    if (menu_id != ""){
+        var div = document.querySelector('#' + menu_id.slice(1));
+        var div2 = document.querySelector('#emoji' + menu_id.slice(1).slice(1));
+       var t2 = e.composedPath().includes(div2);
+        var t = e.composedPath().includes(div);
+        if (!t && !t2){
+            document.getElementById(menu_id).style.display = "none";
+            globalThis.menu_id = "";
+        }
+    }
+    var div = document.querySelector('#menu_create_div');
+    var withinBoundaries = e.composedPath().includes(div);
+    var div2 = document.querySelector('#menu_chat_div_all');
+    var flag = e.composedPath().includes(div2);
+    if (!withinBoundaries) {
+        document.getElementById("how_create").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
+    };
+    if (!flag) {
+        document.getElementById("menu-chat").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
+    };
+    if (menu_id != "" && mobile != true && !t2){
+        document.getElementById(menu_id).style.display = "none";
+        globalThis.menu_id = "";
+      };
+})
+
+
+
+
 
 
 var autoScroll = true;
@@ -152,10 +186,28 @@ function scrollToBottom(elementId) {
 }
 
 
+function show_more_emoji(id_mess){
+    const curr_m = document.getElementById("mm" + id_mess);
+    document.getElementById("ul_on_menu" + id_mess).innerHTML = "";
+    document.getElementById("emoji" + id_mess).innerHTML ="";
+    const emoji_div2 = document.createElement("div");
+    for (let i = 0; i < emoji.length; i++){
+        var btn_emoji = document.createElement("button");
+        btn_emoji.classList = "info-btn";
+        btn_emoji.textContent = emoji[i];
+        btn_emoji.setAttribute("onclick", `set_emoji(${id_mess}, ${i})`);
+        emoji_div2.appendChild(btn_emoji);
+    }
+    curr_m.appendChild(emoji_div2);
+}
+
+
 function open_menu_mess(id_mess){
     var name_functions = ["answer", "send", "pinned", "delete_mess", "copyToClipboard"];
     var titles = ["ответить", "переслать", "закрепить", "удалить", "скопировать"];
     var ul = document.createElement("ul");
+    ul.id = "ul_on_menu"  + id_mess.slice(1);
+
     if (globalThis.menu_id != ""){
         try{
         document.getElementById(menu_id).style.display = "none";
@@ -174,13 +226,20 @@ function open_menu_mess(id_mess){
         ul.appendChild(li);
     }
     const emoji_div2 = document.createElement("div");
-    for (let i = 0; i < emoji.length; i++){
+    emoji_div2.id = "emoji" + id_mess.slice(1);
+    for (let i = 0; i < 4; i++){
         var btn_emoji = document.createElement("button");
         btn_emoji.classList = "info-btn";
         btn_emoji.textContent = emoji[i];
         btn_emoji.setAttribute("onclick", `set_emoji(${id_mess.slice(1)}, ${i})`);
         emoji_div2.appendChild(btn_emoji);
     }
+    var btn_emoji = document.createElement("button");
+        btn_emoji.classList = "info-btn";
+        btn_emoji.textContent = "⋁";
+        btn_emoji.setAttribute("onclick", `show_more_emoji(${id_mess.slice(1)})`);
+        emoji_div2.appendChild(btn_emoji);
+    //⋎∨⋁
     if (id_mess[0] == "e"){
         id_mess = id_mess.substring(1, id_mess.length);
     }
@@ -190,6 +249,7 @@ function open_menu_mess(id_mess){
     curr_m.appendChild(ul);
     globalThis.menu_id = "m" + id_mess;
     showdiv1("m" + id_mess);
+    window.location.hash = "#m" + id_mess;
 }
 
 

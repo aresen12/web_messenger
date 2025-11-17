@@ -186,29 +186,3 @@ function set_bg(num) {
     document.getElementById("background-img").src = "/static/img/bg/mob_bg" + num + ".jpg";
     document.cookie = "bg="+ num;
 }
-1
-// не уверен
-document.addEventListener('click', (e) => {
-    if (menu_id != ""){
-        var div = document.querySelector('#' + menu_id.slice(1));
-        var t = e.composedPath().includes(div);
-        if (!t){
-            document.getElementById(menu_id).style.display = "none";
-            globalThis.menu_id = "";
-        }
-    }
-    var div = document.querySelector('#menu_create_div');
-    var withinBoundaries = e.composedPath().includes(div);
-    var div2 = document.querySelector('#menu_chat_div_all');
-    var flag = e.composedPath().includes(div2);
-    if (!withinBoundaries) {
-        document.getElementById("how_create").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
-    };
-    if (!flag) {
-        document.getElementById("menu-chat").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
-    };
-    if (menu_id != "" && mobile != true){
-        document.getElementById(menu_id).style.display = "none";
-        globalThis.menu_id = "";
-      };
-});
