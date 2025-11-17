@@ -189,7 +189,7 @@ function scrollToBottom(elementId) {
 function show_more_emoji(id_mess){
     const curr_m = document.getElementById("mm" + id_mess);
     document.getElementById("ul_on_menu" + id_mess).innerHTML = "";
-    document.getElementById("emoji" + id_mess).innerHTML ="";
+    document.getElementById("emoji" + id_mess).innerHTML = "";
     const emoji_div2 = document.createElement("div");
     for (let i = 0; i < emoji.length; i++){
         var btn_emoji = document.createElement("button");
@@ -207,7 +207,10 @@ function open_menu_mess(id_mess){
     var titles = ["ответить", "переслать", "закрепить", "удалить", "скопировать"];
     var ul = document.createElement("ul");
     ul.id = "ul_on_menu"  + id_mess.slice(1);
-
+    const curr_m = document.getElementById("m" + id_mess);
+    if (mobile && curr_m.style.display == "block") {
+        return 200;
+    }
     if (globalThis.menu_id != ""){
         try{
         document.getElementById(menu_id).style.display = "none";
@@ -243,7 +246,6 @@ function open_menu_mess(id_mess){
     if (id_mess[0] == "e"){
         id_mess = id_mess.substring(1, id_mess.length);
     }
-    const curr_m = document.getElementById("m" + id_mess);
     curr_m.innerHTML = "";
     curr_m.appendChild(emoji_div2);
     curr_m.appendChild(ul);
