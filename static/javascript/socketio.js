@@ -24,23 +24,21 @@ function set_emoji(id_mess, id_emoji){
 
             // Handle form submission
 function send_io_mess() {
-                const input = document.getElementById('about');
-                const chat_id = document.getElementById('chat_id').value;
-                const message = input.value;
-                const html2 = document.getElementById('html_m');
-                const html_m = html2.value;
-                if (message) {
-                    console.log("test");
-                    // Send message to server
-                if (Number(chat_id)){
-                    socket.emit('room_message', {room: chat_id, message: message, html: html_m });
-                } else {
-                    socket.emit('my_message', {room: chat_id.slice(2), message: message, html: html_m });
-                }
-                    input.value = '';
-                    html2.value = '';
-                }
-
+    const input = document.getElementById('about');
+    const chat_id = document.getElementById('chat_id').value;
+    const message = input.value;
+    const html2 = document.getElementById('html_m');
+    const html_m = html2.value;
+    if (message) {
+        // Send message to server
+        if (Number(chat_id)){
+            socket.emit('room_message', {room: chat_id, message: message, html: html_m });
+        } else {
+            socket.emit('my_message', {room: chat_id.slice(2), message: message, html: html_m });
+        }
+        input.value = '';
+        html2.value = '';
+    }
 }
 
             // Listen for messages from server

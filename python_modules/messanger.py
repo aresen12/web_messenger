@@ -11,7 +11,7 @@ from data.File import File, get_files
 from data.black_list import Black
 from flask_socketio import emit
 from data.bot_db import BotDB
-from data.my_message import MyMessage
+from data.my_message import MyMessage, new_mess_my
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
@@ -26,28 +26,31 @@ def m_st():
 
         return redirect("/login")
     else:
+        if not current_user.is_authenticated:
+            return redirect("/login")
         f = request.files["img"]
         if request.form["about"].strip() == "" and f.filename == "":
             return redirect('/m')
         db_sess = db_session.create_session()
-        if current_user.is_authenticated:
-            c_user = db_sess.query(User).filter(User.email == current_user.email).first()
-        else:
-            c_user = db_sess.query(User).filter(User.email == request.form["id_user"]).first()
-        mess = new_mess(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
-                        chat_id=request.form["chat_id"], html=request.form["html_m"])
-        c_user: User
+        c_user = db_sess.query(User).filter(User.email == current_user.email).first()
+        try:
+            int(request.form["chat_id"])
+            mess = new_mess(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
+                            chat_id=request.form["chat_id"], html=request.form["html_m"])
+        except ValueError:
+            mess = new_mess_my(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
+                               chat_id=request.form["chat_id"][2:], html=request.form["html_m"])
         x = ""
         name = ""
         if f.filename != "":
             file_db = File()
             file_db.name = f.filename
             ex = f.filename.split(".")[-1]
-            os.chdir('../static/img/data')
+            os.chdir('static/img/data')
             dd = len(os.listdir())
-            os.chdir("../..")
-            os.chdir("../..")
-            os.chdir("../..")
+            os.chdir("..")
+            os.chdir("..")
+            os.chdir("..")
             file = open(f"static/img/data/{dd}.{ex}", mode="wb")
             file.write(f.read())
             file.close()

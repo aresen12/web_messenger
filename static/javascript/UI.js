@@ -15,10 +15,13 @@ document.getElementById("background-img").style.top = nav + "px";
 document.getElementById("form").style.display = "none";
 
 
-function gener_icon_chat(name_chat, chat_id, id_div){
+function gener_icon_chat(name_chat, chat_id, id_div, color){
     var icon_size = 40;
     if (mobile){
         icon_size = 120;
+    }
+    if (!color){
+        var color = random_colors[Math.floor(Math.random() * random_colors.length)];
     }
     document.getElementById(id_div).style.width = icon_size + "px";
     const svg =
@@ -28,7 +31,7 @@ function gener_icon_chat(name_chat, chat_id, id_div){
             attr('width', `${icon_size}`)
             var circle = svg.append("circle") .attr("cx", icon_size / 2)
             .attr("cy", icon_size / 2) .attr("r", icon_size / 2)
-             .attr("fill", random_colors[Math.floor(Math.random() * random_colors.length)]);
+             .attr("fill", color);
         var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circle.attr("cy") - 3)
          .attr("dy", "0.35em") .text(name_chat[0]);
 }

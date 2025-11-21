@@ -441,12 +441,13 @@ function leave_chat(chat_id){
 }
 
 
-function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_mess){
+function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_mess, pinned){
     const cont = document.getElementById(id_div);
     get_read(chat_id);
     const btn = document.createElement('button');
     btn.id = 'chat'+ chat_id;
     btn.classList = "a-email";
+
     if (command == "set_recipient"){
         btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status})`);
     } else {
@@ -455,8 +456,14 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
     let last_mess_div = document.createElement("div");
     let last_time = document.createElement("div");
     if (last_mess["time"] != "2023-01-01 00:00:00.0"){
-    last_time.textContent = last_mess["time"].slice(11, 16);;
-    last_time.classList = "time-in-chat";
+        last_time.textContent = last_mess["time"].slice(11, 16);;
+        last_time.classList = "time-in-chat";
+    }
+    if (pinned){
+        last_time.innerHTML += `<svg fill="#b3b3b3" width="15px" height="15px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon">
+  <path d="M878.3 392.1L631.9 145.7c-6.5-6.5-15-9.7-23.5-9.7s-17 3.2-23.5 9.7L423.8 306.9c-12.2-1.4-24.5-2-36.8-2-73.2 0-146.4 24.1-206.5 72.3-15.4 12.3-16.6 35.4-2.7 49.4l181.7 181.7-215.4 215.2a15.8 15.8 0 0 0-4.6 9.8l-3.4 37.2c-.9 9.4 6.6 17.4 15.9 17.4.5 0 1 0 1.5-.1l37.2-3.4c3.7-.3 7.2-2 9.8-4.6l215.4-215.4 181.7 181.7c6.5 6.5 15 9.7 23.5 9.7 9.7 0 19.3-4.2 25.9-12.4 56.3-70.3 79.7-158.3 70.2-243.4l161.1-161.1c12.9-12.8 12.9-33.8 0-46.8z"/>
+</svg>
+                            `
     }
     if (last_mess["type"] == 2){
         last_mess_div.textContent = emoji[last_mess["text"]];
@@ -479,7 +486,7 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
     const rn = document.createElement('div');
     rn.classList = "r-n";
     rn.id = 'rn' + chat_id;
-    const icon_chat = document.createElement('div');
+    var icon_chat = document.createElement('div');
     icon_chat.id = "icon_chat" + command + chat_id;
     const name_chat_div = document.createElement('div');
     name_chat_div.id = "n_c" + chat_id;
@@ -494,7 +501,6 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
     gener_icon_chat(name_chat[0], chat_id, "icon_chat" + command + chat_id);
     $(`#chat${chat_id}`).on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
         e.preventDefault(); //Preventdefaults
-        console.log(e);
         open_menu_chat(`${chat_id}`); //alert the id
         });
 }
@@ -520,11 +526,10 @@ function gener_my_chat(id_div, command, last_mess, chat_id){
         last_mess_div.textContent = emoji[last_mess["text"]];
     } else {
         if (last_mess["text"] && last_mess["text"].length > 12){
-                last_mess_div.textContent = last_mess["name_sender"] + ": " + last_mess["text"].slice(0, 12) + "...";
-            } else {
-                last_mess_div.textContent = last_mess["name_sender"] + ": " + last_mess["text"];
-            }
-
+            last_mess_div.textContent = last_mess["name_sender"] + ": " + last_mess["text"].slice(0, 12) + "...";
+        } else {
+            last_mess_div.textContent = last_mess["name_sender"] + ": " + last_mess["text"];
+        }
     }
     last_mess_div.classList = "last-mess";
     const icon_chat = document.createElement('div');
@@ -538,19 +543,12 @@ function gener_my_chat(id_div, command, last_mess, chat_id){
     btn.appendChild(icon_chat);
     btn.appendChild(name_chat_div);
     cont.appendChild(btn);
-    var icon_size = 40;
-    if (mobile){
-        icon_size = 120;
-    }
-    icon_chat.style.width = icon_size + "px";
-    const svg =
-            d3.select("#icon_chat" + command + chat_id).
-            append('svg').
-            attr('height', `${icon_size}`).
-            attr('width', `${icon_size}`)
-            var circle = svg.append("circle") .attr("cx", icon_size / 2) .attr("cy", icon_size / 2) .attr("r", icon_size / 2) .attr("fill", "#7b68ee");
-var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circle.attr("cy") - 3) .attr("dy", "0.35em") .text("И");
-
+    gener_icon_chat("И", chat_id, "icon_chat" + command + chat_id, "#7b68ee")
+     $(`#my_chat${id_user}`).on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
+        alert("Для избранного в разработке!")
+        e.preventDefault(); //Preventdefaults
+//        open_menu_chat(`${chat_id}`); //alert the id
+        });
 }
 
 

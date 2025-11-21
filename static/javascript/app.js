@@ -736,10 +736,12 @@ function get_chats(id_div, command){
             }
            for (let i = 0; i < json["chats"].length; i++){
                 if (json["chats"][i]["id"] == "my" + id_user){
-                     gener_my_chat(id_div, command, json["chats"][i]["last_message"], json["chats"][i]["id"] );
+                     gener_my_chat(id_div, command, json["chats"][i]["last_message"],
+                      json["chats"][i]["id"],  json["chats"][i]["pinned"]);
                 } else{
                     gener_chat(id_div, json["chats"][i]["id"], json["chats"][i]["name"],
-                     json["chats"][i]["status"], json["chats"][i]["primary_chat"], command, json["chats"][i]["last_message"]);
+                     json["chats"][i]["status"], json["chats"][i]["primary_chat"], command,
+                      json["chats"][i]["last_message"],  json["chats"][i]["pinned"]);
                 }
             }
             },
