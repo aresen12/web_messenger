@@ -126,7 +126,7 @@ function gener_jitsi(){
     document.getElementById("global_menu_d").style.display = "flex";
     global_menu = document.getElementById("global_menu");
     global_menu.innerHTML = '<div id="meet"></div>';
-    const domain = 'meet.confmeet.net';
+    const domain = 'meet.jit.si';
 const options = {
     roomName: 'kjkfghjkl;;loiuytghbnm7654567899xsdl,scn,mxx.',
     width: '100%',

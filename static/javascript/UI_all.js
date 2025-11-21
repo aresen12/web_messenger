@@ -430,3 +430,143 @@ function set_username_tg(){
     global_menu.appendChild(input_tg);
     global_menu.appendChild(btn1);
 }
+
+function leave_chat(chat_id){
+    socket.emit('leave', {room: chat_id});
+        if (Number(chat_id)){
+            document.getElementById("chat" + chat_id).style.background =  "white";
+        } else {
+            document.getElementById("my_chat" + id_user).style.background =  "white";
+        }
+}
+
+
+function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_mess){
+    const cont = document.getElementById(id_div);
+    get_read(chat_id);
+    const btn = document.createElement('button');
+    btn.id = 'chat'+ chat_id;
+    btn.classList = "a-email";
+    if (command == "set_recipient"){
+        btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status})`);
+    } else {
+        btn.setAttribute("onclick",`send_of('${chat_id}', ${command}, '${name_chat}', )`);
+    }
+    let last_mess_div = document.createElement("div");
+    let last_time = document.createElement("div");
+    if (last_mess["time"] != "2023-01-01 00:00:00.0"){
+    last_time.textContent = last_mess["time"].slice(11, 16);;
+    last_time.classList = "time-in-chat";
+    }
+    if (last_mess["type"] == 2){
+        last_mess_div.textContent = emoji[last_mess["text"]];
+    } else {
+        if (primary){
+            if (last_mess["text"] && last_mess["text"].length > 16){
+                last_mess_div.textContent = last_mess["text"].slice(0, 16) + "...";
+            } else {
+                last_mess_div.textContent = last_mess["text"];
+            }
+    } else {
+        if (last_mess["text"] && last_mess["text"].length > 12){
+                last_mess_div.textContent = last_mess["name_sender"] + ": " + last_mess["text"].slice(0, 12) + "...";
+            } else {
+                last_mess_div.textContent = last_mess["name_sender"] + ": " + last_mess["text"];
+            }
+        }
+    }
+    last_mess_div.classList = "last-mess";
+    const rn = document.createElement('div');
+    rn.classList = "r-n";
+    rn.id = 'rn' + chat_id;
+    const icon_chat = document.createElement('div');
+    icon_chat.id = "icon_chat" + command + chat_id;
+    const name_chat_div = document.createElement('div');
+    name_chat_div.id = "n_c" + chat_id;
+    name_chat_div.textContent = name_chat;
+    name_chat_div.classList = "n-c";
+     name_chat_div.appendChild(last_time);
+    name_chat_div.appendChild(last_mess_div);
+    btn.appendChild(icon_chat);
+    btn.appendChild(name_chat_div);
+    btn.appendChild(rn);
+    cont.appendChild(btn);
+    gener_icon_chat(name_chat[0], chat_id, "icon_chat" + command + chat_id);
+    $(`#chat${chat_id}`).on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
+        e.preventDefault(); //Preventdefaults
+        console.log(e);
+        open_menu_chat(`${chat_id}`); //alert the id
+        });
+}
+
+
+function gener_my_chat(id_div, command, last_mess, chat_id){
+    const cont = document.getElementById(id_div);
+    const btn = document.createElement('button');
+    btn.id = 'my_chat' + id_user;
+    btn.classList = "a-email";
+    if (command == "set_recipient"){
+        btn.setAttribute("onclick",`set_my_recipient('${chat_id}')`);
+    } else {
+        btn.setAttribute("onclick",`my_send_of('${chat_id}', ${command})`);
+    }
+    let last_mess_div = document.createElement("div");
+    let last_time = document.createElement("div");
+    if (last_mess["time"] != "2023-01-01 00:00:00.0"){
+    last_time.textContent = last_mess["time"].slice(11, 16);;
+    last_time.classList = "time-in-chat";
+    }
+    if (last_mess["type"] == 2){
+        last_mess_div.textContent = emoji[last_mess["text"]];
+    } else {
+        if (last_mess["text"] && last_mess["text"].length > 12){
+                last_mess_div.textContent = last_mess["name_sender"] + ": " + last_mess["text"].slice(0, 12) + "...";
+            } else {
+                last_mess_div.textContent = last_mess["name_sender"] + ": " + last_mess["text"];
+            }
+
+    }
+    last_mess_div.classList = "last-mess";
+    const icon_chat = document.createElement('div');
+    icon_chat.id = "icon_chat" + command + chat_id;
+    const name_chat_div = document.createElement('div');
+    name_chat_div.id = "n_c" + chat_id;
+    name_chat_div.textContent = "Избранное";
+    name_chat_div.classList = "n-c";
+     name_chat_div.appendChild(last_time);
+    name_chat_div.appendChild(last_mess_div);
+    btn.appendChild(icon_chat);
+    btn.appendChild(name_chat_div);
+    cont.appendChild(btn);
+    var icon_size = 40;
+    if (mobile){
+        icon_size = 120;
+    }
+    icon_chat.style.width = icon_size + "px";
+    const svg =
+            d3.select("#icon_chat" + command + chat_id).
+            append('svg').
+            attr('height', `${icon_size}`).
+            attr('width', `${icon_size}`)
+            var circle = svg.append("circle") .attr("cx", icon_size / 2) .attr("cy", icon_size / 2) .attr("r", icon_size / 2) .attr("fill", "#7b68ee");
+var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circle.attr("cy") - 3) .attr("dy", "0.35em") .text("И");
+
+}
+
+
+function open_menu_chat(chat_id){
+    if (document.getElementById("menu_chat" + chat_id)){
+        document.getElementById("menu_chat" + chat_id).style.display = "block";
+    }else {
+        var div = document.createElement("ul");
+        var btn = document.createElement("li")
+        div.classList = "context-menu-open";
+        div.id = "menu_chat" + chat_id;
+        globalThis.menu_id =  "menu_chat" + chat_id;
+        div.style.display = "block";
+        btn.textContent = "Закрепить";
+        btn.setAttribute("onclick", `pin_chat(${chat_id})`);
+        div.appendChild(btn)
+        document.getElementById("n_c" + chat_id).appendChild(div)
+    }
+}

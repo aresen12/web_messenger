@@ -2,7 +2,7 @@ from telebot import types, TeleBot
 from keys import bot_key
 from data import db_session
 from data.bot_db import BotDB
-db_session.global_init('db/master_paste.db')
+db_session.global_init('../../db/master_paste.db')
 bot = TeleBot(bot_key)
 
 

@@ -1,6 +1,6 @@
 from telebot import TeleBot
 from data.user import User
-from keys import bot_key
+from python_modules.keys import bot_key
 from data.bot_db import BotDB
 from data import db_session
 from data.reset_passwords import DCode

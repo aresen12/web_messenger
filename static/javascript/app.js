@@ -123,24 +123,21 @@ function un_pinned(mess_id){
 
 function set_recipient(id_chat, is_primary, name, status) {
     document.getElementById("pinned").innerHTML = "";
-   document.getElementById("menu_chat_div_all").style.display = "block";
-    var st_chat = document.getElementById("chat_id").value
+    document.getElementById("menu_chat_div_all").style.display = "block";
+    var st_chat = document.getElementById("chat_id").value;
     if (st_chat){
-        socket.emit('leave', {room: st_chat});
+        leave_chat(st_chat);
     }
     try{
+// что то мудрёно надо потом разобраться
         document.getElementById("chat"+ id_chat).style.background =  "#6699cc";
     } catch (error) {
         setTimeout(function() {
         var chat2 = document.getElementById("chat"+ id_chat);
         chat2.style.background =  "#f1f1f1";
-
         document.getElementById('name_chat').textContent = chat2.innerText;
             }, 3000);
 }
-    if (st_chat){
-    document.getElementById("chat"+ st_chat).style.background =  "white";
-    }
     document.getElementById("content").innerHTML = '<h2 class="update">Загрузка...<h2>';
     if (status == 1){
         document.getElementById("form").style.display = "block";
@@ -295,20 +292,26 @@ document.addEventListener('keydown', function(event) {
 
 
 
-function show(){
+function show(path){
+    var chat_id = document.getElementById("chat_id").value;
+    var request_url =  "/m/get_json_mess";
+    if (path){
+        request_url =  "/m/get_json_mess_my";
+        chat_id = chat_id.slice(2);
+    }
       $.ajax({
-    url: '/m/get_json_mess',
+    url: request_url,
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
+    data: JSON.stringify({"chat_id": chat_id}),
     success: function(json_mess){
         var cont = document.getElementById("content");
         var date = "";
         cont.innerHTML = "";
         for (let i = 0; i < json_mess["messages"].length; i++){
             var c_m = json_mess["messages"][i];
-            var other = !(json_mess["current_user"] == c_m["id_sender"]);
+            var other = !(id_user == c_m["id_sender"]);
             var file = "";
             if (c_m["file"]){
                 file = json_mess["files"][c_m["file"]];
@@ -732,9 +735,13 @@ function get_chats(id_div, command){
                 document.getElementById(id_div).innerHTML = "";
             }
            for (let i = 0; i < json["chats"].length; i++){
-                gener_chat(id_div, json["chats"][i]["id"], json["chats"][i]["name"],
-                 json["chats"][i]["status"], json["chats"][i]["primary_chat"], command, json["chats"][i]["last_message"]);
-           }
+                if (json["chats"][i]["id"] == "my" + id_user){
+                     gener_my_chat(id_div, command, json["chats"][i]["last_message"], json["chats"][i]["id"] );
+                } else{
+                    gener_chat(id_div, json["chats"][i]["id"], json["chats"][i]["name"],
+                     json["chats"][i]["status"], json["chats"][i]["primary_chat"], command, json["chats"][i]["last_message"]);
+                }
+            }
             },
         error: function(err) {
             console.error(err);
@@ -898,7 +905,11 @@ $('#content').on('contextmenu','div', function(e) { //Get li under ul and invoke
         e.preventDefault(); //Prevent defaults
         open_menu_mess(this.id); //alert the id
         });
-
+//$('#email').on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
+//        e.preventDefault(); //Preventdefaults
+//        console.log(e, e);
+//        open_menu_chat(this.id); //alert the id
+//        });
 window.onfocus = function() {
     globalThis.vis = true;
     if (document.getElementById("chat_id") && document.getElementById("chat_id").value != ""){
@@ -932,7 +943,6 @@ function set_read(chat_id){
         contentType:'application/json',
         data: JSON.stringify({"chat_id":chat_id}),
         success: function(json){
-
             },
         error: function(err) {
             console.error(err);
@@ -968,7 +978,6 @@ document.addEventListener('DOMContentLoaded', () => {
    }
    })
 });
-
 
 
 function submit_username_tg(){
@@ -1010,4 +1019,67 @@ function get_new_message_id(){
             console.error(err);
         }
     });
+}
+
+
+function pin_chat(chat_id){
+    document.getElementById("menu_chat" + chat_id).style.display = "none";
+    $.ajax({
+        url: '/m/pin_chat',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"chat_id": chat_id}),
+        success: function(json){
+        },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}
+
+
+function set_my_recipient(id_chat){
+    document.getElementById("pinned").innerHTML = "";
+    document.getElementById("menu_chat_div_all").style.display = "block";
+    var st_chat = document.getElementById("chat_id").value
+    if (st_chat){
+        leave_chat(st_chat);
+    }
+    try{
+        document.getElementById("my_chat"+ id_chat.slice(2)).style.background =  "#6699cc";
+    } catch (error) {
+        console.log(id_chat, id_chat.slice(2));
+        setTimeout(function() {
+            var chat2 = document.getElementById("my_chat"+ id_chat);
+            chat2.style.background =  "#f1f1f1";
+            document.getElementById('name_chat').textContent = chat2.innerText;
+        }, 3000);
+    }
+    document.getElementById("content").innerHTML = '<h2 class="update">Загрузка...<h2>';
+    document.getElementById("form").style.display = "block";
+    document.getElementById("chat_id").value = id_chat;
+    document.getElementById('name_chat').textContent = name;
+    document.getElementById("icon_c_chat").innerHTML = document.getElementById("icon_chatset_recipient" + id_chat).innerHTML;
+    var x = document.getElementById("background-img");
+    var y = document.getElementById("email");
+    var button = document.getElementById("button");
+    window.location.hash = "#";
+    show(1);
+    var scrollTop = $(window).scrollTop(),
+    elementOffset = $('#content').offset().top,
+    distance = (elementOffset - scrollTop);
+    globalThis.global_distans = distance;
+    document.getElementById('chat_id').innerText = id_chat;
+    if (mobile){
+        document.getElementById("chat_header").style.display = "flex";
+        x.style.display = "block";
+        var button = document.getElementById("button").style.visibility = 'visible';
+        var cont = document.getElementById("container-mess");
+        cont.style.display = "block";
+        y.style.display = "none";
+        document.getElementById("settings_btn").style.display = 'none';
+        document.getElementById("btn_down").style.visibility = 'visible';
+    }
+    socket.emit('join', {room: id_chat});
 }

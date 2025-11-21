@@ -1,24 +1,17 @@
 import datetime
 import random
-import sys
-from keys import api_key
 from flask import Flask, request, render_template, redirect
-from forms.login_form import LoginForm
+from python_modules.forms.login_form import LoginForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from data import db_session
 from data.user import User
-from forms.register_form import RegisterForm
-from api import api
-from data.message import Message
-from data.chat import Chat
-from data.File import File
-from data.black_list import Black
-from data.bot_db import BotDB
+from python_modules.forms.register_form import RegisterForm
+from python_modules.api import api
 from data.reset_passwords import DCode
 from flask_cors import CORS
-from mess import mg
-from events_io import socketio
-from bot_def import send_random_key
+from python_modules.messanger import mg
+from python_modules.events_io import socketio
+from python_modules.tg_bot.bot_def import send_random_key
 
 application = Flask(__name__)
 application.config['SECRET_KEY'] = 'certificate'
@@ -105,8 +98,9 @@ def reqister():
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
+        login_user(user, remember=True, duration=datetime.timedelta(hours=24 * 90))
         db_sess.close()
-        return redirect('/login')
+        return redirect('/m')
     return render_template('register.html', title='Регистрация', form=form)
 
 

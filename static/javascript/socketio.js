@@ -32,8 +32,11 @@ function send_io_mess() {
                 if (message) {
                     console.log("test");
                     // Send message to server
-//                    socket.emit('message', message);
+                if (Number(chat_id)){
                     socket.emit('room_message', {room: chat_id, message: message, html: html_m });
+                } else {
+                    socket.emit('my_message', {room: chat_id.slice(2), message: message, html: html_m });
+                }
                     input.value = '';
                     html2.value = '';
                 }

@@ -9,7 +9,7 @@ from flask_socketio import emit
 from data.message import new_mess
 from data.chat import get_chats
 from data.File import File
-from keys import api_key
+from python_modules.keys import api_key
 api = Blueprint('api', __name__, url_prefix='/api')
 
 
@@ -48,11 +48,11 @@ def android_base():
             file_db = File()
             file_db.name = f.filename
             ex = f.filename.split(".")[-1]
-            os.chdir('static/img/data')
+            os.chdir('../static/img/data')
             dd = len(os.listdir())
-            os.chdir("..")
-            os.chdir("..")
-            os.chdir("..")
+            os.chdir("../..")
+            os.chdir("../..")
+            os.chdir("../..")
             file = open(f"static/img/data/{dd}.{ex}", mode="wb")
             file.write(f.read())
             file.close()
