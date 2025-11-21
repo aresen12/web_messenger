@@ -442,7 +442,7 @@ def get_json_mess_my():
         db_sess = db_session.create_session()
         print(data["chat_id"])
         messages = db_sess.query(MyMessage).filter(MyMessage.chat_id == data["chat_id"]).all()
-        js = {"messages": [], "files": get_files(data["chat_id"], db_sess)}
+        js = {"messages": [], "files": get_files(f"my{data["chat_id"]}", db_sess)}
         messages.sort(key=lambda x: x.time)
         for m in messages:
             js["messages"].append({"id": m.id, "read": m.read, "html_m": m.html_m, "text": m.message, 'time': m.time,
