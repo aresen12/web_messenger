@@ -9,6 +9,7 @@ from flask_socketio import emit
 from data.message import new_mess
 from data.chat import get_chats
 from data.File import File
+from data.message import Message
 from python_modules.keys import api_key
 api = Blueprint('api', __name__, url_prefix='/api')
 
@@ -71,3 +72,16 @@ def android_base():
                          "file2": [name, x], "html": request.form["html_m"], "name": mess.name_sender,
                          "read": 0, "id_sender": mess.id_sender}, to=request.form["chat_id"], namespace="/")
         return {"log": True}
+
+
+@api.route("/search_in_chat", methods=["POST"])
+def search_response():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    json_response = {"list_message": []}
+    messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).filter(
+        data["search_text"] in Message.message).all()
+    for message in messages:
+        json_response["list_message"].append({"text": message.message, "id_message": message.id})
+    db_sess.close()
+    return json_response

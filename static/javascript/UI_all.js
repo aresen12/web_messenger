@@ -51,7 +51,6 @@ if (document.cookie){
     } else {
         document.cookie = "enter=1";
     }
-
 } else {
     document.cookie = "bg=2";
     document.cookie = "enter=1";

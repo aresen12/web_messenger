@@ -2,7 +2,6 @@ import sqlalchemy
 from flask_login import UserMixin
 from data.db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
-import datetime
 
 
 class Black(SqlAlchemyBase, UserMixin, SerializerMixin):

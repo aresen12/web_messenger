@@ -93,6 +93,9 @@
     align-items: center;
   justify-content: center;
     }
+
+
+
 .my-message {
     position:relative;
     max-width:20vw;
@@ -325,3 +328,88 @@ max-width:80vw;
      width:fit-content;
      min-width: 25  px;
 }
+
+
+
+
+.context-menu {
+    border: 4px solid #337AB7;
+    background: #BFE2FF;
+    width: 180px;
+    height: 100px;
+    display: inline-flex;
+    text-align: center;
+    align-items: center;
+    margin: 20px;
+}
+
+
+.context-menu-open {
+    display: none;
+    position: absolute;
+    z-index: 99999;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.54);
+    background-color: white;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+
+.context-menu-open ul {
+    padding: 0;
+    margin: 0;
+}
+.context-menu-open ul li {
+    cursor: pointer;
+    list-style: none;
+    padding: 10px 12px;
+    margin: 0;
+    border-bottom: 1px solid #BFE2FF;
+}
+
+
+.context-menu-open ul li:last-child {
+    border-bottom: 1px solid transparent;
+}
+.main-menu {
+    last-style:none;
+  }
+
+.context-menu-open ul li:hover {
+    background-color: #BFE2FF;
+}
+
+
+.main-menu ul li:hover {
+    background-color: #BFE2FF;
+}
+
+
+.label-block {
+    border-bottom: 1px solid #BFE2FF;
+}
+
+.add-menu {
+    width: 97%;
+    position:relative;
+    left:2vw;
+    border:1px solid gray;
+}
+
+
+.close-btn {
+    background:none;
+    border:none;
+}
+
+
+.watch-img {
+position:fixed;
+height:100vh;
+background:black;
+top:0px;
+width:100vw;
+}
+.car-img {height:90vh;}
+
+

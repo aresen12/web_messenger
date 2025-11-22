@@ -752,6 +752,44 @@ function get_chats(id_div, command){
 }
 
 
+function get_black_list(){
+    safety_div = document.getElementById("safety");
+    if (safety_div.style.display == "none"){
+        safety_div.style.display = "block";
+    } else {
+        safety_div.innerHTML = "";
+        safety_div.style.display = "none";
+        return 0;
+    }
+    $.ajax({
+        url: '/m/get_black_list',
+        type: 'GET',
+        dataType: 'json',
+        success: function(json_data){
+            var user_div = document.createElement("div");
+            var btn = document.createElement("button");
+            btn.textContent = "Разблокировать";
+            btn.classList = "btn btn-danger";
+            var label = document.createElement("label");
+            label.classList = 'label-block';
+            for (let i = 0; i < json_data["black_list"].length; i++){
+                btn.setAttribute("onclick", `unblock_user(${json_data["black_list"][i][0]})`)
+                user_div.appendChild(btn);
+                label.textContent = `${json_data["black_list"][i][1]}(${json_data["black_list"][i][2]})`
+                user_div.appendChild(label)
+                safety_div.appendChild(user_div);
+            }
+            if (json_data["black_list"].length == 0){
+                safety_div.textContent = "Чёрный список пуст!";
+            }
+        },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}
+
+
 function get_chats_gl(id_div, id_m){
     var global_menu = document.getElementById(id_div);
     var div = document.createElement("div");
@@ -761,6 +799,25 @@ function get_chats_gl(id_div, id_m){
     global_menu.innerHTML += '<button onclick="show_global_menu(' + "'global_menu_d'" + ', 0)" type="button"\
                     class="btn-close gl-btn-close" aria-label="Close"></button>';
 }
+
+
+function unblock_user(id_user){
+    $.ajax({
+        url: '/m/unblock_user',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"id_user":id_user}),
+        success: function(json){
+         get_black_list();
+         get_black_list();
+        },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}
+
 
 
 // отрисовка интерфейса
@@ -774,7 +831,6 @@ function add_in_chat_new(){
     url: '/m/get_users',
     type: 'GET',
     dataType: 'json',
-    contentType:'application/json',
     success: function(json){
             var sp = document.getElementById("list_c_u").value.split(" ");
             for (let i = 0; i < json["users"].length; i++){
@@ -896,22 +952,17 @@ function show_users(){
 
 
 function copyToClipboard(id_m) {
-var t = document.getElementById("text" + id_m).textContent.trim();
+    var t = document.getElementById("text" + id_m).textContent.trim();
     navigator.clipboard.writeText(t);
-
-
   }
 
 
 $('#content').on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
         e.preventDefault(); //Prevent defaults
         open_menu_mess(this.id); //alert the id
-        });
-//$('#email').on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
-//        e.preventDefault(); //Preventdefaults
-//        console.log(e, e);
-//        open_menu_chat(this.id); //alert the id
-//        });
+});
+
+
 window.onfocus = function() {
     globalThis.vis = true;
     if (document.getElementById("chat_id") && document.getElementById("chat_id").value != ""){

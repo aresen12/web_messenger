@@ -112,8 +112,11 @@
             </svg>
             Редактировать
         </button>
-        <fieldset>
-            <legend>Settings</legend>
+        <ul class="main-menu">
+            <li>
+                <label onclick="showdiv1('settings_fieldset')">Settings</label>
+
+        <fieldset id="settings_fieldset" style="display:none;">
             <div>
                 <button class="edit-btn" onclick="set_username_tg()">изменить/добавить оповещения в тг</button>
             </div>
@@ -126,9 +129,13 @@
                 <label for="E2">Send by Ctrl + Enter</label>
             </div>
         </fieldset>
+            </li>
+        <li>
+            <label onclick="showdiv1('interface')">Интерфейс</label>
+            <div id="interface" style="display:none;">
         <iframe name="b" style="display:none;"></iframe>
         <form target="b" action="users_bg" method="post" enctype="multipart/form-data" id="bg_form">
-            свой фон
+            <label>свой фон</label>
             <div style="margin:0px;">
                 <label class="file-label" for="input">
                     <input style="display:block;" name="bg" id="input" type="file" accept="image/png, image/jpeg"/>
@@ -137,10 +144,7 @@
             <button type="submit" class="edit-btn" id="bg_btn">Отправить</button>
             <progress style="display:none;" id="progressBar" value="0" max="100"></progress>
    <div id="status"></div>
-        </form>
-        <input type="checkbox" onclick="cast()">
-        <label>Частичная отрисовка</label>
-        <fieldset>
+            <fieldset>
             <legend>Фон</legend>
             <div>
                 <input onclick="set_bg(1)" type="radio" id="bg1" name="bg" value="2" checked/>
@@ -155,6 +159,7 @@
                 <label for="bg3">Фон №3</label>
             </div>
             <div>
+
                 <input type="radio" onclick="set_bg(4)" id="bg4" name="bg" value="dewey"/>
                 <label for="bg4">Фон №4</label>
             </div>
@@ -163,14 +168,23 @@
                 <label for="bg5">Свой</label>
             </div>
         </fieldset>
+        </form>
+                </div>
+        </li>
+            <li>
+                <label onclick="get_black_list()">Безопасность</label>
+                <div id="safety" style="display:none;">
 
+                </div>
+            </li>
+            </ul>
+        <input type="checkbox" onclick="cast()">
+        <label>Частичная отрисовка</label>
     </div>
     </div>
-
     <img src="" class="background-img" id="background-img">
         <div class="chat-cont">
             <div id="chat_header" class="chat-header">
-
                 <button class="info-btn" id="button" onclick="exit_chat()" style="position:relative;left:0vw;">
             <svg height="50px" viewBox="-3 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"  fill="#707579" stroke="#707579"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>

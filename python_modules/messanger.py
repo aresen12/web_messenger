@@ -76,6 +76,38 @@ def test_call():
     return render_template("test.html")
 
 
+@mg.route("/unblock_user", methods=["POST"])
+def unblock_user():
+    db_sess = db_session.create_session()
+    black_list = db_sess.query(Black).filter(Black.id_user == current_user.id).first()
+    if black_list is None:
+        db_sess.close()
+        return {"log": False}
+    data = request.get_json()
+    sp = black_list.list_b.split()
+    del sp[sp.index(str(data["id_user"]))]
+    black_list.list_b = "".join(sp)
+    db_sess.commit()
+    db_sess.close()
+    return {"log": True}
+
+@mg.route("/get_black_list")
+def get_black():
+    db_sess = db_session.create_session()
+    black_list = db_sess.query(Black.list_b).filter(Black.id_user == current_user.id).first()
+    json_response = {"black_list": []}
+    if black_list is None:
+        db_sess.close()
+        return json_response
+    for user_id in black_list[0].split():
+        user = db_sess.query(User.id, User.email, User.name).filter(User.id == int(user_id)).first()
+        json_response["black_list"].append(
+          [user[0], user[1], user[2]]
+        )
+    db_sess.close()
+    return json_response
+
+
 @mg.route("/create_chat", methods=["POST"])
 def create_chat():
     data = request.get_json()
