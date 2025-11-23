@@ -81,7 +81,7 @@ def search_response():
     json_response = {"list_message": []}
     messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).all()
     for message in messages:
-        if data["search_text"] in message.message:
+        if not (message.message is None) and data["search_text"] in message.message:
             json_response["list_message"].append(message.id)
     db_sess.close()
     return json_response
