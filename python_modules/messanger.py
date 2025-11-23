@@ -178,6 +178,18 @@ def chat_pinned():
     return {"log": True}
 
 
+@mg.route("/unpin_chat", methods=["POST"])
+def chat_unpinned():
+    data = request.get_json()
+    db_sess = db_session.create_session()
+    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
+    chat.pinned = False
+    db_sess.commit()
+    db_sess.close()
+    # добавить socketio
+    return {"log": True}
+
+
 @mg.route("/un_pinned", methods=["POST"])
 def an_pinned():
     data = request.get_json()

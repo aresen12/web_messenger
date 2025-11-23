@@ -145,8 +145,7 @@ document.addEventListener('click', (e) => {
        var t2 = e.composedPath().includes(div2);
         var t = e.composedPath().includes(div);
         if (!t && !t2){
-            document.getElementById(menu_id).style.display = "none";
-            globalThis.menu_id = "";
+            exit_menu();
         }
     }
     var div = document.querySelector('#menu_create_div');
@@ -160,8 +159,7 @@ document.addEventListener('click', (e) => {
         document.getElementById("menu-chat").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
     };
     if (menu_id != "" && mobile != true && !t2){
-        document.getElementById(menu_id).style.display = "none";
-        globalThis.menu_id = "";
+        exit_menu();
       };
 })
 
@@ -201,6 +199,17 @@ function show_more_emoji(id_mess){
 }
 
 
+function open_menu_in_chat(){
+    document.getElementById("menu-chat").style.display = "block";
+    var search_div = document.getElementById("search_text_div");
+    if (search_div){
+        search_div.style.display = "none";
+        document.getElementById("search_text").value = "";
+       document.getElementById("menu-chat-ul").style.display = "block";
+    }
+}
+
+
 function open_menu_mess(id_mess){
     var name_functions = ["answer", "send", "pinned", "delete_mess", "copyToClipboard"];
     var titles = ["ответить", "переслать", "закрепить", "удалить", "скопировать"];
@@ -212,7 +221,7 @@ function open_menu_mess(id_mess){
     }
     if (globalThis.menu_id != ""){
         try{
-        document.getElementById(menu_id).style.display = "none";
+        exit_menu();
         } catch(err) {}
     };
     for (let i = 0; i < name_functions.length; i++){
@@ -393,9 +402,64 @@ window.addEventListener('paste', e => {
 });
 
 
-function search_text(){
-    alert("В разработке!");
+function show_in_chat_search(){
+    answer_color("m"+ mess_id);
 }
+
+
+function search_text(){
+    var cont = document.getElementById("menu-chat");
+    if (!document.getElementById("search_text_div")){
+        var search_div = document.createElement("div");
+        search_div.id = "search_text_div";
+        var input = document.createElement("input");
+        var btn = document.createElement("button");
+        input.id = "search_text";
+        btn.textContent = "поиск";
+        btn.classList = "btn btn-primary";
+        btn.setAttribute("onclick", "search_in_message()");
+        search_div.appendChild(input);
+        search_div.appendChild(btn);
+        cont.appendChild(search_div);
+    } else{
+        document.getElementById("search_text_div").style.display = "block";
+    }
+    cont.style.display = "block";
+    document.getElementById("menu-chat-ul").style.display = "none";
+}
+
+
+function go_to_message(id_mess){
+    var mess = document.getElementById('m' + id_mess);
+    mess.style.background = "#6666ff";
+    setTimeout(function() {
+        if (mess.className == "my-message"){
+            mess.style.background = "#D1E7DD";
+        } else{
+            mess.style.background = "#CFF4FC";
+        }
+    }, 2000);
+    window.location.hash = "#m" + id_mess;
+    var list_pin = document.getElementById("list_search_id_message").value.trim().split(" ");
+    for (let i = 0; i < list_pin.length; i++){
+        if (list_pin[i] == id_mess){
+            document.getElementById("cnt_search_m").textContent = `${i + 1} из (${list_pin.length})`;
+            const btn_up = document.getElementById('btn_search_up');
+            var btn_down = document.getElementById("btn_search_down");
+            if (0 <= i - 1 && i + 1 < list_pin.length){
+                btn_down.setAttribute('onclick', `go_to_message('${list_pin[i - 1]}')`);
+                btn_up.setAttribute('onclick', `go_to_message('${list_pin[i + 1]}')`);
+            } else if (0 > i - 1){
+                   btn_up.setAttribute('onclick', `go_to_message('${list_pin[1]}')`);
+                btn_down.setAttribute('onclick', `go_to_message('${list_pin[list_pin.length - 1]}')`);
+            } else {
+                btn_up.setAttribute('onclick', `go_to_message('${list_pin[0]}')`);
+                btn_down.setAttribute('onclick', `go_to_message('${list_pin[0]}')`);
+            }
+        }
+    }
+}
+
 
 
 function answer_color (src){
@@ -446,11 +510,10 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
     const btn = document.createElement('button');
     btn.id = 'chat'+ chat_id;
     btn.classList = "a-email";
-
     if (command == "set_recipient"){
-        btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status})`);
+        btn.setAttribute("onclick",`set_recipient('${chat_id}', ${primary}, '${name_chat}', ${status}, ${pinned})`);
     } else {
-        btn.setAttribute("onclick",`send_of('${chat_id}', ${command}, '${name_chat}', )`);
+        btn.setAttribute("onclick",`send_of('${chat_id}', ${command}, '${name_chat}',  ${pinned})`);
     }
     let last_mess_div = document.createElement("div");
     let last_time = document.createElement("div");
@@ -459,10 +522,13 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
         last_time.classList = "time-in-chat";
     }
     if (pinned){
-        last_time.innerHTML += `<svg fill="#b3b3b3" width="15px" height="15px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon">
+        var div_pinned = document.createElement('div');
+        div_pinned.style.display = "inline-block"
+        div_pinned.id = "chat_pinned" + chat_id;
+        div_pinned.innerHTML += `<svg fill="#b3b3b3" width="15px" height="15px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon">
   <path d="M878.3 392.1L631.9 145.7c-6.5-6.5-15-9.7-23.5-9.7s-17 3.2-23.5 9.7L423.8 306.9c-12.2-1.4-24.5-2-36.8-2-73.2 0-146.4 24.1-206.5 72.3-15.4 12.3-16.6 35.4-2.7 49.4l181.7 181.7-215.4 215.2a15.8 15.8 0 0 0-4.6 9.8l-3.4 37.2c-.9 9.4 6.6 17.4 15.9 17.4.5 0 1 0 1.5-.1l37.2-3.4c3.7-.3 7.2-2 9.8-4.6l215.4-215.4 181.7 181.7c6.5 6.5 15 9.7 23.5 9.7 9.7 0 19.3-4.2 25.9-12.4 56.3-70.3 79.7-158.3 70.2-243.4l161.1-161.1c12.9-12.8 12.9-33.8 0-46.8z"/>
-</svg>
-                            `
+</svg>`;
+        last_time.appendChild(div_pinned);
     }
     if (last_mess["type"] == 2){
         last_mess_div.textContent = emoji[last_mess["text"]];
@@ -501,6 +567,7 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
     $(`#chat${chat_id}`).on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
         e.preventDefault(); //Preventdefaults
         open_menu_chat(`${chat_id}`); //alert the id
+
         });
 }
 
@@ -552,6 +619,8 @@ function gener_my_chat(id_div, command, last_mess, chat_id){
 
 
 function open_menu_chat(chat_id){
+    exit_menu();
+    globalThis.menu_id = "menu_chat" + chat_id;
     if (document.getElementById("menu_chat" + chat_id)){
         document.getElementById("menu_chat" + chat_id).style.display = "block";
     }else {
@@ -559,10 +628,14 @@ function open_menu_chat(chat_id){
         var btn = document.createElement("li")
         div.classList = "context-menu-open";
         div.id = "menu_chat" + chat_id;
-        globalThis.menu_id =  "menu_chat" + chat_id;
         div.style.display = "block";
-        btn.textContent = "Закрепить";
-        btn.setAttribute("onclick", `pin_chat(${chat_id})`);
+        if (!document.getElementById("chat_pinned" + chat_id)){
+            btn.textContent = "Закрепить";
+            btn.setAttribute("onclick", `pin_chat(${chat_id})`);
+        } else {
+            btn.textContent = "открепить";
+            btn.setAttribute("onclick", `unpin_chat(${chat_id})`);
+        }
         div.appendChild(btn)
         document.getElementById("n_c" + chat_id).appendChild(div)
     }

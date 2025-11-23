@@ -79,9 +79,9 @@ def search_response():
     data = request.get_json()
     db_sess = db_session.create_session()
     json_response = {"list_message": []}
-    messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).filter(
-        data["search_text"] in Message.message).all()
+    messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).all()
     for message in messages:
-        json_response["list_message"].append({"text": message.message, "id_message": message.id})
+        if data["search_text"] in message.message:
+            json_response["list_message"].append(message.id)
     db_sess.close()
     return json_response
