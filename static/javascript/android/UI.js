@@ -1,6 +1,7 @@
 var f = document.getElementById("form").offsetHeight;
 var nav = document.getElementById("chat_header").offsetHeight;
 var m_c =   document.getElementById("container-mess");
+const icon_size = 40;
 var email_cont = document.getElementById("email");
 //m_c.style.height =  window.innerHeight - f - nav + "px";
 m_c.style.top = nav;
@@ -13,25 +14,6 @@ if (nav == 0){
 document.getElementById("background-img").style.height =  window.innerHeight - nav + "px";
 document.getElementById("background-img").style.top = nav + "px";
 document.getElementById("form").style.display = "none";
-
-
-function gener_icon_chat(name_chat, chat_id, id_div, color){
-    var icon_size = 40;
-    document.getElementById(id_div).style.width = icon_size + "px";
-    if (!color){
-        var color = random_colors[Math.floor(Math.random() * random_colors.length)];
-    }
-    const svg =
-            d3.select("#" + id_div).
-            append('svg').
-            attr('height', `${icon_size}`).
-            attr('width', `${icon_size}`)
-            var circle = svg.append("circle") .attr("cx", icon_size / 2)
-            .attr("cy", icon_size / 2) .attr("r", icon_size / 2)
-             .attr("fill", color);
-        var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circle.attr("cy") - 3)
-         .attr("dy", "0.35em") .text(name_chat[0]);
-}
 
 
 // это тоже своё

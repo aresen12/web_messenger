@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block content %}<link href="/static/css/login.css" rel="stylesheet" type="text/css">
     <h1 class="login-h1">Авторизация</h1>
     <form action="" method="post" class="login-form">
         {{ form.hidden_tag() }}
         <p class="login-p">
             {{ form.username.label }}<br>
-            {{ form.username(class="form-control", type="username") }}<br>
+
+            {{ form.username(class="input-class form-control", type="username", contenteditable="true") }}<br>
             {% for error in form.username.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
@@ -15,9 +16,9 @@
         </p>
         <p class="login-p">
             {{ form.password.label }}<br>
-            {{ form.password(class="form-control", type="password") }}<br>
+            {{ form.password(class="form-control input-class", type="password") }}<br>
             {% for error in form.password.errors %}
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger input-class" role="alert">
                     {{ error }}
                 </div>
             {% endfor %}
@@ -25,6 +26,6 @@
         <p class="login-p">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p  class="login-p" >{{ form.submit(type="submit", class="btn btn-primary") }}</p>
         <a class="btn btn-primary info-btn" href="/reset_password">Востановить пароль</a>
-        <div>{{ message }}</div>
+        <div class="login-p alert-danger">{{ message }}</div>
     </form>
 {% endblock %}

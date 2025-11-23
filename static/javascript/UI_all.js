@@ -3,6 +3,27 @@ const emoji = ["💘", "❤️", "❤️‍🔥", "😭", "👌", "😨", "👍"
 "🕊️", "🤡", "🥱", "🥴", "😍", "🐳", "🌚", "💯", "😂", "⚡️", "🏆", "💔", "🤨", "😐", "🍓", "🖕",
  "😈", "😴", "🤓", "👻", "👨‍💻", "🙈", "👀", "😇", "🤝", "✍️", "🤗", "🫡", "🎅", "🎄", "⛄️", "💅",
 "🤪", "🗿", "🆒", "🙉", "🦄", "😘", "💊", "🙊", "😎", "👾", "🤷", "🤷‍♀️", "🤷‍♂️", "😡"];
+
+
+function gener_icon_chat(name_chat, chat_id, id_div, color){
+    document.getElementById(id_div).style.width = icon_size + "px";
+    if (!color){
+        var color = random_colors[Math.floor(Math.random() * random_colors.length)];
+    }
+    const svg =
+            d3.select("#" + id_div).
+            append('svg').
+            attr('height', `${icon_size}`).
+            attr('width', `${icon_size}`)
+            var circle = svg.append("circle") .attr("cx", icon_size / 2)
+            .attr("cy", icon_size / 2) .attr("r", icon_size / 2)
+             .attr("fill", color);
+        var text = svg.append("text") .attr("x", circle.attr("cx") - 3) .attr("y", circle.attr("cy") - 3)
+         .attr("dy", "0.35em") .text(name_chat[0]);
+}
+
+
+
 function showDiv(Div, div2) {
     var x = document.getElementById(Div);
     var y = document.getElementById(div2)
@@ -74,7 +95,7 @@ function showImg(Div, name_img){
     w_img.src = "/static/img/" + name_img;
     if(x.style.display=="none") {
         x.style.display = "block";
-        document.getElementById(Div).click();
+
     } else {
         x.style.display = "none";
     }
@@ -211,6 +232,9 @@ function open_menu_in_chat(){
 
 
 function open_menu_mess(id_mess){
+    if (document.getElementById("watch").style.display == "block"){
+        return 200;
+    }
     var name_functions = ["answer", "send", "pinned", "delete_mess", "copyToClipboard"];
     var titles = ["ответить", "переслать", "закрепить", "удалить", "скопировать"];
     var ul = document.createElement("ul");
@@ -525,7 +549,7 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
         var div_pinned = document.createElement('div');
         div_pinned.style.display = "inline-block"
         div_pinned.id = "chat_pinned" + chat_id;
-        div_pinned.innerHTML += `<svg fill="#b3b3b3" width="15px" height="15px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon">
+        div_pinned.innerHTML += `<svg fill="#b3b3b3" width="${icon_size / 2.6}px" height="${icon_size / 2.6}px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon">
   <path d="M878.3 392.1L631.9 145.7c-6.5-6.5-15-9.7-23.5-9.7s-17 3.2-23.5 9.7L423.8 306.9c-12.2-1.4-24.5-2-36.8-2-73.2 0-146.4 24.1-206.5 72.3-15.4 12.3-16.6 35.4-2.7 49.4l181.7 181.7-215.4 215.2a15.8 15.8 0 0 0-4.6 9.8l-3.4 37.2c-.9 9.4 6.6 17.4 15.9 17.4.5 0 1 0 1.5-.1l37.2-3.4c3.7-.3 7.2-2 9.8-4.6l215.4-215.4 181.7 181.7c6.5 6.5 15 9.7 23.5 9.7 9.7 0 19.3-4.2 25.9-12.4 56.3-70.3 79.7-158.3 70.2-243.4l161.1-161.1c12.9-12.8 12.9-33.8 0-46.8z"/>
 </svg>`;
         last_time.appendChild(div_pinned);

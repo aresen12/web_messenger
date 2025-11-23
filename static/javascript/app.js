@@ -183,18 +183,25 @@ function set_recipient(id_chat, is_primary, name, status, pinned) {
 
 function exit_chat(){
     var st_chat = document.getElementById("chat_id").value;
-    document.getElementById("menu_chat_div_all").style.display = "none";
+    try {
+        document.getElementById("menu_chat_div_all").style.display = "none";
+        document.getElementById('menu-chat-ul').innerHTML = '';
+    } catch(e){
+    }
     document.getElementById("pinned").innerHTML = "";
     socket.emit('leave', {room: st_chat});
     if (st_chat){
-        document.getElementById("chat"+ st_chat).style.background =  "white";
+        if (Number(st_chat)){
+            document.getElementById("chat" + st_chat).style.background =  "white";
+        } else {
+            document.getElementById("my_chat" + st_chat.slice(2)).style.background =  "white";
+        }
     };
     document.getElementById('icon_c_chat').innerHTML = "";
     document.getElementById("content").innerHTML = "";
     document.getElementById('name_chat').innerText = "";
     document.getElementById('chat_id').value = "";
     document.getElementById('form').style.display = "none";
-    document.getElementById('menu-chat-ul').innerHTML = '';
     document.getElementById("btn_down").style.visibility = 'hidden';
     if (globalThis.mobile) {
         document.getElementById("background-img").style.display = "none";
@@ -202,7 +209,6 @@ function exit_chat(){
         document.getElementById("settings_btn").style.display = 'block';
         document.getElementById("button").style.visibility = 'hidden';
         document.getElementById("email").style.display = "block";
-
     }
 }
 

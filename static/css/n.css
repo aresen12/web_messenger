@@ -70,7 +70,7 @@ h2 {
     text-align:center;
 }
 
-.close-btn {position:absolute;text-decoration: none; color:red;}
+.close-btn {position:absolute;text-decoration: none; z-index:9999;}
 .zatemnenie {
         background: black;
         width: 100%;
