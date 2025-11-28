@@ -12,6 +12,8 @@ from data.black_list import Black
 from flask_socketio import emit
 from data.bot_db import BotDB
 from data.my_message import MyMessage, new_mess_my
+from python_modules.keys import room_name, jwt
+
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
@@ -22,8 +24,7 @@ def m_st():
         if current_user.is_authenticated:
             chats = get_chats()
             return render_template("messenger.html", device="",
-                                   title='Kazbek', chats=chats, my_bg=current_user.id)
-
+                                   title='Kazbek', chats=chats, my_bg=current_user.id, room_name=room_name, jwt_my=jwt)
         return redirect("/login")
     else:
         if not current_user.is_authenticated:

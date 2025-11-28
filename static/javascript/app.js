@@ -177,6 +177,9 @@ function set_recipient(id_chat, is_primary, name, status, pinned) {
         document.getElementById("settings_btn").style.display = 'none';
         document.getElementById("btn_down").style.visibility = 'visible';
     }
+    let call_btn = document.getElementById("call-btn");
+    call_btn.setAttribute("onclick", `send_call(${is_primary})`);
+    call_btn.style.display = "block";
     socket.emit('join', {room: id_chat});
 }
 

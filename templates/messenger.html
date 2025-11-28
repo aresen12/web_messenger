@@ -207,7 +207,7 @@
                 </ul>
             </div>
 <!--            display none  чтобы выложить изменения в продукт сразу раскоментировать!-->
-            <button  class="info-btn" onclick="gener_jitsi()">
+            <button id="call-btn" class="info-btn">
                 <svg width="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -373,6 +373,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
             const id_user = {{current_user.id}};
+            const jwt_my = "{{jwt_my}}";
+            const room_name = "{{room_name}}";
 </script>
 
 <div class="z-d" id="global_menu_d" style="display:none;">
