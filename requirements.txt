@@ -6,3 +6,4 @@ flask_wtf
 flask-socketio
 pyopenssl
 flask_cors
+TeleBot
