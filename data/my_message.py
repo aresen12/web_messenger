@@ -30,7 +30,6 @@ class MyMessage(SqlAlchemyBase, UserMixin, SerializerMixin):
         return f"{date[2]}.{date[1]}.{date[0]}"
 
 
-
 def new_mess_my(message, id_sender, name_sender, chat_id, html, file_id="", read=False, pinned_m=False):
         mess = MyMessage()
         mess.message = message

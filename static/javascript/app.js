@@ -179,7 +179,7 @@ function set_recipient(id_chat, is_primary, name, status, pinned) {
     }
     let call_btn = document.getElementById("call-btn");
     call_btn.setAttribute("onclick", `send_call(${is_primary})`);
-    call_btn.style.display = "block";
+//    call_btn.style.display = "block";
     socket.emit('join', {room: id_chat});
 }
 
@@ -699,6 +699,24 @@ function get_read(chat_id){
 
 }
 
+function my_send_of(chat_id, id_m){
+    $.ajax({
+        url: '/m/my_mail',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m}),
+        success: function(json){
+            document.getElementById("global_menu_d").style.display = "none";
+            document.getElementById("global_menu").innerHTML = "";
+            set_my_recipient('my' + id_user);
+            },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+}
+
 
 function send_of(chat_id, id_m, name_chat){
     $.ajax({
@@ -716,8 +734,6 @@ function send_of(chat_id, id_m, name_chat){
             console.error(err);
         }
     });
-
-
 }
 
 

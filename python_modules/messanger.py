@@ -551,12 +551,7 @@ def mail():
             db_sess.close()
             return {"log": 'PermissionError'}
         message = db_sess.query(Message).filter(Message.id == data["mess_id"]).first()
-        new_mail = Message()
-        new_mail.chat_id = data["mail_id_chat"]
-        new_mail.message = message.message
-        new_mail.name_sender = message.name_sender
-        new_mail.html_m = message.html_m
-        new_mail.id_sender = current_user.id
+        new_mail = new_mess(message.message, message.id_sender, message.name_sender, data["mail_id_chat"], message.html_m, message.img)
         db_sess.add(new_mail)
         db_sess.commit()
         db_sess.close()
@@ -564,6 +559,22 @@ def mail():
     return {'log'}
 
 
+@mg.route("/my_mail", methods=["POST"])
+def my_mail():
+    if current_user.is_authenticated:
+        data = request.get_json()
+        db_sess = db_session.create_session()
+        message = db_sess.query(Message).filter(Message.id == data["mess_id"]).first()
+        new_mail = new_mess_my(message.message, message.id_sender, message.name_sender,
+                               current_user.id, message.html_m, message.img)
+        db_sess.add(new_mail)
+        db_sess.commit()
+        db_sess.close()
+        return {"log": True}
+    return {'log': "Not Auth"}
+
+
+# Эту проверить потом на устаревание или поясеить что такое
 @mg.route("/get_cnt_m", methods=["POST"])
 def get_cnt_m():
     data = request.get_json()
