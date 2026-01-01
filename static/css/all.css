@@ -33,6 +33,15 @@
     overflow-y:auto;
     }
 
+    .cont-ul {
+        overflow:auto;
+    }
+.name-new-chat{
+    width: 30vw;
+    position:relative;
+    margin-right:auto;
+    margin-left:auto;
+}
 .message-other {
     position:relative;
     left:3vw;
@@ -248,11 +257,26 @@ bottom: 0px;
 
 
 .gl-btn-close {
-    position: absolute;
-    right: 25px;
-    top: 25px;
+    margin:10px;
+    margin-left:auto;
+    margin-right:15px;
 }
 
+
+.name-menu{
+    padding: 5px;
+    font-size:30px;
+}
+
+.div-name-menu {
+    width:40vw;
+    display: flex;
+  flex-flow: row wrap;
+}
+
+.cont-users{
+    width:35vw;
+}
 
 .text-in-mess {
     overflow:none;

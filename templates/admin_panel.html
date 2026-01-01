@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Пароль</h1> <input id="password" type="password">
+<div style="display:flex;">
+
+<div style="height:70vh; overflow-y:auto; width:40vw;">
+    <h2>Управление пользователями</h2>
+
+    {% for user in user_list %}
+    <div class="alert alert-secondary">
+        <h5>имя</h5>
+        {{user.name}}
+        <h5>USERNAME</h5>
+        {{user.email}}(id_user: {{user.id}})
+        <button class="btn btn-secondary" onclick="delete_user({{user.id}})">Удалить</button>
+    </div>
+    {% endfor %}
+</div>
+<div>
+    <h2>Активность других администраторов</h2>
+    <ul class="list-group">
+    {% for i in range(activiti_list|length) %}
+<li class="list-group-item">
+    {{i + 1}}.
+    {{activiti_list[i][0]}}
+    {{activiti_list[i][1]}}
+</li>
+    {% endfor %}
+    </ul>
+</div>
+<div>
+    <h2>Последнии действия администраторов</h2>
+    <ul class="list-group">
+        {% for action in actions %}
+        <li class="list-group-item">
+            кто: {{action.id_user}}
+            что натворил:
+            {{action.about}}
+            когда
+            {{action.time}}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+</div>
+<form method="post">
+    <h4>Создать новость</h4>
+    <textarea name="text_alert" id="text_alert"></textarea>
+    <button class="btn" type="submit">Сохранить</button>
+</form><script src="/static/javascript/panel/panel.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"
+            integrity=
+"sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer">
+    </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{% endblock %}

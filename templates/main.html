@@ -13,8 +13,9 @@
 <div>
     <div class="alert alert-primary" role="alert"><h3>Новости</h3>
             <ul>
-                <li>Добавили фунуцию переслать</li>
-                <li>Добавили смайлики</li>
+                {% for alert in alerts %}
+                <li>{{alert.text}} {{alert.get_date()}}</li>
+                {% endfor %}
             </ul>
     </div>
 

@@ -519,73 +519,92 @@ function answer(id_mess){
 }
 
 
-function show_global_menu(id_div, id){
-    var x = document.getElementById(id_div);
-    if(x.style.display=="none" || x.style.display=="") {
-        x.style.display = "block";
-        document.getElementById("how_create").style.display = "none";
-        get_users(id);
-    } else {
-        x.style.display = "none";
-    }
+function close_global_menu(){
+    document.getElementById("global_menu_d").style.display = "none";
+    document.getElementById("global_menu").innerHTML = "";
 }
 
 
-function show_create_primary_chat(id){
-    var x = document.getElementById('global_menu_d');
-    x.style.display = "block";
+function show_create_group(){
+    var x = document.getElementById("global_menu_d").style.display = "block";
     document.getElementById("how_create").style.display = "none";
-    get_users_primary(id);
+    get_users(0);
 }
 
 
-function get_users (id){
+function show_create_primary_chat(){
+    document.getElementById('global_menu_d').style.display = "block";
+    document.getElementById("how_create").style.display = "none";
+    get_users(1);
+}
+
+
+function get_users(primary){
+    var global_menu = document.getElementById("global_menu");
+    var text = "Создать чат с пользователем";
+    if (!primary){
+        text = "Создать группу";
+    }
+    global_menu.innerHTML = `<div class="div-name-menu"><b class="name-menu">${text}</b>
+    <button onclick="close_global_menu()" type="button" class="btn-close gl-btn-close"
+    aria-label="Close"></button></div>`;
     $.ajax({
         url: '/m/get_users',
         type: 'GET',
         dataType: 'json',
         success: function(json){
-        document.getElementById("global_menu").innerHTML="";
-        var html = '<h2>Создать чаты</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
-        for (let i = 0; i < json["users"].length; i++){
-            if (id_user != json["users"][i][2]){
-               html = html + '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2]+ ", 'list_members'" + ')">' + json["users"][i][0] + '</label><br>';
-            }
+        ul = document.createElement("ul");
+        ul.classList = "cont-ul";
+        if (primary){
+            ul.style.height = "78vh";
+        } else {
+            ul.style.height = "50vh";
         }
-        var menu = document.getElementById("global_menu");
-        menu.innerHTML = html;
-        menu.innerHTML += '<button onclick="create_group()" class="edit-btn">Create</button><br><div class="add-menu" id="name_new_chat_group"><label>Имя чата</label><br><input id="name_new_chat"></div>';
-        menu.innerHTML += '<input id="list_members" style="display:none;" value="' + id_user+ '">';
+        for (let i = 0; i < json["users"].length; i++){
+            if (id_user == json["users"][i][2]) continue;
+            var li_user = document.createElement("li");
+            if (primary){
+                li_user.setAttribute("onclick",  `create_chat('${json["users"][i][2]} {id_user}', '', 1)`);
+            } else {
+                var my_input = document.createElement("input");
+                my_input.type = "checkbox";
+                my_input.setAttribute("onclick", `add_chat(${json["users"][i][2]}, 'list_members')`);
+                li_user.appendChild(my_input);
+            }
+            li_user.classList = "list-group-item";
+            li_user.innerHTML += json["users"][i][0];
+            ul.appendChild(li_user);
+        }
+        global_menu.appendChild(ul);
+        if (!primary){
+            var button = document.createElement("button");
+            button.classList = "edit-btn";
+            button.setAttribute("onclick", "create_group()");
+            button.textContent = "Создать";
+            var div = document.createElement('div');
+            div.classList = "name-new-chat";
+            div.id = "name_new_chat_group";
+            var label = document.createElement("p");
+            label.textContent = "Имя чата";
+            var input_name_chat = document.createElement("input");
+            input_name_chat.id = "name_new_chat";
+            input_name_chat.classList = "form-control";
+            var input_members = document.createElement("input");
+            input_members.id = "list_members";
+            input_members.style.display = "none";
+            input_members.value = id_user;
+            div.appendChild(label);
+            div.appendChild(input_name_chat)
+            global_menu.appendChild(button);
+            global_menu.appendChild(div);
+            global_menu.appendChild(input_members);
+        }
             },
         error: function(err) {
             console.error(err);
         }
     });
 }
-
-
-function get_users_primary (id){
-    $.ajax({
-        url: '/m/get_users',
-        type: 'GET',
-        dataType: 'json',
-        success: function(json){
-        document.getElementById("global_menu").innerHTML="";
-        var html = '<h2>Создать чат с пользователем</h2><button onclick="' + "show_global_menu('global_menu_d',  0)" +'" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
-        for (let i = 0; i < json["users"].length; i++){
-            if (id_user!= json["users"][i][2]){
-               html = html + '<label class="add-menu" onclick="create_chat('+ "'"+ json["users"][i][2] + ' ' + id_user+ "', '', 1" + ')">' + json["users"][i][0] + '</label><br>';
-            }
-        }
-        var menu = document.getElementById("global_menu");
-        menu.innerHTML = html;
-            },
-        error: function(err) {
-            console.error(err);
-        }
-    });
-}
-
 
 
 function edit_name_chat(){
@@ -811,7 +830,7 @@ function get_chats_gl(id_div, id_m){
     div.id = "cont_user_send"
     global_menu.appendChild(div);
     get_chats("cont_user_send", id_m);
-    global_menu.innerHTML += '<button onclick="show_global_menu(' + "'global_menu_d'" + ', 0)" type="button"\
+    global_menu.innerHTML += '<button onclick="close_global_menu()" type="button"\
                     class="btn-close gl-btn-close" aria-label="Close"></button>';
 }
 
@@ -865,18 +884,23 @@ function add_in_chat_new(){
 
 function add_users_label(users, con_users){
     for (let i = 0; i < users.length; i++){
-             $.ajax({
-                url: '/m/get_user/' + users[i],
-                type: 'GET',
-                dataType: 'json',
-                success: function(json_data){
-                    con_users.innerHTML += '<label class="add-menu">'+ json_data["user"]+ '(' +json_data["email"] + ')' + '</label><br>';
-                    },
-                error: function(err) {
-                    console.error(err);
-                }
-            });
-            };
+    var ul = document.createElement("ul");
+    $.ajax({
+        url: '/m/get_user/' + users[i],
+        type: 'GET',
+        dataType: 'json',
+        success: function(json_data){
+            var li_user = document.createElement("li");
+            li_user.classList = "list-group-item";
+            li_user.textContent = `${json_data["user"]}(${json_data["email"]})`;
+            ul.appendChild(li_user);
+        },
+        error: function(err) {
+            console.error(err);
+        }
+    });
+    }
+    con_users.appendChild(ul);
 }
 
 
@@ -909,28 +933,41 @@ function add_files_label(files_div){
 
 
 function show_users(){
+    var global_menu = document.getElementById("global_menu");
     if (document.getElementById("chat_id").value != ""){
+        global_menu.innerHTML = `<div class="div-name-menu"><b class="name-menu">Управление чатом</b>
+        <button onclick="close_global_menu()" type="button"
+         class="btn-close gl-btn-close" aria-label="Close"></button></div>`;
         $.ajax({
             url: '/m/get_chat_user/' + document.getElementById("chat_id").value,
             type: 'GET',
             dataType: 'json',
             success: function(json){
-            var global_menu = document.getElementById("global_menu");
             document.getElementById("global_menu_d").style.display = "flex";
-            global_menu.innerHTML = '<h2>Управление чатом</h2><button onclick="show_global_menu(' + "'global_menu_d'" + ', ' + id_user   + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button><br>';
             if (!json["primary_chat"]){
-                var div = document.createElement("div");
-                var btn_add = document.createElement("button");
-                btn_add.classList = "edit-btn";
-                btn_add.textContent = "Добавить участника";
-                btn_add.setAttribute("onclick", "add_in_chat_new()");
-                div.appendChild(btn_add);
-                div.innerHTML += '<div><label>Имя чата</label><br><input class="add-menu" id="new_chat_name" value="' + document.getElementById("name_chat").innerText + '"><br><button onclick="edit_name_chat()" class="edit-btn">изменить</button></div>';
+                var div = document.createElement('div');
+                div.classList = "name-new-chat";
+                div.id = "new_chat_name";
+                var label = document.createElement("p");
+                label.textContent = "Имя чата";
+                var input_name_chat = document.createElement("input");
+                input_name_chat.id = "name_new_chat";
+                input_name_chat.classList = "form-control";
+                input_name_chat.value = document.getElementById("name_chat").innerText;
+                div.appendChild(label);
+                div.appendChild(input_name_chat);
+                div.innerHTML += '<button onclick="edit_name_chat()" class="edit-btn">изменить</button></div>';
                 div.innerHTML += '<input id="list_c_u" value="'+ json["user"].join(" ") + '" style="display:none;">'
                 global_menu.appendChild(div);
+                var btn_add = document.createElement("button");
+            btn_add.classList = "edit-btn";
+                btn_add.textContent = "Добавить участника";
+            btn_add.setAttribute("onclick", "add_in_chat_new()");
             }
-            const users_div = document.createElement("div");
+            var users_div = document.createElement("div");
             users_div.id = "users";
+            users_div.classList = "cont-users";
+            users_div.appendChild(btn_add);
             const con_users = document.createElement("div");
             con_users.id = "con_users";
             const user_btn = document.createElement('button');

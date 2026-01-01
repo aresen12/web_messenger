@@ -2,7 +2,7 @@ from flask_login import current_user
 from flask_socketio import emit, SocketIO, join_room, leave_room, rooms
 from data import db_session
 from data.chat import Chat
-from data.message import Message, new_emoji, new_mess
+from data.message import new_emoji, new_mess
 from data.user import User
 from python_modules.tg_bot.bot_def import send_all
 from data.my_message import new_mess_my
