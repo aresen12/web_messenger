@@ -15,6 +15,9 @@ class Action(SqlAlchemyBase, UserMixin, SerializerMixin):
     time = sqlalchemy.Column(sqlalchemy.String, default=datetime.datetime.now)
     list_of_read = sqlalchemy.Column(sqlalchemy.String, default="")
 
+    def __repr__(self):
+        return f"{self.id_user}, {self.about}"
+
 
 def new_action(type_, id_action, user_id=0, comment=""):
     action = Action()

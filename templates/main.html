@@ -13,8 +13,8 @@
 <div>
     <div class="alert alert-primary" role="alert"><h3>Новости</h3>
             <ul>
-                {% for alert in alerts %}
-                <li>{{alert.text}} {{alert.get_date()}}</li>
+                {% for i in range(alerts|length) %}
+                <li>{{alerts[(alerts|length - i - 1)].text}} {{alerts[(alerts|length - i - 1)].get_date()}}</li>
                 {% endfor %}
             </ul>
     </div>

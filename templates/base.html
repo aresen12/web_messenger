@@ -11,14 +11,13 @@
 <body>
 <header>
     <nav class="navbar navbar-dark bg-dark" style="color:white; background:black;">
-        <div>
+        <a class="navbar-brand" href="/">
             <img src="/static/img/main_black.png" style="height:70px;">
             <b style="margin-left:5px;font-size:30px;">Kazbek</b>
-        </div>
+        </a>
          <a class="navbar-brand" href="/m">начать общение</a>
-
         {% if current_user.is_authenticated %}
-        <a class="navbar-brand" href="/profile">{{ current_user.name }}</a>
+        <a class="navbar-brand">{{ current_user.name }}</a>
         {% else %}
         <p>
             <a class="btn btn-primary " href="/register">Зарегистрироваться</a>

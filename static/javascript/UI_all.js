@@ -351,20 +351,46 @@ function edit_prof_html(){
         dataType: 'json',
         contentType:'application/json',
         success: function(json){
-            menu.innerHTML = '<h2>Редактировать профиль</h2><button onclick="show_global_menu(' + "'global_menu_d'" + '\
-            , ' + id_user + ')" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
-            menu.innerHTML += '<div class="edit-cont" id="p_group" style="display:none;"></div>';
-            menu.innerHTML  += '<div class="edit-cont" id="edit_cont"><label>Имя</label><br><input id="name_edit"\
-             name="name_edit"value="'+ json["user"]["name"] + '"><br><label for="email_edit">Email</label><br></div>';
-            var edit_cont = document.getElementById("edit_cont");
-            edit_cont.innerHTML += '<input name="email_edit" id="email_edit" value="'+ json["user"]["email"] + '"><br>\
-            <button class="edit-btn" onclick="edit_prof_post()">Сохранить</button>\
-            <button class="edit-btn" onclick="showDiv(' + "'p_group', 'edit_cont'" +')">Сменить пароль</button>';
-            var p_group = document.getElementById("p_group");
+            menu.innerHTML = '<h2>Редактировать профиль</h2><button onclick="close_global_menu()" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>';
+            var p_group = document.createElement("div");
+            p_group.id = "p_group";
+            p_group.classList = "edit-cont";
+            p_group.style.display = "none";
+            var edit_cont = document.createElement('div');
+            edit_cont.id = "edit_cont";
+            edit_cont.classList = "edit-cont";
+            var name_edit = document.createElement("input");
+            name_edit.id = "name_edit";
+            name_edit.value = json["user"]["name"];
+            var name_p = document.createElement("p");
+            name_p.textContent = "Имя";
+            edit_cont.appendChild(name_p);
+            edit_cont.appendChild(name_edit);
+            var username_p = document.createElement("p");
+            username_p.textContent = "Username";
+            edit_cont.appendChild(username_p);
+            var email_edit = document.createElement("input");
+            email_edit.id = "email_edit";
+            email_edit.value = json["user"]["email"];
+            edit_cont.appendChild(email_edit);
+            var save_btn = document.createElement("button");
+            save_btn.classList = "edit-btn";
+            save_btn.textContent = "Сохранить";
+            save_btn.setAttribute('onclick', 'edit_prof_post()');
+            var password_btn = document.createElement("button");
+            password_btn.classList = "edit-btn";
+            password_btn.textContent = "Сменить пароль";
+            password_btn.setAttribute('onclick', `showDiv('p_group', 'edit_cont')`);
+            edit_cont.appendChild(save_btn);
+            edit_cont.appendChild(password_btn);
+//            <button class= onclick=""></button>\
+//            <button class="edit-btn" onclick=""></button>';
             p_group.innerHTML = 'Для смены пародя введите старый пароль<br><input name="password_old" id="password_old"\
              type="password"><br><label for="password_new">Новый пароль</label><br><input name="password_new"\
               id="password_new" type="password">';
             p_group.innerHTML += '<br><button class="edit-btn" onclick="post_password()">Сменить</button>';
+            menu.appendChild(p_group);
+            menu.appendChild(edit_cont);
             },
         error: function(err) {
             console.error(err);

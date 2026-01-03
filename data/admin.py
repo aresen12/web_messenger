@@ -27,3 +27,13 @@ class Admin(SqlAlchemyBase, UserMixin, SerializerMixin):
         data_base_password = password + salt
         hashed = hashlib.md5(data_base_password.encode())
         return self.password == hashed.hexdigest()
+
+    def __repr__(self):
+        return f"{self.name} {self.permissions}"
+
+
+permissions = {
+    1: "удаление пользователя",
+    2: "блокировка пользователя",
+    3: "отправка новостей",
+}

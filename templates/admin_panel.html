@@ -1,8 +1,7 @@
-{% extends "base.html" %}
+{% extends "admin_base.html" %}
 {% block content %}
 <h1>Пароль</h1> <input id="password" type="password">
 <div style="display:flex;">
-
 <div style="height:70vh; overflow-y:auto; width:40vw;">
     <h2>Управление пользователями</h2>
 
@@ -43,16 +42,33 @@
     </ul>
 </div>
 </div>
-<form method="post">
-    <h4>Создать новость</h4>
-    <textarea name="text_alert" id="text_alert"></textarea>
-    <button class="btn" type="submit">Сохранить</button>
-</form><script src="/static/javascript/panel/panel.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"
-            integrity=
-"sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer">
-    </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<div>
+    <div>
+        <h4>Голосования</h4>
+
+    </div>
+    <div>
+        <h4>Назначение новых администраторов, удаление, расширение, отзыв прав</h4>
+        <ul>
+            {% for admin in activiti_list %}
+            <li>
+                {{admin.name}}
+                разрещения
+                <ol>
+                    {% for i in range(permissions|length) %}
+                    <li class="list-group-item">
+                        {% if (i + 1)| string in admin.permissions.split() %}
+                        {{permissions[i + 1]}}
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ol>
+            </li>
+            {% endfor %}
+        </ul>
+        <button class="edit-btn">Отправить на голосование</button>
+        <button class="edit-btn">Назначить нового администратора</button>
+    </div>
+</div>
+<script src="/static/javascript/panel/panel.js"></script>
 {% endblock %}

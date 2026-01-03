@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link href="/static/css/style.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/all.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/n.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="icon" href="/static/img/icon.ico">
+    <title>{{ title }}</title>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"
+            integrity=
+"sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer">
+    </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<header>
+    <nav class="navbar navbar-dark bg-dark" style="color:white; background:black;">
+        <a class="navbar-brand" href="/">
+            <img src="/static/img/main_black.png" style="height:70px;">
+            <b style="margin-left:5px;font-size:30px;">Kazbek</b>
+        </a>
+         <a class="navbar-brand" href="/m">начать общение</a>
+         <a class="navbar-brand" href="/panel">На панель</a>
+        <a class="navbar-brand" href="/panel/news">мастер новостей</a>
+        <a class="navbar-brand" href="/panel/profile">{{ current_user.name }}</a>
+    </nav>
+</header>
+<main role="main">
+    {% block content %}{% endblock %}
+</main>
+</body>
+</html>

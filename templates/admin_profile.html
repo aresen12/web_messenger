@@ -1,0 +1,17 @@
+{% extends "admin_base.html" %}
+{% block content %}
+<h4>{{admin.name}}</h4>
+<div class="edit-cont" id="p_group" style="display: none;">Для смены пародя введите старый пароль
+    <br><input name="password_old" id="password_old" type="password">
+    <br><label for="password_new">Новый пароль</label>
+    <br><input name="password_new" id="password_new" type="password"><br>
+    <button class="edit-btn" onclick="post_password()">Сменить</button>
+</div>
+<div class="edit-cont" id="edit_cont" ><label>Имя</label>
+    <br><input id="name_edit" name="name_edit" value="{{admin.name}}"><br>
+<!--    <label for="email_edit">Email</label><br><input name="email_edit" id="email_edit" value="Ares.Ares.Ars@yandex.ru"><br>-->
+    <button class="edit-btn" onclick="edit_prof_post()">Сохранить</button>
+    <button class="edit-btn" onclick="showDiv('p_group', 'edit_cont')">Сменить пароль</button></div>
+<script src="/static/javascript/panel/profile.js">const id_user = {{current_user.id}};
+ </script>
+{% endblock %}
