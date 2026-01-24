@@ -167,6 +167,7 @@ function set_recipient(id_chat, is_primary, name, status, pinned) {
     distance = (elementOffset - scrollTop);
     globalThis.global_distans = distance;
     document.getElementById('chat_id').innerText = id_chat;
+    document.getElementById("btn_down").style.display = 'block';
     if (mobile){
         document.getElementById("chat_header").style.display = "flex";
         x.style.display = "block";
@@ -175,7 +176,7 @@ function set_recipient(id_chat, is_primary, name, status, pinned) {
         cont.style.display = "block";
         y.style.display = "none";
         document.getElementById("settings_btn").style.display = 'none';
-        document.getElementById("btn_down").style.visibility = 'visible';
+        document.getElementById("plus_btn").style.display = "none";
     }
     let call_btn = document.getElementById("call-btn");
     call_btn.setAttribute("onclick", `send_call(${is_primary})`);
@@ -205,7 +206,7 @@ function exit_chat(){
     document.getElementById('name_chat').innerText = "";
     document.getElementById('chat_id').value = "";
     document.getElementById('form').style.display = "none";
-    document.getElementById("btn_down").style.visibility = 'hidden';
+    document.getElementById("btn_down").style.display = 'none';
     if (globalThis.mobile) {
         document.getElementById("background-img").style.display = "none";
         document.getElementById("container-mess").style.display = "none";
@@ -1207,7 +1208,7 @@ function set_my_recipient(id_chat){
         cont.style.display = "block";
         y.style.display = "none";
         document.getElementById("settings_btn").style.display = 'none';
-        document.getElementById("btn_down").style.visibility = 'visible';
+        document.getElementById("btn_down").style.display= 'block';
     }
     socket.emit('join', {room: id_chat});
 }

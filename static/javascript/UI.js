@@ -14,7 +14,7 @@ if (nav == 0){
     nav = 125;
     m_c.style.top = nav;
 }
-document.getElementById("background-img").style.height =  window.innerHeight - nav + "px";
+//document.getElementById("background-img").style.height =  window.innerHeight - nav + "px";
 document.getElementById("background-img").style.top = nav + "px";
 document.getElementById("form").style.display = "none";
 
@@ -133,11 +133,9 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
 // отрисовка под мобильный интерфейс
 if (mobile){
     document.getElementById("about").style.fontSize = "50px";
-    document.getElementById("btn_down").style.visibility = 'hidden';
     document.getElementById("plus_svg").setAttribute("width", "100px");
     document.getElementById("chat_header").style.display = "none";
     document.getElementById("btn_settings_svg").setAttribute("width", "7vw");
-
     };
 
 
