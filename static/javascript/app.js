@@ -945,6 +945,7 @@ function show_users(){
             dataType: 'json',
             success: function(json){
             document.getElementById("global_menu_d").style.display = "flex";
+            var users_div = document.createElement("div");
             if (!json["primary_chat"]){
                 var div = document.createElement('div');
                 div.classList = "name-new-chat";
@@ -961,14 +962,15 @@ function show_users(){
                 div.innerHTML += '<input id="list_c_u" value="'+ json["user"].join(" ") + '" style="display:none;">'
                 global_menu.appendChild(div);
                 var btn_add = document.createElement("button");
-            btn_add.classList = "edit-btn";
+                btn_add.classList = "edit-btn";
                 btn_add.textContent = "Добавить участника";
-            btn_add.setAttribute("onclick", "add_in_chat_new()");
+                btn_add.setAttribute("onclick", "add_in_chat_new()");
+                users_div.appendChild(btn_add);
             }
-            var users_div = document.createElement("div");
+
             users_div.id = "users";
             users_div.classList = "cont-users";
-            users_div.appendChild(btn_add);
+
             const con_users = document.createElement("div");
             con_users.id = "con_users";
             const user_btn = document.createElement('button');
@@ -1172,6 +1174,7 @@ function set_my_recipient(id_chat){
     document.getElementById("pinned").innerHTML = "";
     document.getElementById("menu_chat_div_all").style.display = "block";
     var st_chat = document.getElementById("chat_id").value
+    document.getElementById("btn_down").style.display = 'block';
     if (st_chat){
         leave_chat(st_chat);
     }
@@ -1185,10 +1188,10 @@ function set_my_recipient(id_chat){
             document.getElementById('name_chat').textContent = chat2.innerText;
         }, 3000);
     }
+    document.getElementById('name_chat').textContent = "Избранное";
     document.getElementById("content").innerHTML = '<h2 class="update">Загрузка...<h2>';
     document.getElementById("form").style.display = "block";
     document.getElementById("chat_id").value = id_chat;
-    document.getElementById('name_chat').textContent = name;
     document.getElementById("icon_c_chat").innerHTML = document.getElementById("icon_chatset_recipient" + id_chat).innerHTML;
     var x = document.getElementById("background-img");
     var y = document.getElementById("email");
@@ -1208,7 +1211,6 @@ function set_my_recipient(id_chat){
         cont.style.display = "block";
         y.style.display = "none";
         document.getElementById("settings_btn").style.display = 'none';
-        document.getElementById("btn_down").style.display= 'block';
     }
     socket.emit('join', {room: id_chat});
 }

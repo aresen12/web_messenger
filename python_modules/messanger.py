@@ -219,7 +219,11 @@ def get_files_menu():
     for file in files:
         file: File
         mess_id = db_sess.query(Message.id).filter(Message.img == file.id).first()
-        json_res.append({"name": file.name, "mess_id": mess_id[0]})
+        if not (mess_id is None):
+            json_res.append({"name": file.name, "mess_id": mess_id[0]})
+        else:
+            pass
+    #     прописать удаление файла
     db_sess.close()
     return json_res
 

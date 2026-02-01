@@ -92,10 +92,12 @@ function showdiv1(Div){
 function showImg(Div, name_img){
     var x = document.getElementById("watch");
     var w_img = document.getElementById("watch_img");
-    w_img.src = "/static/img/" + name_img;
-    if(x.style.display=="none") {
+    var download_a = document.getElementById("download-img-a");
+    if(x.style.display == "none") {
         x.style.display = "block";
-
+        w_img.src = "/static/img/" + name_img;
+        download_a.href = "/static/img/" + name_img;
+        download_a.download = name_img;
     } else {
         x.style.display = "none";
     }

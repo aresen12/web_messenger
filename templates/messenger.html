@@ -111,14 +111,13 @@
             </svg>
             Редактировать
         </button>
+        <div>
+            <button class="edit-btn" onclick="set_username_tg()">изменить/добавить оповещения в тг</button>
+        </div>
         <ul class="main-menu">
             <li>
                 <label onclick="showdiv1('settings_fieldset')">Settings</label>
-
         <fieldset id="settings_fieldset" style="display:none;">
-            <div>
-                <button class="edit-btn" onclick="set_username_tg()">изменить/добавить оповещения в тг</button>
-            </div>
             <div>
                 <input onclick="set_enter(1)" type="radio" id="E1" name="drone" checked/>
                 <label for="E1">Send by Enter</label>
@@ -394,9 +393,14 @@
 <div class="watch-img" id="watch" style="display:none;">
     <div class="close">
         <button onclick="showdiv1('watch')" type="button" class="btn-close btn-close-white close-btn" aria-label="Close"></button>
-<!--        <button  type="button" class="btn-close" aria-label="Close"></button>-->
-<!--        <button  class="close-btn" style="z-index:9999;">❌</button>-->
+<!--        система палка верёвка right: WIDTH_BUTTON_CLOSE;-->
+        <a id="download-img-a" class="download-img-a" download="">
+        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 14V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V14M12 15L12 3M12 15L8 11M12 15L16 11" stroke="rgba(255,255,255,.55)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        </a>
     </div>
+
     <div class="win">
         <img src="" id="watch_img" class="car-img" style="">
         <button id="send2_btn" style="display:none;" onclick="send_img();" class="btn btn-primary submit_btn ">

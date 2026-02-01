@@ -330,7 +330,7 @@ bottom: 0px;
     right:2vw;
     background-color:#c0c0c0;
     border-radius:60px;
-    height: 100px;
+    height: 60px;
 }
 
 
@@ -445,3 +445,8 @@ width:100vw;
 .car-img {height:90vh; max-width:90vw;  }
 
 
+.download-img-a {
+    position:relative;
+    right: 50px;
+    text-decoration:none;
+}
