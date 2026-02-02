@@ -216,14 +216,23 @@ def get_files_menu():
     db_sess = db_session.create_session()
     files = db_sess.query(File).filter(File.chat_id == data["chat_id"]).all()
     json_res = []
-    for file in files:
-        file: File
-        mess_id = db_sess.query(Message.id).filter(Message.img == file.id).first()
-        if not (mess_id is None):
-            json_res.append({"name": file.name, "mess_id": mess_id[0]})
-        else:
-            pass
-    #     прописать удаление файла
+    if str(data["chat_id"])[0] != "m":
+        for file in files:
+            file: File
+            mess_id = db_sess.query(Message.id).filter(Message.img == file.id).first()
+            if not (mess_id is None):
+                json_res.append({"name": file.name, "mess_id": mess_id[0]})
+            else:
+                pass
+    else:
+        for file in files:
+            file: File
+            mess_id = db_sess.query(MyMessage.id).filter(MyMessage.img == file.id).first()
+            if not (mess_id is None):
+                json_res.append({"name": file.name, "mess_id": mess_id[0]})
+            else:
+                pass
+        #     прописать удаление файла
     db_sess.close()
     return json_res
 
