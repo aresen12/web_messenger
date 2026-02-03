@@ -86,6 +86,23 @@ function showdiv1(Div){
 }
 
 
+function scroll_carousel(number_img){
+    var list_Img = document.getElementById("images_list").value.split(" ");
+    console.log(list_Img);
+    document.getElementById("watch_img").src = "/static/img/" + list_Img[number_img];
+    var right_index = number_img + 1;
+    var left_index = number_img - 1;
+    if (left_index <= 0) {
+        left_index = list_Img.length - 1;
+    }
+    if (right_index >= list_Img.length){
+        right_index = 0;
+    }
+    document.getElementById("carousel_right").setAttribute("onclick", `scroll_carousel(${right_index})`);
+    document.getElementById("carousel_left").setAttribute("onclick", `scroll_carousel(${left_index})`);
+}
+
+
 function showImg(Div, name_img){
     var x = document.getElementById("watch");
     var w_img = document.getElementById("watch_img");
@@ -95,6 +112,17 @@ function showImg(Div, name_img){
         w_img.src = "/static/img/" + name_img;
         download_a.href = "/static/img/" + name_img;
         download_a.download = name_img;
+        var list_Img = document.getElementById("images_list").value.split(" ");
+        var right_index = list_Img.indexOf(name_img) + 1;
+        var left_index = list_Img.indexOf(name_img) - 1;
+        if (left_index <= 0) {
+            left_index = list_Img.length - 1;
+        }
+        if (right_index >= list_Img.length){
+            right_index = 0;
+        }
+        document.getElementById("carousel_right").setAttribute("onclick", `scroll_carousel(${right_index})`);
+        document.getElementById("carousel_left").setAttribute("onclick", `scroll_carousel(${left_index})`);
     } else {
         x.style.display = "none";
     }

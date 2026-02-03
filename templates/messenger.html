@@ -391,7 +391,7 @@
     </svg>
 </a>
 <div class="watch-img" id="watch" style="display:none;">
-    <input id="images-list" style="display:none;">
+    <input id="images_list" type="text" style="display:none;">
     <div class="close">
         <button onclick="showdiv1('watch')" type="button" class="btn-close btn-close-white close-btn" aria-label="Close"></button>
 <!--        система палка верёвка right: WIDTH_BUTTON_CLOSE;-->
@@ -402,7 +402,16 @@
         </a>
     </div>
     <div class="win">
+
         <img src="" id="watch_img" class="car-img" style="">
+        <button id="carousel_left" class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button id="carousel_right" class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
         <button id="send2_btn" style="display:none;" onclick="send_img();" class="btn btn-primary submit_btn ">
                 <svg width="30px" height="29px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                       x="0px" y="0px" viewBox="0 0 466.897 466.897"

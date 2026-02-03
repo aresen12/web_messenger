@@ -193,6 +193,7 @@ function exit_chat(){
     } catch(e){
     }
     document.getElementById("pinned").innerHTML = "";
+    document.getElementById("images_list").textContent = "";
     socket.emit('leave', {room: st_chat});
     if (st_chat){
         if (Number(st_chat)){
@@ -938,8 +939,8 @@ function show_users(){
                 files_div.classList = "list-group";
                 files_div.style.display = 'none';
          global_menu.appendChild(files_div);
+         add_files_label(files_div);
          if (Number(document.getElementById("chat_id").value)){
-            add_files_label(files_div);
             $.ajax({
             url: '/m/get_chat_user/' + document.getElementById("chat_id").value,
             type: 'GET',
@@ -972,8 +973,6 @@ function show_users(){
                 console.error(err);
             }
         });
-        } else {
-            add_files_label(files_div);
         }
     };
 }
