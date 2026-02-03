@@ -1,0 +1,42 @@
+@media screen and (width < 981px) and (pointer:none), (pointer:coarse) {
+    .cont-users{
+        width:85vw;
+    }
+
+    .name-menu{
+        width:85vw;
+    }
+    .name-new-chat{
+        width:85vw;
+    }
+
+    .name-user {
+        width: 90vw;
+    }
+
+    .global-menu {
+        position:relative;
+        width:95vw;
+        left: 2.5px;
+        margin-left:2.5vw;
+    }
+
+    .form-group {width:100vw;}
+
+    .text120{width:40vw;}
+
+    .mess {
+        width:90vw;
+        left:5vw;
+    }
+
+    .settings {
+        width:100vw;
+    }
+
+    .container-mess {
+        width:100vw;
+    }
+
+    .form2 {width:100vw;}
+}

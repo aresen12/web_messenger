@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link href="/static/css/n.css" rel="stylesheet" type="text/css">
-     <link href="/static/css/all.css" rel="stylesheet" type="text/css">
+     <link href="/static/css/desktop.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/all_mobile.css" rel="stylesheet" type="text/css">
     {% if device == "android" %}
         <link href="/static/css/android.css" rel="stylesheet" type="text/css">
     {% else %}
@@ -70,7 +71,7 @@
     </div>
     <div id="settings" class="settings" style="display:none;">
         <div style="display:flex;">
-            <h2 style="width:200px;" id="name_user">{{current_user.name}}</h2><a class="info-btn" href="/logout">
+            <h2 class="name-user" id="name_user">{{current_user.name}}</h2><a class="info-btn" href="/logout">
             <svg fill="#000000" height="30px" width="64px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 384.971 384.971" xml:space="preserve"
                  stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -87,8 +88,7 @@
         </a></div>
         <h3 id="username">{{current_user.email }}</h3>
         <button onclick="edit_prof_html()" class="edit-btn">
-            <svg width="20px" viewBox="0 -0.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                 xmlns:xlink="http://www.w3.org/1999/xlink" fill="#ffffff">
+            <svg width="20px" viewBox="0 -0.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#ffffff">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                 <g id="SVGRepo_iconCarrier"><title>edit_cover [#1481]</title>
@@ -391,6 +391,7 @@
     </svg>
 </a>
 <div class="watch-img" id="watch" style="display:none;">
+    <input id="images-list" style="display:none;">
     <div class="close">
         <button onclick="showdiv1('watch')" type="button" class="btn-close btn-close-white close-btn" aria-label="Close"></button>
 <!--        система палка верёвка right: WIDTH_BUTTON_CLOSE;-->
@@ -400,7 +401,6 @@
         </svg>
         </a>
     </div>
-
     <div class="win">
         <img src="" id="watch_img" class="car-img" style="">
         <button id="send2_btn" style="display:none;" onclick="send_img();" class="btn btn-primary submit_btn ">

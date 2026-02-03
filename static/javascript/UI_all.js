@@ -37,21 +37,18 @@ function showDiv(Div, div2) {
 }
 
 
-function add_border(div1, div2, btn1, btn2){
+function add_border(div1, div2, btn1_id, btn2_id){
     var x = document.getElementById(div1);
     var y = document.getElementById(div2);
-    var btn1 = document.getElementById(btn1);
-    var btn2 = document.getElementById(btn2);
-    if(x.style.display=="none") {
+    if(x.style.display == "none") {
         x.style.display = "block";
-        btn2.style.borderBottom = "none";
-        btn1.style.borderBottom = "3px solid #6495ED";
+        document.getElementById(btn2_id).style.borderBottom = "";
+        document.getElementById(btn1_id).style.borderBottom = "3px solid #6495ED";
         y.style.display = "none";
-
     } else {
         x.style.display = "none";
-        btn1.style.borderBottom = "3px solid #6495ED";
-        btn2.style.borderBottom = "none";
+        document.getElementById(btn1_id).style.borderBottom = "";
+        document.getElementById(btn2_id).style.borderBottom = "3px solid #6495ED";
         y.style.display = "block";
     }
 }
@@ -59,7 +56,7 @@ function add_border(div1, div2, btn1, btn2){
 
 function show_in_chat(mess_id){
     close_global_menu();
-    answer_color("m"+ mess_id);
+    answer_color("m" + mess_id);
 }
 
 
@@ -213,7 +210,7 @@ function show_more_emoji(id_mess){
     const emoji_div2 = document.createElement("div");
     for (let i = 0; i < emoji.length; i++){
         var btn_emoji = document.createElement("button");
-        btn_emoji.classList = "info-btn";
+        btn_emoji.classList = "info-btn emoji-button";
         btn_emoji.textContent = emoji[i];
         btn_emoji.setAttribute("onclick", `set_emoji(${id_mess}, ${i})`);
         emoji_div2.appendChild(btn_emoji);
@@ -266,13 +263,13 @@ function open_menu_mess(id_mess){
     emoji_div2.id = "emoji" + id_mess.slice(1);
     for (let i = 0; i < 4; i++){
         var btn_emoji = document.createElement("button");
-        btn_emoji.classList = "info-btn";
+        btn_emoji.classList = "info-btn emoji-button";
         btn_emoji.textContent = emoji[i];
         btn_emoji.setAttribute("onclick", `set_emoji(${id_mess.slice(1)}, ${i})`);
         emoji_div2.appendChild(btn_emoji);
     }
     var btn_emoji = document.createElement("button");
-        btn_emoji.classList = "info-btn";
+        btn_emoji.classList = "info-btn emoji-button";
         btn_emoji.textContent = "⋁";
         btn_emoji.setAttribute("onclick", `show_more_emoji(${id_mess.slice(1)})`);
         emoji_div2.appendChild(btn_emoji);
@@ -399,6 +396,8 @@ function edit_prof_html(){
         }
     });
 }
+
+
 function uploadFile(file) {
   const xhr = new XMLHttpRequest(); // Создаем новый XMLHttpRequest
   const formData = new FormData(); // Используем FormData для отправки файла
@@ -456,6 +455,34 @@ window.addEventListener('paste', e => {
 
 function show_in_chat_search(){
     answer_color("m"+ mess_id);
+}
+
+
+function add_files_label(files_div){
+    console.log(document.getElementById("chat_id").value);
+    $.ajax({
+        url: '/m/get_files_menu',
+        type: 'POST',
+        dataType: 'json',
+        contentType:'application/json',
+        data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
+        success: function(json_data){
+            console.log(json_data);
+            if (json_data.length == 0){
+                files_div.textContent = "Файлы не найдены";
+            };
+            for (let i = 0; i < json_data.length; i++){
+                var file_label = document.createElement('li');
+                file_label.textContent = json_data[i]["name"];
+                file_label.classList = "list-group-item";
+                file_label.setAttribute("onclick", `show_in_chat("${json_data[i]['mess_id']}")`);
+                files_div.appendChild(file_label);
+           }
+                    },
+                error: function(err) {
+                    console.error(err);
+                }
+            });
 }
 
 
@@ -532,14 +559,15 @@ function set_username_tg(){
     var global_menu_d = document.getElementById("global_menu_d");
     global_menu_d.style.display = "block";
     var global_menu = document.getElementById("global_menu");
-    global_menu.innerHTML = `<button onclick="show_global_menu('global_menu_d', 1)" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>`;
+    global_menu.innerHTML = `<button onclick="close_global_menu()" type="button" class="btn-close gl-btn-close" aria-label="Close"></button>`;
     var btn1 = document.createElement("button");
     btn1.textContent = "Добавить/изменить";
     btn1.setAttribute("onclick", "submit_username_tg()");
     btn1.classList = "edit-btn";
     var input_tg = document.createElement("input");
     input_tg.id = "tg_input";
-    var h1_tg = document.createElement("label");
+    var h1_tg = document.createElement("p");
+    h1_tg.classList = "emoji-button";
     h1_tg.textContent = "Напишите свой username в текстовое поле ниже, а затем напишите нашему тг боту @Kazbek_messenger_bot";
     global_menu.appendChild(h1_tg);
     global_menu.appendChild(input_tg);

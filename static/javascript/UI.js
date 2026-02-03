@@ -26,7 +26,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
             }
      const messagesDiv = document.getElementById('content');
      const messageItem = document.createElement('div');
-    imges = ["bmp", "jpg", "png", "svg"]
+    imges = ["bmp", "jpg", "png", "svg", "webp"]
     audio = ["mp3", "flac", "m4a"]
     video = ["mp4", "mov"]
     if (other) {

@@ -208,6 +208,7 @@ function exit_chat(){
     document.getElementById('form').style.display = "none";
     document.getElementById("btn_down").style.display = 'none';
     if (globalThis.mobile) {
+        document.getElementById("plus_btn").style.display = "block";
         document.getElementById("background-img").style.display = "none";
         document.getElementById("container-mess").style.display = "none";
         document.getElementById("settings_btn").style.display = 'block';
@@ -905,35 +906,6 @@ function add_users_label(users, con_users){
 }
 
 
-function add_files_label(files_div){
-    console.log(document.getElementById("chat_id").value);
-    $.ajax({
-        url: '/m/get_files_menu',
-        type: 'POST',
-        dataType: 'json',
-        contentType:'application/json',
-        data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
-        success: function(json_data){
-            console.log(json_data);
-            if (json_data.length == 0){
-                files_div.textContent = "Файлы не найдены";
-            };
-            for (let i = 0; i < json_data.length; i++){
-                var file_label = document.createElement('button');
-                file_label.textContent = json_data[i]["name"];
-                file_label.classList = "add-menu";
-                file_label.setAttribute("onclick", `show_in_chat("${json_data[i]['mess_id']}")`);
-                files_div.appendChild(file_label);
-                files_div.appendChild(document.createElement("br"));
-           }
-                    },
-                error: function(err) {
-                    console.error(err);
-                }
-            });
-}
-
-
 function show_users(){
     var global_menu = document.getElementById("global_menu");
     if (document.getElementById("chat_id").value != ""){
@@ -961,8 +933,9 @@ function show_users(){
                 global_menu.appendChild(user_btn);
                 global_menu.appendChild(file_btn);
                 global_menu.appendChild(users_div);
-                files_div = document.createElement("div");
+                files_div = document.createElement("ul");
                 files_div.id = "files";
+                files_div.classList = "list-group";
                 files_div.style.display = 'none';
          global_menu.appendChild(files_div);
          if (Number(document.getElementById("chat_id").value)){

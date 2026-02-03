@@ -1,31 +1,6 @@
 @media screen and (width < 981px) and (pointer:none), (pointer:coarse) {
-    .log-img {}
-    .log-name {}
      .add-menu{width:100vw;}
-    .html {}
-    .container-mess {width:100vw;}
-    .form2 {width:100vw;}
-    .settings {
-    width:100vw;
-    }
-    .text120{width:40vw;}
-.form-group {width:100vw;}
 
-    .global-menu {
-        position:relative;
-        width:95vw;
-        left: 2.5px;
-        margin-left:2.5vw;
-        }
-
-
-
-    .info-btn {
-    }
-    .mess {
-        width:90vw;
-        left:5vw;
-    }
     .date {
     text-align:center;}
 
@@ -53,16 +28,14 @@
         }
 
     .time-mess {
-    float:none;
-    margin:0px;
-
+        float:none;
+        margin:0px;
     }
 
     .my-message {
         width:60vw;
         left:15vw;
-        }
-
+    }
 
     .mess-admin {
         position:relative;

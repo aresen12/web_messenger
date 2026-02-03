@@ -34,8 +34,14 @@
     }
 
     .cont-ul {
+        max-width:85vw;
         overflow:auto;
     }
+
+.name-user {
+    width: 27vw;
+}
+
 .name-new-chat{
     width: 30vw;
     position:relative;
@@ -442,7 +448,7 @@ background:black;
 top:0px;
 width:100vw;
 }
-.car-img {height:90vh; max-width:90vw;  }
+.car-img {max-height:90vh; max-width:90vw;  }
 
 
 .download-img-a {
@@ -450,3 +456,5 @@ width:100vw;
     right: 50px;
     text-decoration:none;
 }
+
+
