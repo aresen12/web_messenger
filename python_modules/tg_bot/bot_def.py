@@ -42,8 +42,12 @@ def send_random_key(c_id, key):
             dcode2.set_password(key)
             db_sess.add(dcode2)
         else:
-            dcode.set_password(code)
+            dcode.set_password(key)
         db_sess.commit()
-        bot2.send_message(chat[0], f"Код для востановления пароля:\n{key}")
+        try:
+            bot2.send_message(chat[0], f"Код для востановления пароля:\n{key}")
+        except Exception:
+            code = 500
+            message = "Что-то с тг ботом"
     db_sess.close()
     return [code, message]

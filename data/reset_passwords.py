@@ -28,3 +28,6 @@ class DCode(SqlAlchemyBase, UserMixin, SerializerMixin):
         data_base_password = str(password) + salt
         hashed = hashlib.md5(data_base_password.encode())
         return self.code == hashed.hexdigest()
+
+
+
