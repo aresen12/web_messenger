@@ -23,7 +23,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
             }
      const messagesDiv = document.getElementById('content');
      const messageItem = document.createElement('div');
-    imges = ["bmp", "jpg", "png", "svg"]
+    images = ["bmp", "jpg", "png", "svg", "webp"]
     audio = ["mp3", "flac", "m4a"]
     video = ["mp4", "mov"]
     if (other) {
@@ -48,7 +48,14 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
     if (file_){
         var ras = file_[1].split(".");
         ras = ras[ras.length - 1];
-        if (imges.includes(ras)){
+        if (images.includes(ras)){
+            var images_list = document.getElementById("images_list");
+            console.log(images_list.value);
+            if (images_list.value == ""){
+                images_list.value = file_[1];
+            } else {
+                images_list.value += " " + file_[1];
+            }
             const button = document.createElement('button');
             button.classList = "info-btn";
             button.setAttribute("onclick", `showImg('m${id_m}', '${file_[1]}')`);
