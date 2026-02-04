@@ -7,6 +7,7 @@ from flask_login import current_user
 from data.message import Message
 from data.user import User
 from data.my_chat import get_my_chat
+from data.admin import Admin
 
 
 class Chat(SqlAlchemyBase, UserMixin, SerializerMixin):
@@ -31,20 +32,24 @@ def get_chats():
     new = []
     if my_chat["id"]:
         new.append(my_chat)
+    admins = [_[0] for _ in db_sess.query(Admin.id_user).all()]
+    print(admins)
     for i in chats:
+        admin_flag = False
         if str(current_user.id) in i.members.split():
             name = i.name
             if i.primary_chat:
                 id_user = i.members.split()
-                # print(id_user, i.members, i.id)
                 del id_user[id_user.index(str(current_user.id))]
                 id_user = id_user[0]
                 name = db_sess.query(User.name).filter(User.id == id_user).first()[0]
+                if int(id_user) in admins:
+                    admin_flag = True
             mess2 = db_sess.query(Message).filter(Message.chat_id == i.id).all()
             if len(mess2) != 0:
                 mess = mess2[-1]
                 new.append({"id": i.id, "name": name, "primary_chat": i.primary_chat, "pinned": int(i.pinned),
-                            "status": i.status,
+                            "status": i.status, "admin": admin_flag,
                             "last_message": {"text": mess.message, "time": mess.time,
                                              "name_sender": mess.name_sender, "type": mess.type
                                              }})
@@ -52,7 +57,7 @@ def get_chats():
                 mess: Message
                 new.append({"id": i.id, "name": name, "pinned": int(i.pinned),
                             "primary_chat": i.primary_chat, "status": i.status,
-
+                            "admin": admin_flag,
                             "last_message": {"text": "", "time": "2023-01-01 00:00:00.0",
                                              "name_sender": "", "type": ''
                                              }})

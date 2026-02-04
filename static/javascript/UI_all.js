@@ -612,7 +612,7 @@ function leave_chat(chat_id){
 }
 
 
-function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_mess, pinned){
+function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_mess, pinned, admin){
     const cont = document.getElementById(id_div);
     get_read(chat_id);
     const btn = document.createElement('button');
@@ -664,6 +664,10 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
     const name_chat_div = document.createElement('div');
     name_chat_div.id = "n_c" + chat_id;
     name_chat_div.textContent = name_chat;
+    console.log(admin);
+    if (admin){
+        name_chat_div.innerHTML +=`<svg width="20px" height="20px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--emojione" preserveAspectRatio="xMidYMid meet"><circle cx="32" cy="32" r="30" fill="#4bd37b"></circle><path fill="#ffffff" d="M46 14L25 35.6l-7-7.2l-7 7.2L25 50l28-28.8z"></path></svg>`;
+    }
     name_chat_div.classList = "n-c";
      name_chat_div.appendChild(last_time);
     name_chat_div.appendChild(last_mess_div);

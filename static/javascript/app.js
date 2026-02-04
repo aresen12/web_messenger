@@ -567,7 +567,7 @@ function get_users(primary){
             if (id_user == json["users"][i][2]) continue;
             var li_user = document.createElement("li");
             if (primary){
-                li_user.setAttribute("onclick",  `create_chat('${json["users"][i][2]} {id_user}', '', 1)`);
+                li_user.setAttribute("onclick",  `create_chat('${json["users"][i][2]} ${id_user}', '', 1)`);
             } else {
                 var my_input = document.createElement("input");
                 my_input.type = "checkbox";
@@ -778,7 +778,7 @@ function get_chats(id_div, command){
                 } else{
                     gener_chat(id_div, json["chats"][i]["id"], json["chats"][i]["name"],
                      json["chats"][i]["status"], json["chats"][i]["primary_chat"], command,
-                      json["chats"][i]["last_message"],  json["chats"][i]["pinned"]);
+                      json["chats"][i]["last_message"],  json["chats"][i]["pinned"], json["chats"][i]["admin"]);
                 }
             }
             },
