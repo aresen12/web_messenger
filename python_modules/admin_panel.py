@@ -19,14 +19,18 @@ def main_page():
             db_sess = db_session.create_session()
             if db_sess.query(Admin).filter(Admin.id_user == current_user.id).first() is None:
                 db_sess.close()
-                return "permission denied"
+                return {"log": "permission denied"}
             activiti = db_sess.query(Admin.name, Admin.time_activiti, Admin.permissions).all()
             users = db_sess.query(User).all()
             actions = db_sess.query(Action).all()
             db_sess.close()
             return render_template("admin_panel.html", activiti_list=activiti, user_list=users,
-                                   actions=actions, permissions=permissions)
+
+                                  actions=actions, permissions=permissions)
+        return {"log": "Not authenticated"}
     else:
+        if not current_user.is_authenticated:
+            return "permission denied"
         db_sess = db_session.create_session()
         admin = db_sess.query(Admin).filter(Admin.id_user == current_user.id).first()
         if admin is None or not ("3" in admin.permissions.split()):
@@ -112,10 +116,12 @@ def delete_news():
 
 @panel.route("/profile")
 def profile():
-    db_sess = db_session.create_session()
-    admin = db_sess.query(Admin).filter(Admin.id_user == current_user.id).first()
-    db_sess.close()
-    return render_template("admin_profile.html", admin=admin)
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        admin = db_sess.query(Admin).filter(Admin.id_user == current_user.id).first()
+        db_sess.close()
+        return render_template("admin_profile.html", admin=admin)
+    return {"log": "permi"}
 
 
 @panel.route("/edit_prof", methods=["POST"])
