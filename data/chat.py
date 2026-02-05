@@ -33,7 +33,6 @@ def get_chats():
     if my_chat["id"]:
         new.append(my_chat)
     admins = [_[0] for _ in db_sess.query(Admin.id_user).all()]
-    print(admins)
     for i in chats:
         admin_flag = False
         if str(current_user.id) in i.members.split():

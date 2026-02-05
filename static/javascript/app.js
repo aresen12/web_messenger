@@ -383,7 +383,9 @@ function create_chat(list_members, name, is_primary){
     data: JSON.stringify({"name":name, "list_members": list_members, "primary":is_primary}),
     success: function(json){
           // update chats list
-          get_chats('email', "set_recipient");
+          gener_chat("email", json["chat_id"], json["name"], 1, is_primary, "set_recipient",
+          {"time" : "2023-01-01 00:00:00.0"}, 0, json["admin"]);
+//          get_chats('email', "set_recipient");
           document.getElementById("global_menu_d").style.display = 'none';
           set_recipient(json["chat_id"], json["is_primary"], json["name"], 1, 0);
         },

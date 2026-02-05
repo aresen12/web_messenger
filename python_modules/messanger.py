@@ -13,7 +13,7 @@ from flask_socketio import emit
 from data.bot_db import BotDB
 from data.my_message import MyMessage, new_mess_my
 from python_modules.keys import room_name, jwt
-
+from data.admin import Admin
 
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
@@ -72,11 +72,6 @@ def m_st():
         return {"log": True}
 
 
-@mg.route("/test")
-def test_call():
-    return render_template("test.html")
-
-
 @mg.route("/unblock_user", methods=["POST"])
 def unblock_user():
     db_sess = db_session.create_session()
@@ -91,6 +86,7 @@ def unblock_user():
     db_sess.commit()
     db_sess.close()
     return {"log": True}
+
 
 @mg.route("/get_black_list")
 def get_black():
@@ -128,31 +124,33 @@ def create_chat():
     db_sess.add(chat)
     db_sess.commit()
     chat_id = chat.id
+    admin_flag = False
+    name_user = data["name"]
     if chat.primary_chat:
         members = chat.members.split()
         del members[members.index(str(current_user.id))]
         if len(members) != 0:
-            name = db_sess.query(User.name).filter(User.id == members[0]).first()
-            try:
-                emit("create_chat", {"chat_id": str(chat_id),
-                                     "name": name, "is_primary": data["primary"]},
-                     to=f"u{members[0]}")
-            except Exception:
-                print("ERROR")
+            admins = [_[0] for _ in db_sess.query(Admin.id_user).all()]
+            if int(members[0]) in admins:
+                admin_flag = True
+            name_user = db_sess.query(User.name).filter(User.id == members[0]).first()[0]
+            emit("create_chat", {"chat_id": str(chat_id),
+                                 "name": current_user.name[0], "is_primary": data["primary"]},
+                 to=f"u{members[0]}", namespace="/")
+
     else:
         members = chat.members.split()
         c_id = str(current_user.id)
+        print(members, "members")
         for member in members:
-            if c_id != member:
-                try:
-                    emit("create_chat", {"chat_id": str(chat_id),
+            if str(c_id) != member:
+                print(member)
+                emit("create_chat", {"chat_id": str(chat_id),
                                          "name": chat.name, "is_primary": data["primary"]},
-                         to=f"u{member}")
-                except Exception:
-                    print("ERROR")
+                         to=f"u{member}", namespace="/")
+
         db_sess.close()
-    print(chat_id)
-    return {"chat_id": str(chat_id), "name": data["name"], "is_primary": data["primary"]}
+    return {"chat_id": str(chat_id), "name": name_user, "is_primary": data["primary"], "admin": admin_flag}
 
 
 @mg.route("/pinned", methods=["POST"])
@@ -205,7 +203,6 @@ def an_pinned():
 
 @mg.route("/last_m", methods=["POST"])
 def last_m():
-
     # добавить socketio
     return {"log": True}
 

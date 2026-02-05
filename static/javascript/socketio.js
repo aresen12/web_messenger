@@ -52,8 +52,7 @@ socket.on('message', (data) => {
 });
 
 socket.on('create_chat', (data) => {
-    alert('refresh page');
-    gener_chat("email", data["chat_id"], data["name"], 1, data["is_primary"]);
+    gener_chat("email", data["chat_id"], data["name"], 1, data["is_primary"], "set_recipient", {"time" : "2023-01-01 00:00:00.0"});
 });
 
 //, html_m, other, text
