@@ -61,6 +61,10 @@ socket.on('emoji_client', (data) => {
     gener_emoji(data["id_emoji"], data["id_mess"], 0, data['value'])
 });
 
+socket.on('delete_message', (data) => {
+    document.getElementById("m" + data["message_id"]).remove();
+})
+
 
 
 socket.on('join_event', (data) => {

@@ -382,10 +382,8 @@ function create_chat(list_members, name, is_primary){
     contentType:'application/json',
     data: JSON.stringify({"name":name, "list_members": list_members, "primary":is_primary}),
     success: function(json){
-          // update chats list
           gener_chat("email", json["chat_id"], json["name"], 1, is_primary, "set_recipient",
           {"time" : "2023-01-01 00:00:00.0"}, 0, json["admin"]);
-//          get_chats('email', "set_recipient");
           document.getElementById("global_menu_d").style.display = 'none';
           set_recipient(json["chat_id"], json["is_primary"], json["name"], 1, 0);
         },
@@ -401,7 +399,6 @@ function send(id){
     get_chats_gl("global_menu", id);
     document.getElementById("global_menu_d").style.display = "block";
 }
-
 
 
 function post_password() {
@@ -434,9 +431,6 @@ function delete_mess(id_mess){
     dataType: 'json',
     contentType:'application/json',
     data: JSON.stringify({"id":id_mess}),
-    success: function(html){
-          show();
-        },
     error: function(err) {
         console.error(err);
     }

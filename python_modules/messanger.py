@@ -135,7 +135,7 @@ def create_chat():
                 admin_flag = True
             name_user = db_sess.query(User.name).filter(User.id == members[0]).first()[0]
             emit("create_chat", {"chat_id": str(chat_id),
-                                 "name": current_user.name[0], "is_primary": data["primary"]},
+                                 "name": current_user.name, "is_primary": data["primary"]},
                  to=f"u{members[0]}", namespace="/")
 
     else:
@@ -347,18 +347,7 @@ def delete_mess():
     data = request.get_json()
     db_sess = db_session.create_session()
     mes = db_sess.query(Message).filter(Message.id == data["id"]).first()
-    db_sess.delete(mes)
-    db_sess.commit()
-    db_sess.close()
-    return {"log": "True"}
-
-
-@mg.route("/delete_chat/<int:id_>", methods=["DELETE"])
-def delete_chat(id_):
-    if not current_user.admin:
-        return redirect("/")
-    db_sess = db_session.create_session()
-    mes = db_sess.query(Chat).filter(Chat.id == id_).first()
+    emit('delete_message', {"message_id": mes.id}, to=str(mes.chat_id), namespace="/")
     db_sess.delete(mes)
     db_sess.commit()
     db_sess.close()
@@ -367,7 +356,6 @@ def delete_chat(id_):
 
 @mg.route("/get_chats")
 def mg_get_chats():
-    # return {"test":True}
     return {"chats": get_chats()}
 
 
