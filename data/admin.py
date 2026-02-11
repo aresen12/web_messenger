@@ -10,9 +10,9 @@ class Admin(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'admins'
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
-    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="")
     id_user = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    permissions = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    permissions = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="")
     time_activiti = sqlalchemy.Column(sqlalchemy.String, default=datetime.datetime.now)
     password = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="")
 
@@ -30,6 +30,9 @@ class Admin(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     def __repr__(self):
         return f"{self.name} {self.permissions}"
+
+    def activiti(self):
+        self.time_activiti = datetime.datetime.now()
 
 
 permissions = {

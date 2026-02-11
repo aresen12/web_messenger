@@ -27,7 +27,6 @@ class Chat(SqlAlchemyBase, UserMixin, SerializerMixin):
 def get_chats():
     db_sess = db_session.create_session()
     chats = db_sess.query(Chat).filter(Chat.status == 1).all()
-    db_sess.close()
     my_chat = get_my_chat()
     new = []
     if my_chat["id"]:
@@ -62,4 +61,5 @@ def get_chats():
                                              }})
     new.sort(key=lambda x: x["last_message"]["time"], reverse=True)
     new.sort(key=lambda x: x["pinned"], reverse=True)
+    db_sess.close()
     return new

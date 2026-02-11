@@ -243,7 +243,7 @@ def edit_mess():
         mess.message = data["new_text"]
         mess.read = 0
         db_sess.commit()
-        db_sess.close()
+    db_sess.close()
     return {"log": True}
 
 
@@ -483,7 +483,6 @@ def get_json_mess_my():
     if current_user.is_authenticated:
         data = request.get_json()
         db_sess = db_session.create_session()
-        print(data["chat_id"])
         messages = db_sess.query(MyMessage).filter(MyMessage.chat_id == data["chat_id"]).all()
         js = {"messages": [], "files": get_files(f"my" + data["chat_id"], db_sess)}
         messages.sort(key=lambda x: x.time)
@@ -503,6 +502,7 @@ def get_json_message():
         db_sess = db_session.create_session()
         mem = db_sess.query(Chat.members).filter(Chat.id == data["chat_id"]).first()
         if not (str(current_user.id) in mem[0].split()):
+            db_sess.close()
             return {"log": "Permission error"}
         messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).all()
         js = {"messages": [], "files": get_files(data["chat_id"], db_sess), "current_user": current_user.id}
@@ -593,6 +593,7 @@ def get_json_mess():
         db_sess = db_session.create_session()
         mem = db_sess.query(Chat.members).filter(Chat.id == data["chat_id"]).first()
         if not (str(current_user.id) in mem[0].split()):
+            db_sess.close()
             return {"log": "Permission error"}
         messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).all()
         js = {"messages": [], "files": get_files(data["chat_id"], db_sess), "current_user": current_user.id}

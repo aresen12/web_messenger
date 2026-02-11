@@ -72,7 +72,7 @@ def room_message(data):
             emit('message', {"message": data['message'], "time": mess.get_time(), "id_m": mess.id,
                              "file2": mess.img, "html": data["html"], "name": current_user.name,
                              "read": 0, "id_sender": current_user.id, "pinned": mess.pinned}, to=data['room'])
-            db_sess.close()
+    db_sess.close()
 
 
 @socketio.on('connect')

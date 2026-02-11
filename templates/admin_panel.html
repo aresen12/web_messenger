@@ -66,8 +66,11 @@
             </li>
             {% endfor %}
         </ul>
-        <button class="edit-btn">Отправить на голосование</button>
-        <button class="edit-btn">Назначить нового администратора</button>
+        <button class="info-btn btn-primary">Отправить на голосование</button>
+        <button class="info-btn btn-primary" onclick="show_no_admin()">Назначить нового администратора</button>
+        <ul class="list-group:" id="new_admins"></ul>
+        name new admin
+        <input id="name_new_admin">
     </div>
 </div>
 <script src="/static/javascript/panel/panel.js"></script>

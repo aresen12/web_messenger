@@ -151,3 +151,36 @@ def edit_password():
         db_sess.commit()
     db_sess.close()
     return {"log": True}
+
+
+@panel.route("/get_not_admin")
+def get_no_admin_html():
+    db_sess = db_session.create_session()
+    users = db_sess.query(User).all()
+    admins = db_sess.query(Admin.id_user).all()
+    db_sess.close()
+    return {"users": [{"id": user.id, "name": user.name, "username": user.email} for user in users
+                      if not (user.id in admins)]
+            }
+
+
+@panel.route("/add_new_admin", methods=["POST"])
+def add_new_admin():
+    data = request.get_json()
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        admin = db_sess.query(Admin).filter(Admin.id_user == current_user.id).first()
+        if not admin.check_password(data["password"]):
+            db_sess.close()
+            return abort(400)
+            # не помню коды точно bad req
+        admin.activiti()
+        admin_new = Admin()
+        admin_new.name = data["name"]
+        admin_new.id_user = data["id_user"]
+        admin_new.set_password("CHANGE PASSWORD")
+        db_sess.add(admin_new)
+        db_sess.commit()
+        db_sess.close()
+        return {"log": True}
+
