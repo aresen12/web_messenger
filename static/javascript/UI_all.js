@@ -161,7 +161,8 @@ function unset_emoji(id_message){
 
 function gener_emoji(id_mess, html_m, other, id_emoji){
     var em_div = document.getElementById("em" + html_m);
-    em_div.classList = "emoji"
+    console.log(em_div);
+    em_div.classList = "emoji";
     if (document.getElementById(html_m + "emoji_btn_id" + id_emoji)){
         var btn = document.getElementById(html_m + "emoji_btn_id" + id_emoji);
           if (btn.textContent.length  && Number(btn.textContent[1])){

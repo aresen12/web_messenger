@@ -7,6 +7,7 @@ from data.admin import Admin, permissions
 from data.user import User
 from data.alerts import new_alert, Alert
 from data.actions import Action, new_action
+from data.admin_voting import Voting
 import datetime
 
 panel = Blueprint('admin_panel', __name__, url_prefix='/panel')
@@ -22,9 +23,10 @@ def main_page():
                 return {"log": "permission denied"}
             activiti = db_sess.query(Admin.name, Admin.time_activiti, Admin.permissions).all()
             users = db_sess.query(User).all()
+            voting = db_sess.query(Voting).all()
             actions = db_sess.query(Action).all()
             db_sess.close()
-            return render_template("admin_panel.html", activiti_list=activiti, user_list=users,
+            return render_template("admin_panel.html", voting=voting, activiti_list=activiti, user_list=users,
 
                                   actions=actions, permissions=permissions)
         return {"log": "Not authenticated"}
@@ -180,7 +182,26 @@ def add_new_admin():
         admin_new.id_user = data["id_user"]
         admin_new.set_password("CHANGE PASSWORD")
         db_sess.add(admin_new)
+        db_sess.add(new_action(3, current_user.id))
         db_sess.commit()
         db_sess.close()
         return {"log": True}
 
+
+@panel.route("/admin_voting", methods=["POST"])
+def admin_voting():
+    data = request.get_json()
+    if current_user.is_authenticated:
+        db_sess = db_session.create_session()
+        admin = db_sess.query(Admin).filter(Admin.id_user == current_user.id).first()
+        if not admin.check_password(data["password"]):
+            db_sess.close()
+            return abort(400)
+            # не помню коды точно bad req
+        admin.activiti()
+        vote = db_sess.query(Voting).filter(Voting.id == data["voting_id"]).first()
+        vote.voting(current_user.id,data["bool"])
+        db_sess.add(new_action(4, current_user.id))
+        db_sess.commit()
+        db_sess.close()
+    return {"log": True}

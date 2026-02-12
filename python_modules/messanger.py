@@ -348,6 +348,9 @@ def delete_mess():
     db_sess = db_session.create_session()
     mes = db_sess.query(Message).filter(Message.id == data["id"]).first()
     emit('delete_message', {"message_id": mes.id}, to=str(mes.chat_id), namespace="/")
+    list_emoji = db_sess.query(Message).filter(Message.type == 2).filter(Message.html_m == data["id"]).all()
+    for _ in list_emoji:
+        db_sess.delete(_)
     db_sess.delete(mes)
     db_sess.commit()
     db_sess.close()

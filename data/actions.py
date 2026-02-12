@@ -26,6 +26,10 @@ def new_action(type_, id_action, user_id=0, comment=""):
         action.about = f"Удаление аккаунта: {user_id}"
     elif type_ == 2:
         action.about = "Создание новости"
+    elif type_ == 3:
+        action.about = "Добавление администратора"
+    elif type_ == 4:
+        action.about = "Голосование"
     else:
         pass
     if comment != "":
