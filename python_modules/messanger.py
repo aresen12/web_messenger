@@ -247,16 +247,16 @@ def edit_mess():
     return {"log": True}
 
 
+
 @mg.route("/send_voice/<chat_id>", methods=["POST"])
 def send_voice(chat_id):
     db_sess = db_session.create_session()
     f = request.files['voice']
-    print(f.filename)
-    os.chdir('../static/img/data')
+    os.chdir('static/img/data')
     dd = len(os.listdir())
-    os.chdir("../..")
-    os.chdir("../..")
-    os.chdir("../..")
+    os.chdir("..")
+    os.chdir("..")
+    os.chdir("..")
     file = open(f"static/img/data/{dd}.mp3", mode="wb")
     file.write(f.read())
     file.close()

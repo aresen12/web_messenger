@@ -197,6 +197,16 @@ document.addEventListener('click', (e) => {
             exit_menu();
         }
     }
+    if (document.getElementById("global_menu_d").style.display == "block"){
+        var global_menu_d = document.querySelector("#global_menu_d");
+        var global_menu = document.querySelector("#global_menu");
+       var tr2 = e.composedPath().includes(global_menu_d);
+        var tr = e.composedPath().includes(global_menu);
+        console.log(tr2, tr);
+        if (tr2 && !tr){
+            close_global_menu();
+        }
+    }
     var div = document.querySelector('#menu_create_div');
     var withinBoundaries = e.composedPath().includes(div);
     var div2 = document.querySelector('#menu_chat_div_all');
@@ -667,7 +677,7 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
     name_chat_div.textContent = name_chat;
     console.log(admin);
     if (admin){
-        name_chat_div.innerHTML +=`<svg width="20px" height="20px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--emojione" preserveAspectRatio="xMidYMid meet"><circle cx="32" cy="32" r="30" fill="#4bd37b"></circle><path fill="#ffffff" d="M46 14L25 35.6l-7-7.2l-7 7.2L25 50l28-28.8z"></path></svg>`;
+        name_chat_div.innerHTML +=`<svg width="${icon_size / 2.6}px" height="${icon_size / 2.6}px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--emojione" preserveAspectRatio="xMidYMid meet"><circle cx="32" cy="32" r="30" fill="#4bd37b"></circle><path fill="#ffffff" d="M46 14L25 35.6l-7-7.2l-7 7.2L25 50l28-28.8z"></path></svg>`;
     }
     name_chat_div.classList = "n-c";
      name_chat_div.appendChild(last_time);
