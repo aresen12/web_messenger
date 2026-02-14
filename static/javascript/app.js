@@ -122,6 +122,7 @@ function un_pinned(mess_id){
 
 
 function set_recipient(id_chat, is_primary, name, status, pinned) {
+    document.getElementById("ident").textContent = "";
     document.getElementById("pinned").innerHTML = "";
     document.getElementById("menu_chat_div_all").style.display = "block";
     var st_chat = document.getElementById("chat_id").value;
@@ -192,6 +193,7 @@ function exit_chat(){
         document.getElementById('menu-chat-ul').innerHTML = '';
     } catch(e){
     }
+    document.getElementById("ident").textContent = "";
     document.getElementById("pinned").innerHTML = "";
     document.getElementById("images_list").textContent = "";
     socket.emit('leave', {room: st_chat});
@@ -1082,7 +1084,6 @@ function get_new_message_id(){
         type: 'GET',
         dataType: 'json',
         success: function(json){
-            console.log(json);
             for (var j = 0; j < json["message"].length; j++){
                 var mess = json["message"][j];
                 let other = !(mess["id_sender"] == id_user);
@@ -1143,6 +1144,7 @@ function pin_chat(chat_id){
 
 function set_my_recipient(id_chat){
     document.getElementById("pinned").innerHTML = "";
+    document.getElementById("ident").textContent = "";
     document.getElementById("menu_chat_div_all").style.display = "block";
     var st_chat = document.getElementById("chat_id").value
     document.getElementById("btn_down").style.display = 'block';
@@ -1152,7 +1154,6 @@ function set_my_recipient(id_chat){
     try{
         document.getElementById("my_chat"+ id_chat.slice(2)).style.background =  "#6699cc";
     } catch (error) {
-        console.log(id_chat, id_chat.slice(2));
         setTimeout(function() {
             var chat2 = document.getElementById("my_chat"+ id_chat);
             chat2.style.background =  "#f1f1f1";
@@ -1203,7 +1204,6 @@ function search_in_message(){
         contentType:'application/json',
         data: JSON.stringify({"chat_id": chat_id, "search_text": text}),
         success: function(json){
-            console.log(json);
             if (!document.getElementById("btn_search_down")){
                 var btn_down = document.createElement("button");
                 var btn_up = document.createElement("button");

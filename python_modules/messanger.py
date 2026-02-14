@@ -375,8 +375,12 @@ def del_chat():
         data = request.get_json()
         db_sess = db_session.create_session()
         chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
-        if str(current_user.id) in chat.members.split():
+        memebers = chat.members.split()
+        if str(current_user.id) in memebers:
             chat.status = 2
+            for member in memebers:
+                if str(current_user.id) != member:
+                    emit("delete_chat", {"chat_id": data["id_chat"]}, to=f"u{member}", namespace="/")
         else:
             db_sess.close()
             raise PermissionError

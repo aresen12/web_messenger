@@ -59,16 +59,26 @@ socket.on('emoji_client', (data) => {
     gener_emoji(data["id_emoji"], data["id_mess"], !(data["id_sender"] == id_user), data['value'])
 });
 
+
+socket.on('delete_chat', (data) => {
+    if (document.getElementById("chat_id") == data["chat_id"]){
+        exit_chat();
+    }
+    document.getElementById("chat" + data["chat_id"]).remove();
+});
+
+
 socket.on('delete_message', (data) => {
     document.getElementById("m" + data["message_id"]).remove();
-})
+});
 
 
 socket.on('delete_emoji', (data) => {
     document.getElementById(`${data["message_id_on_emoji"]}emoji_btn_id${data["id_emoji"]}`);
     var btn = document.getElementById(data["message_id_on_emoji"] + "emoji_btn_id" + data["id_emoji"]);
     if (data['id_sender'] == id_user){
-        btn.style.background = "none";
+        btn.style.background = "#9999ff";
+        btn.setAttribute("onclick", `set_emoji(${data["message_id_on_emoji"]}, ${data["id_emoji"]})`);
     }
     console.log(btn.textContent);
     if (btn.textContent.length  && Number(btn.textContent.split(" ")[1])){

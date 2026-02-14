@@ -1,5 +1,5 @@
-const emoji = ["💘", "❤️", "❤️‍🔥", "😭", "👌", "😨", "👍", "🍌", "🌭", "💋",
-"🤯", "👏", "🍾", "👎", "🔥", "🥰", "😁", "🤔", "😱", "🤬", "😢", "🎉", "🤩", "🤮", "💩", "🙏",
+const emoji = ["🔥", "❤️", "👍", "😁", "👎", "❤️‍🔥", "😭", "👌", "😨",  "🍌", "🌭", "💋",
+"🤯", "👏", "🍾",  "💘", "🥰",  "🤔", "😱", "🤬", "😢", "🎉", "🤩", "🤮", "💩", "🙏",
 "🕊️", "🤡", "🥱", "🥴", "😍", "🐳", "🌚", "💯", "😂", "⚡️", "🏆", "💔", "🤨", "😐", "🍓", "🖕",
  "😈", "😴", "🤓", "👻", "👨‍💻", "🙈", "👀", "😇", "🤝", "✍️", "🤗", "🫡", "🎅", "🎄", "⛄️", "💅",
 "🤪", "🗿", "🆒", "🙉", "🦄", "😘", "💊", "🙊", "😎", "👾", "🤷", "🤷‍♀️", "🤷‍♂️", "😡"];
@@ -100,7 +100,6 @@ function showdiv1(Div){
 
 function scroll_carousel(number_img){
     var list_Img = document.getElementById("images_list").value.split(" ");
-    console.log(list_Img);
     document.getElementById("watch_img").src = "/static/img/" + list_Img[number_img];
     var right_index = number_img + 1;
     var left_index = number_img - 1;
@@ -184,7 +183,7 @@ function gener_emoji(id_mess, html_m, other, id_emoji){
     } else {
         var btn = document.createElement("button");
         btn.textContent = emoji[id_emoji];
-        btn.classList = "info-btn";
+        btn.classList = "info-btn emoji";
         btn.id = html_m + "emoji_btn_id" + id_emoji;
         em_div.appendChild(btn);
     }
@@ -192,7 +191,6 @@ function gener_emoji(id_mess, html_m, other, id_emoji){
             btn.style.background = "#6699cc";
              btn.setAttribute("onclick", `unset_emoji(${id_mess})`);
     } else {
-        console.log(btn.style.background)
         if (btn.style.background != "#6699cc" && btn.style.background != "rgb(102, 153, 204)") {
             btn.setAttribute("onclick", `set_emoji(${html_m}, ${id_emoji})`);
         }
@@ -209,7 +207,6 @@ document.addEventListener('click', (e) => {
         var div_emoji_menu = document.querySelector('#emojis_menu');
         var bool_emoji_menu = e.composedPath().includes(button_emoji_menu);
         var bool_is_emoji_menu = (menu_id ==  "emojis_menu");
-        console.log(bool_is_emoji_menu, bool_emoji_menu, !t && !t2 && !bool_is_emoji_menu, (!bool_emoji_menu && bool_is_emoji_menu));
         if ((!t && !t2 && !bool_is_emoji_menu) || (!bool_emoji_menu && bool_is_emoji_menu)){
             exit_menu();
         }
@@ -217,9 +214,8 @@ document.addEventListener('click', (e) => {
     if (document.getElementById("global_menu_d").style.display == "block"){
         var global_menu_d = document.querySelector("#global_menu_d");
         var global_menu = document.querySelector("#global_menu");
-       var tr2 = e.composedPath().includes(global_menu_d);
+        var tr2 = e.composedPath().includes(global_menu_d);
         var tr = e.composedPath().includes(global_menu);
-        console.log(tr2, tr);
         if (tr2 && !tr){
             close_global_menu();
         }
@@ -234,9 +230,6 @@ document.addEventListener('click', (e) => {
     if (!flag) {
         document.getElementById("menu-chat").style.display = 'none'; // скрываем элемент, так как клик был за его пределами
     };
-//    if (menu_id != "" && !mobile && !t2){
-//        exit_menu();
-//      };
 })
 
 
@@ -515,7 +508,6 @@ function show_in_chat_search(){
 
 
 function add_files_label(files_div){
-    console.log(document.getElementById("chat_id").value);
     $.ajax({
         url: '/m/get_files_menu',
         type: 'POST',
@@ -523,7 +515,6 @@ function add_files_label(files_div){
         contentType:'application/json',
         data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
         success: function(json_data){
-            console.log(json_data);
             if (json_data.length == 0){
                 files_div.textContent = "Файлы не найдены";
             };
@@ -692,12 +683,11 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
     const name_chat_div = document.createElement('div');
     name_chat_div.id = "n_c" + chat_id;
     name_chat_div.textContent = name_chat;
-    console.log(admin);
     if (admin){
-        name_chat_div.innerHTML +=`<svg width="${icon_size / 2.6}px" height="${icon_size / 2.6}px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--emojione" preserveAspectRatio="xMidYMid meet"><circle cx="32" cy="32" r="30" fill="#4bd37b"></circle><path fill="#ffffff" d="M46 14L25 35.6l-7-7.2l-7 7.2L25 50l28-28.8z"></path></svg>`;
+        name_chat_div.innerHTML += `<svg width="${icon_size / 2.6}px" height="${icon_size / 2.6}px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--emojione" preserveAspectRatio="xMidYMid meet"><circle cx="32" cy="32" r="30" fill="#4bd37b"></circle><path fill="#ffffff" d="M46 14L25 35.6l-7-7.2l-7 7.2L25 50l28-28.8z"></path></svg>`;
     }
     name_chat_div.classList = "n-c";
-     name_chat_div.appendChild(last_time);
+    name_chat_div.appendChild(last_time);
     name_chat_div.appendChild(last_mess_div);
     btn.appendChild(icon_chat);
     btn.appendChild(name_chat_div);
