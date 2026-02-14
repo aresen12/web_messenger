@@ -347,7 +347,14 @@ def delete_mess():
     data = request.get_json()
     db_sess = db_session.create_session()
     mes = db_sess.query(Message).filter(Message.id == data["id"]).first()
-    emit('delete_message', {"message_id": mes.id}, to=str(mes.chat_id), namespace="/")
+    mes: Message
+    print(data['id'])
+    if mes.type == 1:
+        emit('delete_message', {"message_id": mes.id}, to=str(mes.chat_id), namespace="/")
+    else:
+        emit('delete_emoji', {"message_id_on_emoji": mes.html_m,
+                              "id_emoji": mes.message, "id_sender": mes.id_sender, "id_message_emoji": mes.id},
+             to=str(mes.chat_id),  namespace="/")
     list_emoji = db_sess.query(Message).filter(Message.type == 2).filter(Message.html_m == data["id"]).all()
     for _ in list_emoji:
         db_sess.delete(_)

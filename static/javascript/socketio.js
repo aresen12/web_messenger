@@ -5,24 +5,22 @@ const socket = io.connect();
 function set_emoji(id_mess, id_emoji){
     var div = document.getElementById(id_mess + "emoji_btn_id" + id_emoji);
     if (div) {
-        if (div.style.background != "#6699cc")
-        {
-        document.getElementById(menu_id).style.display = "none";
-    globalThis.menu_id = '';
-        return 500;
+        if (div.style.background == "#6699cc"){
+            document.getElementById(menu_id).style.display = "none";
+            globalThis.menu_id = '';
+            alert(500);
+            return 500;
         }
     }
-//    if (!div || div.style.background != "#6699cc"){
-        var chat_id =  document.getElementById("chat_id").value;
-        socket.emit('emoji', {chat_id: chat_id, id_mess: id_mess, value: id_emoji});
-//    } else {
-//        alert("Вы уже поставили эмоцию!");
-//    }
-    document.getElementById(menu_id).style.display = "none";
-    globalThis.menu_id = '';
+    var chat_id =  document.getElementById("chat_id").value;
+    socket.emit('emoji', {chat_id: chat_id, id_mess: id_mess, value: id_emoji});
+    if (menu_id){
+        document.getElementById(menu_id).style.display = "none";
+        globalThis.menu_id = '';
+    }
 }
 
-            // Handle form submission
+
 function send_io_mess() {
     const input = document.getElementById('about');
     const chat_id = document.getElementById('chat_id').value;
@@ -58,11 +56,28 @@ socket.on('create_chat', (data) => {
 //, html_m, other, text
 socket.on('emoji_client', (data) => {
 //    пока id не работает
-    gener_emoji(data["id_emoji"], data["id_mess"], 0, data['value'])
+    gener_emoji(data["id_emoji"], data["id_mess"], !(data["id_sender"] == id_user), data['value'])
 });
 
 socket.on('delete_message', (data) => {
     document.getElementById("m" + data["message_id"]).remove();
+})
+
+
+socket.on('delete_emoji', (data) => {
+    document.getElementById(`${data["message_id_on_emoji"]}emoji_btn_id${data["id_emoji"]}`);
+    var btn = document.getElementById(data["message_id_on_emoji"] + "emoji_btn_id" + data["id_emoji"]);
+    if (data['id_sender'] == id_user){
+        btn.style.background = "none";
+    }
+    console.log(btn.textContent);
+    if (btn.textContent.length  && Number(btn.textContent.split(" ")[1])){
+        btn.textContent = emoji[data["id_emoji"]] + (Number(btn.textContent.split(" ")[1]) - 1);
+    } else {
+        var em_div = document.getElementById("em" + data["message_id_on_emoji"]);
+        em_div.classList = "";
+        btn.remove();
+    }
 })
 
 
@@ -109,76 +124,6 @@ socket.on('message_other', (data) => {
     if (document.getElementById("chat_id").value != data["chat_id"]){
         notification(data["text"], "");
 }
-});
-
-
-async function get_cand(num){
-    console.log(num, globalThis.my_peer);
-    globalThis.my_peer.onicecandidate = evt => {
-        send_candidate(evt.candidate?.candidate, num);
-        console.log(evt.candidate?.candidate);
-//    return 0;
-  }
-}
-
-
-socket.on('send_offer', (data) => {
-    if (data["current_user"] != id_user){
-        globalThis.my_peer.setLocalDescription(data["data"]["offer"]);
-//        candidate = get_cand(1);
-//        console.log(candidate, 1);
-
-    }
-});
-
-async function add_cand(candidate_data){
-//.iceCandidate
-    const iceCandidate = new RTCIceCandidate({
-  candidate: candidate_data["candidate"],
-  sdpMLineIndex: 12345, // don't make it up, you get this in onicecandidate
-});
-            await globalThis.my_peer.addIceCandidate(iceCandidate);
-}
-
-
-socket.on('send_cand_to_user1', (data) => {
-
-    console.log(data["current_user"] , id_user, "send_cand_to_user1", data["current_user"] != id_user);
-    if (data["current_user"] != id_user){
-//    socket.emit("send_candidate2", {'chat_id':"s"});
-//        candidate = get_cand(2);
-//        console.log(data["data"])
-        add_cand(data["data"]);
-//        try{
-//            console.log(globalThis.my_peer, data["data"], new RTCIceCandidateInit(data["data"]));
-//
-//            globalThis.my_peer.addIceCandidate(new RTCIceCandidateInit(data["data"]));
-//            console.log("sucsesful");
-//        }catch (e){
-//            console.log("bad_cand")
-//
-//        }
-    } else {
-        console.log("повтор")
-    }
-});
-
-
-socket.on('send_cand_to_user2', (data) => {
-    console.log(data["current_user"] , id_user, "send_cand_to_user2");
-    if (data["current_user"] != id_user){
-            add_cand(data["data"])
-//        try{
-//        globalThis.my_peer.addIceCandidate(data["data"]);
-//        console.log("sucsesful");
-//        }catch (e){
-//            console.log("bad_cand");
-//        }
-        my_peer.onaddstream = function(event) {
-    videoElement.srcObject = event.stream;
-};
-// вроде теперь подключилось
-    }
 });
 
 

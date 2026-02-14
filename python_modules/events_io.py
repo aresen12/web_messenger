@@ -94,10 +94,10 @@ def handle_disconnect():
 def send_emoji(data):
     db_sess = db_session.create_session()
     mess = new_emoji(data["value"], data["id_mess"], data["chat_id"], current_user.id, current_user.name)
-    emit('emoji_client', {"id_emoji": mess.id, "id_mess": data["id_mess"], "name": mess.name_sender,
-                          "id_sender": mess.id_sender, "value": data["value"]}, to=data["chat_id"])
     db_sess.add(mess)
     db_sess.commit()
+    emit('emoji_client', {"id_emoji": mess.id, "id_mess": data["id_mess"], "name": mess.name_sender,
+                          "id_sender": current_user.id, "value": data["value"]}, to=data["chat_id"])
     db_sess.close()
 
 
