@@ -77,7 +77,7 @@ socket.on('delete_emoji', (data) => {
     document.getElementById(`${data["message_id_on_emoji"]}emoji_btn_id${data["id_emoji"]}`);
     var btn = document.getElementById(data["message_id_on_emoji"] + "emoji_btn_id" + data["id_emoji"]);
     if (data['id_sender'] == id_user){
-        btn.style.background = "#9999ff";
+        btn.style.background = "#91b3f2";
         btn.setAttribute("onclick", `set_emoji(${data["message_id_on_emoji"]}, ${data["id_emoji"]})`);
     }
     console.log(btn.textContent);
@@ -85,7 +85,6 @@ socket.on('delete_emoji', (data) => {
         btn.textContent = emoji[data["id_emoji"]] + (Number(btn.textContent.split(" ")[1]) - 1);
     } else {
         var em_div = document.getElementById("em" + data["message_id_on_emoji"]);
-        em_div.classList = "";
         btn.remove();
     }
 })

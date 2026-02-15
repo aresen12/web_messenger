@@ -172,7 +172,7 @@ function unset_emoji(id_message){
 
 function gener_emoji(id_mess, html_m, other, id_emoji){
     var em_div = document.getElementById("em" + html_m);
-    em_div.classList = "emoji";
+//    em_div.classList = "emoji";
     if (document.getElementById(html_m + "emoji_btn_id" + id_emoji)){
         var btn = document.getElementById(html_m + "emoji_btn_id" + id_emoji);
         if (btn.textContent.length  && Number(btn.textContent.split(" ")[1])){
@@ -188,10 +188,10 @@ function gener_emoji(id_mess, html_m, other, id_emoji){
         em_div.appendChild(btn);
     }
     if (!other){
-            btn.style.background = "#6699cc";
+            btn.style.background = "#3574e8";
              btn.setAttribute("onclick", `unset_emoji(${id_mess})`);
     } else {
-        if (btn.style.background != "#6699cc" && btn.style.background != "rgb(102, 153, 204)") {
+        if (btn.style.background != "#3574e8") {
             btn.setAttribute("onclick", `set_emoji(${html_m}, ${id_emoji})`);
         }
     }
