@@ -23,9 +23,9 @@
                 </div>
             {% endfor %}
         </p>
-        <p class="login-p">{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p  class="login-p" >{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-        <a class="btn btn-primary info-btn" href="/reset_password">Востановить пароль</a>
+        <p class="login-p">{{ form.remember_me( class="login-p") }} {{ form.remember_me.label }}</p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary login-p") }}</p>
+        <a class="btn btn-primary info-btn login-p" href="/reset_password">Востановить пароль</a>
         <div class="login-p alert-danger">{{ message }}</div>
     </form>
 {% endblock %}
