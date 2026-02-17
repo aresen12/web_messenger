@@ -290,6 +290,12 @@ bottom: 0px;
     margin:0px;
 }
 
+.carousel-buttons {
+    max-height:80vh;
+    position:relative;
+    top: 10vh;
+}
+
 
 .content-email {
     position:relative;
@@ -309,7 +315,7 @@ bottom: 0px;
     color: white;
     border-radius: 10px;
      width:fit-content;
-     min-width: 25  px;
+     height:25px;
  }
  .date_k {
     display:flex;

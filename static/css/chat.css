@@ -98,9 +98,20 @@
     .my-message {
         font-size: 25pt;
         width:60vw;
-        left:15vw;
+        left:30vw;
         }
 
+    .submit_btn{
+        height: 80px;
+        width:70px;
+    }
+    .download-img-a{
+        right: 15vw;
+    }
+    .big-close-on-mobile{
+        font-size: 7vw;
+        right: 20px;
+    }
 
     .mess-admin {
         position:fixed;

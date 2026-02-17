@@ -26,7 +26,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
             }
      const messagesDiv = document.getElementById('content');
      const messageItem = document.createElement('div');
-    images = ["bmp", "jpg", "png", "svg", "webp"]
+    images = ["bmp", "jpg", "png", "svg", "webp", "jpeg"]
     audio = ["mp3", "flac", "m4a"]
     video = ["mp4", "mov"]
     if (other) {
@@ -143,6 +143,11 @@ if (mobile){
     document.getElementById("plus_svg").setAttribute("width", "100px");
     document.getElementById("chat_header").style.display = "none";
     document.getElementById("btn_settings_svg").setAttribute("width", "7vw");
+    document.getElementById("svg_download_img_a").setAttribute("width", "7vw");
+    document.getElementById("exit_chat_svg").setAttribute("height", "6vh");
+//    document.getElementById("Capa_1").setAttribute("height", "9vw");
+    document.getElementById("Capa_1").setAttribute("width", "100vw");
+
     };
 
 

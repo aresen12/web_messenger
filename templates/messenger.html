@@ -186,7 +186,7 @@
             <img src="" class="background-img" id="background-img">
             <div id="chat_header" class="chat-header">
                 <button class="info-btn" id="button" onclick="exit_chat()" style="position:relative;left:0vw;">
-            <svg height="50px" viewBox="-3 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"  fill="#707579" stroke="#707579"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <svg id="exit_chat_svg" height="50px" viewBox="-3 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"  fill="#707579" stroke="#707579"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                 <g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g>
                     <path d="M13.114 2.887c-7.243 0-13.114 5.871-13.114 13.113s5.871 13.113 13.114 13.113c7.242 0 13.112-5.871 13.112-13.113s-5.87-13.113-13.112-13.113zM13.114 28.064c-6.653 0-12.065-5.412-12.065-12.064s5.412-12.063 12.065-12.063c6.652 0 12.063 5.412 12.063 12.063s-5.411 12.064-12.063 12.064z" fill="#ffff">
@@ -307,7 +307,7 @@
             <textarea class="text-form form-control" id="about" name="about" contenteditable="true"
                       style="resize: none;"></textarea>
             <button onclick="submit_form();" class="btn btn-primary submit_btn">
-                <svg width="30px" height="29px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                <svg width="30px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                       x="0px" y="0px" viewBox="0 0 466.897 466.897"
                      style="enable-background:new 0 0 466.897 466.897;" xml:space="preserve"><g><g>
                     <polygon style="fill:#010002;" points="374.105,73.807 203.974,318.03 203.974,432.042 259.801,358.275
@@ -395,27 +395,26 @@
 <div class="watch-img" id="watch" style="display:none;">
     <input id="images_list" type="text" style="display:none;">
     <div class="close">
-        <button onclick="showdiv1('watch')" type="button" class="btn-close btn-close-white close-btn" aria-label="Close"></button>
+            <button onclick="showdiv1('watch')" type="button" class="btn-close btn-close-white close-btn big-close-on-mobile" aria-label="Close"></button>
 <!--        система палка верёвка right: WIDTH_BUTTON_CLOSE;-->
         <a id="download-img-a" class="download-img-a" download="">
-        <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg id="svg_download_img_a" width="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 14V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V14M12 15L12 3M12 15L8 11M12 15L16 11" stroke="rgba(255,255,255,.55)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         </a>
     </div>
     <div class="win">
-
         <img src="" id="watch_img" class="car-img" style="">
-        <button id="carousel_left" class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <button style="top:10vh;" id="carousel_left" class="carousel-control-prev carousel-buttons" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Previous</span>
   </button>
-  <button id="carousel_right" class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+  <button style="top:10vh;" id="carousel_right" class="carousel-control-next carousel-buttons" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
         <button id="send2_btn" style="display:none;" onclick="send_img();" class="btn btn-primary submit_btn ">
-                <svg width="30px" height="29px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                <svg width="30px" height="29px" version="1.1" id="Capa_2" xmlns="http://www.w3.org/2000/svg"
                       x="0px" y="0px" viewBox="0 0 466.897 466.897"
                      style="enable-background:new 0 0 466.897 466.897;" xml:space="preserve"><g><g>
                     <polygon style="fill:#010002;" points="374.105,73.807 203.974,318.03 203.974,432.042 259.801,358.275 410.505,466.897 441.012,0 25.885,189.672 143.823,274.681 "/>
