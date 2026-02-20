@@ -118,8 +118,8 @@ function showImg(Div, name_img){
     var x = document.getElementById("watch");
     var w_img = document.getElementById("watch_img");
     var download_a = document.getElementById("download-img-a");
-    document.getElementById("carousel_left").style.display = "block";
-    document.getElementById("carousel_right").style.display = "block";
+    document.getElementById("carousel_left").style.display = "";
+    document.getElementById("carousel_right").style.display = "";
     if(x.style.display == "none") {
         x.style.display = "block";
         w_img.src = "/static/img/" + name_img;
@@ -748,6 +748,14 @@ function gener_my_chat(id_div, command, last_mess, chat_id){
 //        open_menu_chat(`${chat_id}`); //alert the id
         });
 }
+
+
+function exit_watch_menu(){
+    document.getElementById("watch").style.display = "none";
+    document.getElementById("carousel_left").style.display = "none";
+    document.getElementById("carousel_right").style.display = "none";
+}
+
 
 
 function open_menu_chat(chat_id){
