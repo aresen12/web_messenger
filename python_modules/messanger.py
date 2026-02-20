@@ -352,9 +352,10 @@ def delete_mess():
     print(data['id'], "delete id")
     if mes is None:
         return {"log": "bad id", "delete_id": data["id"]}
-    if mes.type == 1:
+    if mes.type != 2:
+        print("emit")
         emit('delete_message', {"message_id": mes.id}, to=str(mes.chat_id), namespace="/")
-        emit('delete_message', {"message_id": mes.id}, to=mes.chat_id, namespace="/")
+        # emit('delete_message', {"message_id": mes.id}, to=mes.chat_id, namespace="/")
     else:
         emit('delete_emoji', {"message_id_on_emoji": mes.html_m,
                               "id_emoji": mes.message, "id_sender": mes.id_sender, "id_message_emoji": mes.id},
