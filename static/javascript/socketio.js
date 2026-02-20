@@ -70,6 +70,7 @@ socket.on('delete_chat', (data) => {
 
 socket.on('delete_message', (data) => {
     document.getElementById("m" + data["message_id"]).remove();
+    console.log("m" + data["message_id"]);
 });
 
 

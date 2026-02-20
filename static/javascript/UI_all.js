@@ -118,6 +118,8 @@ function showImg(Div, name_img){
     var x = document.getElementById("watch");
     var w_img = document.getElementById("watch_img");
     var download_a = document.getElementById("download-img-a");
+    document.getElementById("carousel_left").style.display = "block";
+    document.getElementById("carousel_right").style.display = "block";
     if(x.style.display == "none") {
         x.style.display = "block";
         w_img.src = "/static/img/" + name_img;
