@@ -859,7 +859,7 @@ function unblock_user(id_user){
 function add_in_chat_new(){
     var global_menu = document.getElementById("global_menu");
     document.getElementById("users").style.display = "none";
-    global_menu.innerHTML += '<div id="add_new_users"></div>';
+    global_menu.innerHTML += '<ul id="add_new_users" class="list-group"></div>';
     var add_new_users = document.getElementById("add_new_users");
     add_new_users.innerHTML = '<input style="display:none;" id="list_of_new_u">';
     $.ajax({
@@ -871,7 +871,7 @@ function add_in_chat_new(){
             for (let i = 0; i < json["users"].length; i++){
                 if (json["users"][i][2] in sp || id_user == json["users"][i][2]){
                 } else{
-                add_new_users.innerHTML += '<label class="add-menu">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2]+ ", 'list_of_new_u'" + ')">' + json["users"][i][0] + '</label><br>';
+                add_new_users.innerHTML += '<li class="list-group-item">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2]+ ", 'list_of_new_u'" + ')">' + json["users"][i][0] + '</label><br>';
             }
             }
             add_new_users.innerHTML += '<button onclick="submit_new_users()" class="edit-btn">Добавить</button>'

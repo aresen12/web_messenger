@@ -537,23 +537,10 @@ function add_files_label(files_div){
 
 function search_text(){
     var cont = document.getElementById("menu-chat");
-    if (!document.getElementById("search_text_div")){
-        var search_div = document.createElement("div");
-        search_div.id = "search_text_div";
-        var input = document.createElement("input");
-        var btn = document.createElement("button");
-        input.id = "search_text";
-        btn.textContent = "поиск";
-        btn.classList = "btn btn-primary";
-        btn.setAttribute("onclick", "search_in_message()");
-        search_div.appendChild(input);
-        search_div.appendChild(btn);
-        cont.appendChild(search_div);
-    } else{
-        document.getElementById("search_text_div").style.display = "block";
-    }
+    document.getElementById("search_text_div").style.display = "block";
     cont.style.display = "block";
     document.getElementById("menu-chat-ul").style.display = "none";
+    globalThis.menu_id = "search_text_div";
 }
 
 
