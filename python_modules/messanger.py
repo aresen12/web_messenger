@@ -5,16 +5,16 @@ from flask import (
 from data import db_session
 from data.user import User
 from flask_login import current_user
-from data.message import Message, new_mess
 from data.chat import Chat, get_chats
 from data.File import File, get_files
 from data.black_list import Black
 from flask_socketio import emit
 from data.bot_db import BotDB
-from data.my_message import MyMessage, new_mess_my
+from data.my_orm.my_message import MyMessage, new_mess_my
 from python_modules.keys import room_name, jwt
 from data.admin import Admin
-
+from data.my_orm.message import Message, new_mess
+from data.my_orm.engine import SessionDB
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
 
@@ -61,14 +61,17 @@ def m_st():
             db_sess.add(file_db)
             db_sess.commit()
             file_db.chat_id = request.form["chat_id"]
-            mess.img = file_db.id
-        db_sess.add(mess)
+            mess.img.value = file_db.id
+        my_sess = SessionDB(f"chat{request.form["chat_id"]}.db")
+        my_sess.add(mess)
+        my_sess.commit()
+        my_sess.close()
         db_sess.commit()
         t_ = mess.get_time()
         db_sess.close()
-        emit('message', {"message": mess.message, "time": t_, "id_m": mess.id,
-                         "file2": [name, x], "html": request.form["html_m"], "name": mess.name_sender,
-                         "read": 0, "id_sender": mess.id_sender}, to=request.form["chat_id"], namespace="/")
+        emit('message', {"message": mess.message.value, "time": t_, "id_m": mess.id.value,
+                         "file2": [name, x], "html": request.form["html_m"], "name": mess.name_sender.value,
+                         "read": 0, "id_sender": mess.id_sender.value}, to=request.form["chat_id"], namespace="/")
         return {"log": True}
 
 
@@ -345,25 +348,25 @@ def get_chat_user(id_):
 @mg.route("/delete", methods=["DELETE"])
 def delete_mess():
     data = request.get_json()
-    db_sess = db_session.create_session()
-    mes = db_sess.query(Message).filter(Message.id == str(data["id"])).first()
+    db_sess = SessionDB(f'db/chat{data["chat_id"]}.db')
+    mes = db_sess.query(Message()).filter(f'message.id = {data["id"]}').first()
     print(mes)
     mes: Message
-    print(data['id'], "delete id")
+    # print(data['id'], "delete id")
     if mes is None:
         return {"log": "bad id", "delete_id": data["id"]}
     if mes.type != 2:
         print("emit")
-        emit('delete_message', {"message_id": mes.id}, to=str(mes.chat_id), namespace="/")
+        emit('delete_message', {"message_id": mes.id}, to=str(data["chat_id"]), namespace="/")
         # emit('delete_message', {"message_id": mes.id}, to=mes.chat_id, namespace="/")
     else:
-        emit('delete_emoji', {"message_id_on_emoji": mes.html_m,
-                              "id_emoji": mes.message, "id_sender": mes.id_sender, "id_message_emoji": mes.id},
-             to=str(mes.chat_id),  namespace="/")
-    list_emoji = db_sess.query(Message).filter(Message.type == 2).filter(Message.html_m == data["id"]).all()
-    for _ in list_emoji:
-        db_sess.delete(_)
-    db_sess.delete(mes)
+        emit('delete_emoji', {"message_id_on_emoji": mes.html_m.value,
+                              "id_emoji": mes.message.value, "id_sender": mes.id_sender.value, "id_message_emoji": mes.id},
+             to=str(data["chat_id"]),  namespace="/")
+    # list_emoji = db_sess.query(Message).filter(Message.type == 2).filter(Message.html_m == data["id"]).all()
+    # for _ in list_emoji:
+    #     db_sess.delete(_)
+    # db_sess.delete(mes)
     db_sess.commit()
     db_sess.close()
     return {"log": "True"}
@@ -501,14 +504,16 @@ def get_part_messages():
 def get_json_mess_my():
     if current_user.is_authenticated:
         data = request.get_json()
-        db_sess = db_session.create_session()
-        messages = db_sess.query(MyMessage).filter(MyMessage.chat_id == data["chat_id"]).all()
-        js = {"messages": [], "files": get_files(f"my" + data["chat_id"], db_sess)}
-        messages.sort(key=lambda x: x.time)
+        db_sess = SessionDB(f"db/my/my{data["chat_id"]}.db")
+        messages = db_sess.query(MyMessage()).all()
+        sess = db_session.create_session()
+        js = {"messages": [], "files": get_files(f"my" + data["chat_id"], sess)}
+        messages.sort(key=lambda x: x[8])
         for m in messages:
-            js["messages"].append({"id": m.id, "read": m.read, "html_m": m.html_m, "text": m.message, 'time': m.time,
-                                   "file": m.img, "id_sender": m.id_sender, "name_sender": m.name_sender,
-                                   "pinned": m.pinned, "type": m.type})
+            js["messages"].append({"id": m[0], "read": m[1], "html_m": m[4], "text": m[2], 'time': m[8],
+                                   "file": m[3], "id_sender": m[7], "name_sender": m[6],
+                               "pinned": m[5], "type": m[9]})
+        sess.close()
         db_sess.close()
         return js
     return {"log": "NOT auth"}
@@ -523,20 +528,22 @@ def get_json_message():
         if not (str(current_user.id) in mem[0].split()):
             db_sess.close()
             return {"log": "Permission error"}
-        messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).all()
+        db_sess.close()
+        my_orm = SessionDB(f"db/chat{data["chat_id"]}.db")
+        messages = my_orm.query(Message()).all()
         js = {"messages": [], "files": get_files(data["chat_id"], db_sess), "current_user": current_user.id}
         f = False
-        messages.sort(key=lambda x: x.time)
+        messages.sort(key=lambda x: x[8])
         for m in messages:
-            if m.id_sender != js["current_user"] and not m.read:
-                m.read = 1
-                f = True
-            js["messages"].append({"id": m.id, "read": m.read, "html_m": m.html_m, "text": m.message, 'time': m.time,
-                                   "file": m.img, "id_sender": m.id_sender, "name_sender": m.name_sender,
-                                   "pinned": m.pinned, "type": m.type})
+            # if m.id_sender != js["current_user"] and not m.read:
+            #     m.read = 1
+            #     f = True
+            js["messages"].append({"id": m[0], "read": m[1], "html_m": m[4], "text": m[2], 'time': m[8],
+                                   "file": m[3], "id_sender": m[7], "name_sender": m[6],
+                                   "pinned": m[5], "type": m[9]})
         if f:
             db_sess.commit()
-        db_sess.close()
+        my_orm.close()
         return js
     return {"log": "NOT auth"}
 
@@ -545,8 +552,8 @@ def get_json_message():
 def get_not_read():
     data = request.get_json()
     if current_user.is_authenticated:
-        db_sess = db_session.create_session()
-        m = db_sess.query(Message.read, Message.id_sender).filter(Message.chat_id == data["chat_id"]).all()
+        db_sess = SessionDB(f"db/chat{data["chat_id"]}.db")
+        m = db_sess.query(Message()).all()
         db_sess.close()
         le = 0
         for i in range(len(m) - 1, -1, -1):
@@ -658,12 +665,12 @@ def users_bg():
 @mg.route("/set_read", methods=["POST"])
 def set_raed():
     data = request.get_json()
-    db_sess = db_session.create_session()
-    mess = db_sess.query(Message).filter(Message.chat_id == data["chat_id"])
+    db_sess = SessionDB(f"db/chat{data["chat_id"]}.db")
+    mess = db_sess.query(Message()).filter("message.read = 0").all()
     f = False
     for m in mess:
-        if not m.read and current_user.id != m.id_sender:
-            m.read = 1
+        if current_user.id != m[7]:
+            m[2] = 1
             f = True
     if f:
         db_sess.commit()
@@ -674,13 +681,14 @@ def set_raed():
 @mg.route("/get_new_message_id/<id_mess>/<chat_id>")
 def get_new_message_id(id_mess, chat_id):
     if current_user.is_authenticated:
-        db_sess = db_session.create_session()
-        messages = db_sess.query(Message).filter(Message.chat_id == chat_id).filter(Message.id > id_mess).all()
+        print(chat_id)
+        db_sess = SessionDB(f"db/chat{chat_id}.db")
+        messages = db_sess.query(Message()).filter(f"message.id > {id_mess}").all()
         js = {"message": []}
         for message in messages:
-            js["message"].append({"id": message.id, "id_sender": message.id_sender,
-                                  "html": message.html_m, "read": message.read, "text": message.message,
-                                  "time": message.get_time(), "pinned": message.pinned,
-                                  "name_sender": message.name_sender})
+            js["message"].append({"id": message[0], "id_sender": message[7],
+                                  "html": message.html_m[4], "read": message[1], "text": message[2],
+                                  "time": message[8], "pinned": message[5],
+                                  "name_sender": message[6]})
         db_sess.close()
         return js

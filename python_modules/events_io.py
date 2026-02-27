@@ -2,11 +2,11 @@ from flask_login import current_user
 from flask_socketio import emit, SocketIO, join_room, leave_room, rooms
 from data import db_session
 from data.chat import Chat
-from data.message import new_emoji, new_mess
+from data.my_orm.message import new_emoji, new_mess
 from data.user import User
 from python_modules.tg_bot.bot_def import send_all
-from data.my_message import new_mess_my
-
+from data.my_orm.my_message import new_mess_my
+from data.my_orm.engine import SessionDB
 socketio = SocketIO(cors_allowed_origins="*")
 
 
@@ -63,15 +63,18 @@ def room_message(data):
     chat: Chat
     if current_user.is_authenticated:
         if str(current_user.id) in chat.members.split():
-            mess = new_mess(data['message'], current_user.id, current_user.name, data["room"], data["html"])
-            db_sess.add(mess)
-            db_sess.commit()
+            my_sess = SessionDB(f"db/chat{data['room']}.db")
+            print("html", data["html"])
+            mess = new_mess(data['message'], current_user.id, current_user.name, data["html"])
+            my_sess.add(mess)
+            my_sess.commit()
+            my_sess.close()
             chat_info = db_sess.query(Chat.members, Chat.name, Chat.primary_chat).filter(Chat.id == data["room"]).first()
             send_all(db_sess, chat_info[0], data['message'], current_user.id, chat_info[1], chat_info[2])
             send_all2(db_sess, chat_info[0], data['message'], current_user.id, chat_info[1], chat_info[2], data["room"])
-            emit('message', {"message": data['message'], "time": mess.get_time(), "id_m": mess.id,
-                             "file2": mess.img, "html": data["html"], "name": current_user.name,
-                             "read": 0, "id_sender": current_user.id, "pinned": mess.pinned}, to=data['room'])
+            emit('message', {"message": data['message'], "time": mess.get_time(), "id_m": mess.id.value,
+                             "file2": mess.img.value, "html": data["html"], "name": current_user.name,
+                             "read": 0, "id_sender": current_user.id, "pinned": mess.pinned.value}, to=data['room'])
     db_sess.close()
 
 
@@ -93,7 +96,7 @@ def handle_disconnect():
 @socketio.on("emoji")
 def send_emoji(data):
     db_sess = db_session.create_session()
-    mess = new_emoji(data["value"], data["id_mess"], data["chat_id"], current_user.id, current_user.name)
+    mess = new_emoji(data["value"], data["id_mess"], current_user.id, current_user.name)
     db_sess.add(mess)
     db_sess.commit()
     emit('emoji_client', {"id_emoji": mess.id, "id_mess": data["id_mess"], "name": mess.name_sender,
@@ -126,14 +129,14 @@ def send_number(data):
 
 @socketio.on("my_message")
 def send_my_message(data):
-    db_sess = db_session.create_session()
     if current_user.is_authenticated:
+        db_sess = SessionDB(f"db/my/my{current_user.id}.db")
         mess = new_mess_my(data['message'], current_user.id, current_user.name, data["room"], data["html"])
         db_sess.add(mess)
         db_sess.commit()
-        emit('message', {"message": data['message'], "time": mess.get_time(), "id_m": mess.id,
-                         "file2": mess.img, "html": data["html"], "name": current_user.name,
-                             "read": 0, "id_sender": current_user.id, "pinned": mess.pinned}, to=f"my{data['room']}")
+        emit('message', {"message": data['message'], "time": mess.get_time(), "id_m": mess.id.value,
+                         "file2": mess.img.value, "html": data["html"], "name": current_user.name,
+                             "read": 0, "id_sender": current_user.id, "pinned": 0}, to=f"my{data['room']}")
         print(data["room"])
         db_sess.close()
 
