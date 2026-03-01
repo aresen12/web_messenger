@@ -264,6 +264,7 @@ def edit_mess():
 @mg.route("/send_voice/<chat_id>", methods=["POST"])
 def send_voice(chat_id):
     db_sess = db_session.create_session()
+    sess_my = SessionDB(f"db/chats/chat{chat_id}.db")
     f = request.files['voice']
     os.chdir('static/img/data')
     dd = len(os.listdir())
@@ -277,23 +278,21 @@ def send_voice(chat_id):
     file_db.chat_id = chat_id
     file_db.path = f"data/{dd}.mp3"
     file_db.name = "voice.mp3"
-    mess = Message()
-    mess.name_sender = current_user.name
-    mess.id_sender = current_user.id
-    mess.chat_id = chat_id
+    mess = new_mess("", current_user.id, current_user.name)
     db_sess.add(file_db)
     db_sess.commit()
-    mess.img = file_db.id
-    db_sess.add(mess)
+    mess.img.value = file_db.id
+    sess_my.add(mess)
+    sess_my.commit()
     db_sess.commit()
     t_ = mess.get_time()
     name = file_db.name
     x = file_db.path
     db_sess.close()
-    emit('message', {"message": mess.message, "time": t_, "id_m": mess.id,
-                     "file2": [name, x], "html": "", "name": mess.name_sender,
-                     "read": 0, "id_sender": mess.id_sender}, to=chat_id, namespace="/")
-
+    sess_my.close()
+    emit('message', {"message": mess.message.value, "time": t_, "id_m": mess.id.value,
+                     "file2": [name, x], "html": "", "name": mess.name_sender.value,
+                     "read": 0, "id_sender": mess.id_sender.value}, to=chat_id, namespace="/")
     return {"log": True}
 
 
