@@ -8,9 +8,9 @@ class Table:
 
     def create_table(self):
         names = self.__dict__
-        column = [names[key] for key in names.keys() if not ("__" in key or names[key] is None or isinstance(names[key], str) or isinstance(names[key], tuple) )]
-        print(column)
-        # column[1] = column[1][0]
+        column = [names[key] for key in names.keys() if not ("__" in key or names[key] is None
+                                                             or isinstance(names[key], str)
+                                                             or isinstance(names[key], tuple))]
         sql = ", ".join([_.sql for _ in column])
         return f'''CREATE TABLE {self.table_name}({sql})'''
 
@@ -22,6 +22,19 @@ class Table:
         sql = ", ".join([_.get_value() for _ in column])
         return f'''INSERT INTO {self.table_name}({", ".join([_.name for _ in column])}) VALUES ({sql})'''
 
+    def update(self):
+        names = self.__dict__
+        column = [names[key] for key in names.keys() if not (
+                "__" in key or names[key] is None or isinstance(names[key], str) or isinstance(names[key], tuple))]
+        del column[0]
+        sp = []
+        for c in column:
+            if c.type_ == "TEXT":
+                sp.append(f'{c.name} = "{c.value}"')
+            else:
+                sp.append(f'{c.name} = {c.value}')
+        return f'''UPDATE {self.table_name} SET {", ".join(sp)} WHERE {self.table_name}.id = {self.id.value}'''
+
     def __hash__(self):
         return hash(self.id)
 
@@ -29,6 +42,5 @@ class Table:
         names = self.__dict__
         column = [names[key] for key in names.keys() if
                   not ("__" in key or names[key] is None or isinstance(names[key], str))]
-        # column[0] = column[0][0]
         return column
 

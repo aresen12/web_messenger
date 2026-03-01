@@ -6,11 +6,12 @@ from data import db_session
 from flask_login import current_user
 # from data.message import Message
 from data.user import User
-# from data.my_chat import get_my_chat
+from data.my_chat import get_my_chat
 from data.admin import Admin
 from data.my_orm.message import Message
 from data.my_orm.engine import SessionDB
 from .my_orm.my_message import MyMessage
+
 
 class Chat(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'chats'
@@ -29,10 +30,10 @@ class Chat(SqlAlchemyBase, UserMixin, SerializerMixin):
 def get_chats():
     db_sess = db_session.create_session()
     chats = db_sess.query(Chat).filter(Chat.status == 1).all()
-    # my_chat = get_my_chat()
-    my_chat = {"id": f"my{current_user.id}", "pinned": 0,
-            "last_message": {"text": "", "time": "2023-01-01 00:00:00.0",
-                             "name_sender": "", "type": ''}}
+    my_chat = get_my_chat()
+    # my_chat = {"id": f"my{current_user.id}", "pinned": 0,
+    #         "last_message": {"text": "", "time": "2023-01-01 00:00:00.0",
+    #                          "name_sender": "", "type": ''}}
     new = []
     if my_chat["id"]:
         new.append(my_chat)
@@ -49,7 +50,7 @@ def get_chats():
                 if int(id_user) in admins:
                     admin_flag = True
             print(i.id)
-            my_sess = SessionDB(f"db/chat{i.id}.db")
+            my_sess = SessionDB(f"db/chats/chat{i.id}.db")
             mess2 = my_sess.query(Message()).all()
             if len(mess2) != 0:
                 mess = mess2[-1]

@@ -127,6 +127,10 @@ def create_chat():
     db_sess.add(chat)
     db_sess.commit()
     chat_id = chat.id
+    my_sess = SessionDB(f"db/chats/chat{chat_id}.db")
+    my_sess.create_table(Message())
+    my_sess.commit()
+    my_sess.close()
     admin_flag = False
     name_user = data["name"]
     if chat.primary_chat:
@@ -159,9 +163,10 @@ def create_chat():
 @mg.route("/pinned", methods=["POST"])
 def pinned():
     data = request.get_json()
-    db_sess = db_session.create_session()
-    mess = db_sess.query(Message).filter(Message.id == data["mess_id"]).first()
-    mess.pinned = True
+    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+    mess = db_sess.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
+    mess.pinned.value = 1
+    db_sess.update(mess)
     db_sess.commit()
     db_sess.close()
     # добавить socketio
@@ -195,9 +200,10 @@ def chat_unpinned():
 @mg.route("/un_pinned", methods=["POST"])
 def an_pinned():
     data = request.get_json()
-    db_sess = db_session.create_session()
-    mess = db_sess.query(Message).filter(Message.id == data["mess_id"]).first()
-    mess.pinned = False
+    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+    mess = db_sess.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
+    mess.pinned.value = 0
+    db_sess.update(mess)
     db_sess.commit()
     db_sess.close()
     # добавить socketio
@@ -217,22 +223,25 @@ def get_files_menu():
     files = db_sess.query(File).filter(File.chat_id == data["chat_id"]).all()
     json_res = []
     if str(data["chat_id"])[0] != "m":
+        sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
         for file in files:
             file: File
-            mess_id = db_sess.query(Message.id).filter(Message.img == file.id).first()
-            if not (mess_id is None):
-                json_res.append({"name": file.name, "mess_id": mess_id[0]})
+            mess = sess.query(MyMessage()).filter(f"message.img = {file.id}").first()
+            if not (mess is None):
+                json_res.append({"name": file.name, "mess_id": mess.id.value})
             else:
                 pass
     else:
+        sess = SessionDB(f"db/my/{data["chat_id"]}.db")
         for file in files:
             file: File
-            mess_id = db_sess.query(MyMessage.id).filter(MyMessage.img == file.id).first()
-            if not (mess_id is None):
-                json_res.append({"name": file.name, "mess_id": mess_id[0]})
+            mess = sess.query(MyMessage()).filter(f"message.img = {file.id}").first()
+            if not (mess is None):
+                json_res.append({"name": file.name, "mess_id": mess.id.value})
             else:
                 pass
         #     прописать удаление файла
+    sess.close()
     db_sess.close()
     return json_res
 
@@ -240,15 +249,16 @@ def get_files_menu():
 @mg.route("/edit_message", methods=["POST"])
 def edit_mess():
     data = request.get_json()
-    db_sess = db_session.create_session()
-    mess = db_sess.query(Message).filter(Message.id == data["id"]).first()
-    if mess.id_sender == current_user.id:
-        mess.message = data["new_text"]
-        mess.read = 0
+    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+    mess = db_sess.query(Message()).filter(f"message.id = {data["id"]}").first()
+    if mess.id_sender.value == current_user.id:
+        mess.message.value = data["new_text"]
+        mess.read.value = 0
+        db_sess.update(mess)
         db_sess.commit()
+        print("test")
     db_sess.close()
     return {"log": True}
-
 
 
 @mg.route("/send_voice/<chat_id>", methods=["POST"])
@@ -348,7 +358,7 @@ def get_chat_user(id_):
 @mg.route("/delete", methods=["DELETE"])
 def delete_mess():
     data = request.get_json()
-    db_sess = SessionDB(f'db/chat{data["chat_id"]}.db')
+    db_sess = SessionDB(f'db/chats/chat{data["chat_id"]}.db')
     mes = db_sess.query(Message()).filter(f'message.id = {data["id"]}').first()
     print(mes)
     mes: Message
@@ -357,16 +367,18 @@ def delete_mess():
         return {"log": "bad id", "delete_id": data["id"]}
     if mes.type != 2:
         print("emit")
-        emit('delete_message', {"message_id": mes.id}, to=str(data["chat_id"]), namespace="/")
+        emit('delete_message', {"message_id": mes.id.value}, to=str(data["chat_id"]), namespace="/")
         # emit('delete_message', {"message_id": mes.id}, to=mes.chat_id, namespace="/")
     else:
         emit('delete_emoji', {"message_id_on_emoji": mes.html_m.value,
                               "id_emoji": mes.message.value, "id_sender": mes.id_sender.value, "id_message_emoji": mes.id},
              to=str(data["chat_id"]),  namespace="/")
-    # list_emoji = db_sess.query(Message).filter(Message.type == 2).filter(Message.html_m == data["id"]).all()
-    # for _ in list_emoji:
-    #     db_sess.delete(_)
-    # db_sess.delete(mes)
+    list_emoji = db_sess.query(Message()).filter("message.type == 2").filter(f"message.html_m == {data["id"]}").all()
+    for _ in list_emoji:
+        mess = Message()
+        mess.id.value = _[0]
+        db_sess.delete(mess)
+    db_sess.delete(mes)
     db_sess.commit()
     db_sess.close()
     return {"log": "True"}
@@ -529,7 +541,7 @@ def get_json_message():
             db_sess.close()
             return {"log": "Permission error"}
         db_sess.close()
-        my_orm = SessionDB(f"db/chat{data["chat_id"]}.db")
+        my_orm = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
         messages = my_orm.query(Message()).all()
         js = {"messages": [], "files": get_files(data["chat_id"], db_sess), "current_user": current_user.id}
         f = False
@@ -552,7 +564,7 @@ def get_json_message():
 def get_not_read():
     data = request.get_json()
     if current_user.is_authenticated:
-        db_sess = SessionDB(f"db/chat{data["chat_id"]}.db")
+        db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
         m = db_sess.query(Message()).all()
         db_sess.close()
         le = 0
@@ -574,10 +586,15 @@ def mail():
                 Chat.id == data["mail_id_chat"]).first().members.split()):
             db_sess.close()
             return {"log": 'PermissionError'}
-        message = db_sess.query(Message).filter(Message.id == data["mess_id"]).first()
-        new_mail = new_mess(message.message, message.id_sender, message.name_sender, data["mail_id_chat"], message.html_m, message.img)
-        db_sess.add(new_mail)
-        db_sess.commit()
+        sess_my_chat = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+        sess_other_chat = SessionDB(f"db/chats/chat{data["mail_id_chat"]}.db")
+        message = sess_my_chat.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
+        new_mail = new_mess(message.message.value, message.id_sender.value, message.name_sender.value,
+                            message.html_m.value, message.img.value)
+        sess_other_chat.add(new_mail)
+        sess_other_chat.commit()
+        sess_my_chat.close()
+        sess_other_chat.close()
         db_sess.close()
         return {"log": True}
     return {'log'}
@@ -588,11 +605,16 @@ def my_mail():
     if current_user.is_authenticated:
         data = request.get_json()
         db_sess = db_session.create_session()
-        message = db_sess.query(Message).filter(Message.id == data["mess_id"]).first()
-        new_mail = new_mess_my(message.message, message.id_sender, message.name_sender,
-                               current_user.id, message.html_m, message.img)
-        db_sess.add(new_mail)
-        db_sess.commit()
+        sess_my_chat = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+        # mail_id_chat id в формате my{number}
+        sess_other_chat = SessionDB(f"db/my/{data["mail_id_chat"]}.db")
+        message = sess_my_chat.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
+        new_mail = new_mess_my(message.message.value, message.id_sender.value, message.name_sender.value,
+                               message.html_m.value, message.img.value)
+        sess_other_chat.add(new_mail)
+        sess_other_chat.commit()
+        sess_my_chat.close()
+        sess_other_chat.close()
         db_sess.close()
         return {"log": True}
     return {'log': "Not Auth"}
@@ -665,7 +687,7 @@ def users_bg():
 @mg.route("/set_read", methods=["POST"])
 def set_raed():
     data = request.get_json()
-    db_sess = SessionDB(f"db/chat{data["chat_id"]}.db")
+    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
     mess = db_sess.query(Message()).filter("message.read = 0").all()
     f = False
     for m in mess:
@@ -682,12 +704,12 @@ def set_raed():
 def get_new_message_id(id_mess, chat_id):
     if current_user.is_authenticated:
         print(chat_id)
-        db_sess = SessionDB(f"db/chat{chat_id}.db")
+        db_sess = SessionDB(f"db/chats/chat{chat_id}.db")
         messages = db_sess.query(Message()).filter(f"message.id > {id_mess}").all()
         js = {"message": []}
         for message in messages:
             js["message"].append({"id": message[0], "id_sender": message[7],
-                                  "html": message.html_m[4], "read": message[1], "text": message[2],
+                                  "html": message[4], "read": message[1], "text": message[2],
                                   "time": message[8], "pinned": message[5],
                                   "name_sender": message[6]})
         db_sess.close()

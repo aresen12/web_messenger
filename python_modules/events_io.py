@@ -63,8 +63,7 @@ def room_message(data):
     chat: Chat
     if current_user.is_authenticated:
         if str(current_user.id) in chat.members.split():
-            my_sess = SessionDB(f"db/chat{data['room']}.db")
-            print("html", data["html"])
+            my_sess = SessionDB(f"db/chats/chat{data['room']}.db")
             mess = new_mess(data['message'], current_user.id, current_user.name, data["html"])
             my_sess.add(mess)
             my_sess.commit()
@@ -95,11 +94,11 @@ def handle_disconnect():
 
 @socketio.on("emoji")
 def send_emoji(data):
-    db_sess = db_session.create_session()
+    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
     mess = new_emoji(data["value"], data["id_mess"], current_user.id, current_user.name)
     db_sess.add(mess)
     db_sess.commit()
-    emit('emoji_client', {"id_emoji": mess.id, "id_mess": data["id_mess"], "name": mess.name_sender,
+    emit('emoji_client', {"id_emoji": mess.id.value, "id_mess": data["id_mess"], "name": mess.name_sender.value,
                           "id_sender": current_user.id, "value": data["value"]}, to=data["chat_id"])
     db_sess.close()
 

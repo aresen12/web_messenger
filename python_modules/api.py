@@ -6,11 +6,13 @@ from data import db_session
 from data.user import User
 from flask_login import current_user, logout_user
 from flask_socketio import emit
-from data.message import new_mess
+from data.my_orm.message import new_mess
 from data.chat import get_chats
 from data.File import File
-from data.message import Message
+from data.my_orm.message import Message
 from python_modules.keys import api_key
+from data.my_orm.engine import SessionDB
+
 api = Blueprint('api', __name__, url_prefix='/api')
 
 
@@ -77,11 +79,11 @@ def android_base():
 @api.route("/search_in_chat", methods=["POST"])
 def search_response():
     data = request.get_json()
-    db_sess = db_session.create_session()
+    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
     json_response = {"list_message": []}
-    messages = db_sess.query(Message).filter(Message.chat_id == data["chat_id"]).all()
+    messages = db_sess.query(Message()).all()
     for message in messages:
-        if not (message.message is None) and data["search_text"] in message.message:
-            json_response["list_message"].append(message.id)
+        if not (message[2] is None) and data["search_text"] in message[2]:
+            json_response["list_message"].append(message[0])
     db_sess.close()
     return json_response

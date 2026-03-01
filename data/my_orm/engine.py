@@ -10,6 +10,7 @@ class SessionDB:
         self.name_db = name_db
         self.connect(name_db)
         self.current_table = None
+        self.sql_text = ""
 
     def connect(self, name_db=""):
         if name_db == "":
@@ -25,19 +26,22 @@ class SessionDB:
 
     def query(self, args: Table):
         self.current_table = args
-        self.cursor.execute(f'''SELECT * FROM {args.table_name}''')
+        self.sql_text = f'''SELECT * FROM {args.table_name}'''
         return self
 
     def filter(self, logical):
-        self.cursor.execute(f'''WHERE {logical}''')
+        if "WHERE" in logical:
+            self.sql_text += f" AND {logical}"
+        else:
+            self.sql_text += f''' WHERE {logical}'''
+        return self
 
     def all(self):
-        return self.cursor.fetchall()
+        return self.cursor.execute(self.sql_text).fetchall()
 
     def first(self):
-        value = self.cursor.fetchone()
+        value = self.cursor.execute(self.sql_text).fetchone()
         columns = self.cursor.execute(f"PRAGMA table_info({self.current_table.table_name})").fetchall()
-        print(columns)
         for i in range(len(columns)):
             try:
                 getattr(self.current_table, columns[i][1]).value = value[i]
@@ -48,10 +52,14 @@ class SessionDB:
         return r
 
     def add(self, new_data: Table):
-        self.connection.execute(new_data.add())
+        res = self.connection.execute(new_data.add())
+        new_data.id.value = res.lastrowid
 
     def delete_(self, object_: Table):
         self.connection.execute(f'''DELETE FROM {object_.table_name} WHERE {object_.table_name}.id = {object_.id}''')
 
     def create_table(self, table):
         self.connection.execute(table.create_table())
+
+    def update(self, table: Table):
+        self.connection.execute(table.update())

@@ -2,7 +2,7 @@ import datetime
 
 
 class Column:
-    type_ = None
+    type_ = "TEXT"
     name = None
     sql = "TEXT"
 
