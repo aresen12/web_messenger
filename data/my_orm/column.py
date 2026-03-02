@@ -19,7 +19,7 @@ class Column:
     def get_value(self):
         if self.value is None:
             return "''"
-        return f"'{self.value}'"
+        return f"'''{self.value}'''"
 
 
 class INEGERColumn(Column):

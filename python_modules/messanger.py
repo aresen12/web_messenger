@@ -30,17 +30,19 @@ def m_st():
         if not current_user.is_authenticated:
             return redirect("/login")
         f = request.files["img"]
-        if request.form["about"].strip() == "" and f.filename == "":
+        if request.form["about"].strip() == "" and f.filename == ""  and request.form["html_m"] == "":
             return redirect('/m')
         db_sess = db_session.create_session()
         c_user = db_sess.query(User).filter(User.email == current_user.email).first()
         try:
             int(request.form["chat_id"])
+            my_sess = SessionDB(f"db/chats/chat{request.form["chat_id"]}.db")
             mess = new_mess(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
-                            chat_id=request.form["chat_id"], html=request.form["html_m"])
+                        html=request.form["html_m"])
         except ValueError:
+            my_sess = SessionDB(f"db/my/{request.form["chat_id"]}.db")
             mess = new_mess_my(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
-                               chat_id=request.form["chat_id"][2:], html=request.form["html_m"])
+                               html=request.form["html_m"])
         x = ""
         name = ""
         if f.filename != "":
@@ -62,7 +64,6 @@ def m_st():
             db_sess.commit()
             file_db.chat_id = request.form["chat_id"]
             mess.img.value = file_db.id
-        my_sess = SessionDB(f"chat{request.form["chat_id"]}.db")
         my_sess.add(mess)
         my_sess.commit()
         my_sess.close()
@@ -264,7 +265,10 @@ def edit_mess():
 @mg.route("/send_voice/<chat_id>", methods=["POST"])
 def send_voice(chat_id):
     db_sess = db_session.create_session()
-    sess_my = SessionDB(f"db/chats/chat{chat_id}.db")
+    if str(chat_id)[0] == "m":
+        sess_my = SessionDB(f"db/my/{chat_id}.db")
+    else:
+        sess_my = SessionDB(f"db/chats/chat{chat_id}.db")
     f = request.files['voice']
     os.chdir('static/img/data')
     dd = len(os.listdir())

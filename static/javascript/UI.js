@@ -38,8 +38,10 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
     message_text.textContent = text;
     message_text.classList = "text-in-mess";
     message_text.id = 'text' + id_m;
-    const html_text = document.createElement('p');
-    html_text.innerHTML = html_m;
+    const html_text = document.createElement('div');
+    if (html_m != ""){
+        html_text.innerHTML = html_m;
+    }
     var em_div = document.createElement("div");
     em_div.id = "em" + id_m;
     messageItem.appendChild(html_text);

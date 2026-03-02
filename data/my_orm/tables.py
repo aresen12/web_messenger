@@ -19,8 +19,7 @@ class Table:
         column = [names[key] for key in names.keys() if not (
                     "__" in key or names[key] is None or isinstance(names[key], str) or isinstance(names[key], tuple))]
         del column[0]
-        sql = ", ".join([_.get_value() for _ in column])
-        return f'''INSERT INTO {self.table_name}({", ".join([_.name for _ in column])}) VALUES ({sql})'''
+        return column
 
     def update(self):
         names = self.__dict__

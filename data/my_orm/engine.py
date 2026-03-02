@@ -38,7 +38,6 @@ class SessionDB:
 
     def all(self):
         try:
-            # print(self.sql_text)
             return self.cursor.execute(self.sql_text).fetchall()
         except sqlite3.OperationalError:
             self.create_table(self.current_table)
@@ -70,7 +69,11 @@ class SessionDB:
             return r
 
     def add(self, new_data: Table):
-        res = self.connection.execute(new_data.add())
+        column = new_data.add()
+        sql = ", ".join(["?" for _ in column])
+        param = [_.value for _ in column]
+        res = self.connection.execute(f'''INSERT INTO {new_data.table_name}
+        ({", ".join([_.name for _ in column])}) VALUES ({sql})''', param)
         new_data.id.value = res.lastrowid
 
     def delete(self, object_: Table):

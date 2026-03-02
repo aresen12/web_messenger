@@ -57,6 +57,7 @@
     color:#055160;
     border-radius: 5px;
     padding-left: 4px;
+    margin: 10px;
 }
 .pinned {
     background:#F1F1F1;
@@ -120,6 +121,7 @@
     color:#0F5132;
     border-radius: 5px;
     padding-left: 4px;
+    margin: 10px;
 }
 
 .name-chat-div {width:90%;}
