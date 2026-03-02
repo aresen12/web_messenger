@@ -61,14 +61,15 @@ function close_edit() {
 
 
 function edit_post(id_mess, text){
+var chat_id = document.getElementById("chat_id").value;
     $.ajax({
     url: '/m/edit_message',
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"id":id_mess, "new_text": text}),
+    data: JSON.stringify({"id":id_mess, "new_text": text, "chat_id": chat_id}),
     success: function(json){
-    socket.emit("edit_mess", {new_text: text, id_m: id_mess, room: document.getElementById("chat_id").value});
+    socket.emit("edit_mess", {new_text: text, id_m: id_mess, room: chat_id});
         close_edit();
     },
     error: function(err) {
@@ -102,7 +103,7 @@ function un_pinned(mess_id){
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"mess_id": mess_id}),
+    data: JSON.stringify({"mess_id": mess_id, "chat_id": document.getElementById("chat_id").value}),
     success: function(json){
          var list_pin = document.getElementById("list_pin").value.trim().split(" ");
          if (list_pin.length == 1){
@@ -432,7 +433,7 @@ function delete_mess(id_mess){
     type: 'DELETE',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"id":id_mess}),
+    data: JSON.stringify({"id":id_mess, "chat_id": document.getElementById("chat_id").value}),
     error: function(err) {
         console.error(err);
     }
@@ -725,7 +726,7 @@ function my_send_of(chat_id, id_m){
         type: 'POST',
         dataType: 'json',
         contentType:'application/json',
-        data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m}),
+        data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m, "chat_id": document.getElementById("chat_id").value}),
         success: function(json){
             document.getElementById("global_menu_d").style.display = "none";
             document.getElementById("global_menu").innerHTML = "";
@@ -744,7 +745,7 @@ function send_of(chat_id, id_m, name_chat){
         type: 'POST',
         dataType: 'json',
         contentType:'application/json',
-        data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m}),
+        data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m, "chat_id": document.getElementById("chat_id").value}),
         success: function(json){
             document.getElementById("global_menu_d").style.display = "none";
             document.getElementById("global_menu").innerHTML = "";
@@ -1080,7 +1081,7 @@ function get_new_message_id(){
     let mess_id = document.getElementById("last_mess_id").value;
     let chat_id = document.getElementById("chat_id").value;
     $.ajax({
-        url: '/m/get_new_message_id/${mess_id}/${chat_id}',
+        url: `/m/get_new_message_id/${mess_id}/${chat_id}`,
         type: 'GET',
         dataType: 'json',
         success: function(json){
