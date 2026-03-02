@@ -6,15 +6,15 @@ class Message(Table):
     def __init__(self):
         super().__init__("message")
         # self.id = IDColumn("id"),
-        self.read = BoolColumn("read")
-        self.message = TextColumn("message")
-        self.img = TextColumn("img")
-        self.html_m = TextColumn("html_m")
-        self.pinned = BoolColumn("pinned")
-        self.name_sender = TextColumn("name_sender")
-        self.id_sender = INEGERColumn("id_sender")
-        self.time = DataTime("time")
-        self.type = INEGERColumn("type")
+        self.read = BoolColumn("read")  # 1
+        self.message = TextColumn("message")    # 2
+        self.img = TextColumn("img")  # 3
+        self.html_m = TextColumn("html_m")  # 4
+        self.pinned = BoolColumn("pinned")  # 5
+        self.name_sender = TextColumn("name_sender")  # 6
+        self.id_sender = INEGERColumn("id_sender")  # 7
+        self.time = DataTime("time")  # 8
+        self.type = INEGERColumn("type")  # 9
 
     def get_date(self):
         # print(self.time)

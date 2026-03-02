@@ -372,7 +372,7 @@ def delete_mess():
         emit('delete_emoji', {"message_id_on_emoji": mes.html_m.value,
                               "id_emoji": mes.message.value, "id_sender": mes.id_sender.value, "id_message_emoji": mes.id},
              to=str(data["chat_id"]),  namespace="/")
-    list_emoji = db_sess.query(Message()).filter("message.type == 2").filter(f"message.html_m == {data["id"]}").all()
+    list_emoji = db_sess.query(Message()).filter("message.type = 2").filter(f"message.html_m = {data["id"]}").all()
     for _ in list_emoji:
         mess = Message()
         mess.id.value = _[0]
@@ -691,7 +691,10 @@ def set_raed():
     f = False
     for m in mess:
         if current_user.id != m[7]:
-            m[2] = 1
+            mess = new_mess(m[2], m[7], m[6], m[4], m[3], 1, m[5], m[9])
+            mess.id.value = m[0]
+            mess.time.value = m[8]
+            db_sess.update(mess)
             f = True
     if f:
         db_sess.commit()

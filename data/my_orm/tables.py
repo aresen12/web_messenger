@@ -12,7 +12,7 @@ class Table:
                                                              or isinstance(names[key], str)
                                                              or isinstance(names[key], tuple))]
         sql = ", ".join([_.sql for _ in column])
-        return f'''CREATE TABLE {self.table_name}({sql})'''
+        return f'''CREATE TABLE IF NOT EXISTS {self.table_name}({sql})'''
 
     def add(self):
         names = self.__dict__
