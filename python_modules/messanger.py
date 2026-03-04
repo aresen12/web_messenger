@@ -589,7 +589,10 @@ def mail():
                 Chat.id == data["mail_id_chat"]).first().members.split()):
             db_sess.close()
             return {"log": 'PermissionError'}
-        sess_my_chat = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+        if str(data["chat_id"])[0] != "m":
+            sess_my_chat = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+        else:
+            sess_my_chat = SessionDB(f"db/my/{data["chat_id"]}.db")
         sess_other_chat = SessionDB(f"db/chats/chat{data["mail_id_chat"]}.db")
         message = sess_my_chat.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
         new_mail = new_mess(message.message.value, message.id_sender.value, message.name_sender.value,

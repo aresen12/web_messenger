@@ -302,7 +302,7 @@ function open_menu_mess(id_mess){
     for (let i = 0; i < name_functions.length; i++){
         var li = document.createElement("li");
         li.textContent = titles[i];
-        li.setAttribute("onclick", `${name_functions[i]}(${id_mess.slice(1)}, ${chat_id})`);
+        li.setAttribute("onclick", `${name_functions[i]}(${id_mess.slice(1)}, "${chat_id}")`);
         ul.appendChild(li);
     }
     if (document.getElementById(id_mess).className == "my-message") {
