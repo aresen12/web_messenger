@@ -201,6 +201,13 @@ function gener_emoji(id_mess, html_m, other, id_emoji){
 
 document.addEventListener('click', (e) => {
     if (menu_id != ""){
+        if (menu_id == "search_text_div"){
+            var search_div = document.getElementById("search_text_div");
+            var menu_chat = document.getElementById("menu-chat");
+            if (!e.composedPath().includes(search_div) && !e.composedPath().includes(menu_chat)){
+                exit_menu();
+            }
+        } else {
         var div = document.querySelector('#' + menu_id.slice(1));
         var div2 = document.querySelector('#emoji' + menu_id.slice(1).slice(1));
         var t2 = e.composedPath().includes(div2);
@@ -211,7 +218,7 @@ document.addEventListener('click', (e) => {
         var bool_is_emoji_menu = (menu_id ==  "emojis_menu");
         if ((!t && !t2 && !bool_is_emoji_menu) || (!bool_emoji_menu && bool_is_emoji_menu)){
             exit_menu();
-        }
+        }}
     }
     if (document.getElementById("global_menu_d").style.display == "block"){
         var global_menu_d = document.querySelector("#global_menu_d");
@@ -273,6 +280,7 @@ function show_more_emoji(id_mess){
 function open_menu_in_chat(){
     document.getElementById("menu-chat").style.display = "block";
     var search_div = document.getElementById("search_text_div");
+    search_div.style.display = "block";
     if (search_div){
         search_div.style.display = "none";
         document.getElementById("search_text").value = "";
@@ -633,9 +641,16 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
         btn.setAttribute("onclick",`send_of('${chat_id}', ${command}, '${name_chat}',  ${pinned})`);
     }
     let last_mess_div = document.createElement("div");
+    let last_rn_div = document.createElement("div");
     let last_time = document.createElement("div");
+    last_rn_div.classList = "rn-time";
+    last_rn_div.appendChild(last_time);
+    if (command == "set_recipient"){
+        last_mess_div.id = "last_m" + chat_id;
+        last_time.id = "last_time" + chat_id;
+    }
     if (last_mess["time"] != "2023-01-01 00:00:00.0"){
-        last_time.textContent = last_mess["time"].slice(11, 16);;
+        last_time.textContent = last_mess["time"].slice(11, 16);
         last_time.classList = "time-in-chat";
     }
     if (pinned){
@@ -668,6 +683,8 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
     const rn = document.createElement('div');
     rn.classList = "r-n";
     rn.id = 'rn' + chat_id;
+    rn.style.display = "none";
+    last_rn_div.appendChild(rn);
     var icon_chat = document.createElement('div');
     icon_chat.id = "icon_chat" + command + chat_id;
     const name_chat_div = document.createElement('div');
@@ -677,11 +694,13 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
         name_chat_div.innerHTML += `<svg width="${icon_size / 2.6}px" height="${icon_size / 2.6}px" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--emojione" preserveAspectRatio="xMidYMid meet"><circle cx="32" cy="32" r="30" fill="#4bd37b"></circle><path fill="#ffffff" d="M46 14L25 35.6l-7-7.2l-7 7.2L25 50l28-28.8z"></path></svg>`;
     }
     name_chat_div.classList = "n-c";
-    name_chat_div.appendChild(last_time);
+//    last_time.appendChild(rn);
+//    name_chat_div.appendChild(last_time);
+name_chat_div.appendChild(last_rn_div);
     name_chat_div.appendChild(last_mess_div);
+//    name_chat_div.appendChild(rn);
     btn.appendChild(icon_chat);
     btn.appendChild(name_chat_div);
-    btn.appendChild(rn);
     cont.appendChild(btn);
     gener_icon_chat(name_chat[0], chat_id, "icon_chat" + command + chat_id);
     $(`#chat${chat_id}`).on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu

@@ -3,6 +3,17 @@
         width:85vw;
     }
 
+
+    .create-chats-plus-div{
+        right: 25vw;
+        left:auto;
+        bottom: 20vh;
+    }
+    .hew-chats-div-menu{
+    text-align:left;
+    left: -20vw;
+     width: 40vw;
+}
     .name-menu{
         width:85vw;
     }

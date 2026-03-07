@@ -1,5 +1,5 @@
 from data.my_orm.tables import Table
-from data.my_orm.column import BoolColumn, TextColumn, IDColumn, INEGERColumn, DataTime
+from data.my_orm.column import BoolColumn, TextColumn, INEGERColumn, DataTime
 
 
 class Message(Table):
@@ -17,7 +17,6 @@ class Message(Table):
         self.type = INEGERColumn("type")  # 9
 
     def get_date(self):
-        # print(self.time)
         date = str(self.time.value).split()[0].split("-")
         return f"{date[2]}.{date[1]}.{date[0]}"
 

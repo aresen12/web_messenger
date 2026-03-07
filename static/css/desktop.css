@@ -16,9 +16,9 @@
 .time-in-chat{
     color: #b3b3b3;
     display: inline;
-    float: right;
-   position:relative; left:auto;top:0px;right: 0px;
 }
+
+
 .global-menu{
     position:relative;
     width:40vw;
@@ -48,6 +48,15 @@
     margin-right:auto;
     margin-left:auto;
 }
+
+
+.create-chats-plus-div{
+    position:absolute;
+    bottom:100px;
+    left: 25vw;
+}
+
+
 .message-other {
     position:relative;
     left:3vw;
@@ -311,13 +320,22 @@ bottom: 0px;
     scrollbar-color: hsl(0 0% 50%);
 
  }
+ .rn-time {
+ float: right;
+   position:relative;
+    left:auto;
+    right: 0px;
+ }
  .r-n {
     display:inline-block;
     background-color:red;
     color: white;
     border-radius: 10px;
-     width:fit-content;
+     width:25px;
      height:25px;
+    text-align: center;
+
+
  }
  .date_k {
     display:flex;

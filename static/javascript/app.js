@@ -123,6 +123,10 @@ function un_pinned(mess_id){
 
 
 function set_recipient(id_chat, is_primary, name, status, pinned) {
+// пользователь прочитал все сообщения
+    var rn = document.getElementById("rn" + id_chat);
+    rn.textContent = "";
+    rn.style.display = "none";
     document.getElementById("ident").textContent = "";
     document.getElementById("pinned").innerHTML = "";
     document.getElementById("menu_chat_div_all").style.display = "block";
@@ -710,7 +714,9 @@ function get_read(chat_id){
         data: JSON.stringify({"chat_id":chat_id}),
         success: function(json){
             if (json["r"]){
-                document.getElementById("rn" + chat_id).innerHTML = json["r"];
+                var rn = document.getElementById("rn" + chat_id);
+                rn.innerHTML = json["r"];
+                rn.style.display = "block";
             }
             },
         error: function(err) {
@@ -1080,6 +1086,7 @@ function submit_username_tg(){
 function get_new_message_id(){
     let mess_id = document.getElementById("last_mess_id").value;
     let chat_id = document.getElementById("chat_id").value;
+    if (chat_id){
     $.ajax({
         url: `/m/get_new_message_id/${mess_id}/${chat_id}`,
         type: 'GET',
@@ -1096,6 +1103,7 @@ function get_new_message_id(){
             console.error(err);
         }
     });
+}
 }
 
 

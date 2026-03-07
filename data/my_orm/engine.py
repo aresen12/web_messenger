@@ -51,7 +51,7 @@ class SessionDB:
                 try:
                     getattr(self.current_table, columns[i][1]).value = value[i]
                 except Exception:
-                    print(columns[i][1])
+                    pass
             r = self.current_table
             self.current_table = None
             return r
@@ -63,7 +63,7 @@ class SessionDB:
                 try:
                     getattr(self.current_table, columns[i][1]).value = value[i]
                 except Exception:
-                    print(columns[i][1])
+                    pass
             r = self.current_table
             self.current_table = None
             return r

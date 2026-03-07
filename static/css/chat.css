@@ -36,6 +36,7 @@
 
     .info-btn {
         font-size: 40px;
+        border-radius:25px;
     }
 
     .date {
@@ -80,14 +81,26 @@
         left:3vw;
         font-size: 25pt;
         width:60vw;
+        border-radius:25px;
         }
 
     .my-message {
         position:relative;
-        left:3vw;
         font-size: 25pt;
         max-width:60vw;
+        width:60vw;
+        left:30vw;
+        border-radius:25px;
+        padding-left:6px;
         }
+
+    .r-n{
+        width:70px;
+        border-radius:35px;
+        height:70px;
+        bottom: 15px;
+        text-align:center;
+    }
 
     .time-mess {
         font-size:16pt;
@@ -95,11 +108,6 @@
         margin:0px;
     }
 
-    .my-message {
-        font-size: 25pt;
-        width:60vw;
-        left:30vw;
-        }
 
     .submit_btn{
         height: 80px;
@@ -132,6 +140,7 @@
     .context-menu-open{
         font-size: 55px;
         width: 55vw;
+        border-radius: 30px;
     }
 
     .emoji-button {

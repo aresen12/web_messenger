@@ -36,11 +36,11 @@ def m_st():
         c_user = db_sess.query(User).filter(User.email == current_user.email).first()
         try:
             int(request.form["chat_id"])
-            my_sess = SessionDB(f"db/chats/chat{request.form["chat_id"]}.db")
+            my_sess = SessionDB(f"db/chats/chat{request.form['chat_id']}.db")
             mess = new_mess(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
                         html=request.form["html_m"])
         except ValueError:
-            my_sess = SessionDB(f"db/my/{request.form["chat_id"]}.db")
+            my_sess = SessionDB(f"db/my/{request.form['chat_id']}.db")
             mess = new_mess_my(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
                                html=request.form["html_m"])
         x = ""
@@ -148,11 +148,8 @@ def create_chat():
 
     else:
         members = chat.members.split()
-        c_id = str(current_user.id)
-        print(members, "members")
         for member in members:
-            if str(c_id) != member:
-                print(member)
+            if str(current_user.id) != member:
                 emit("create_chat", {"chat_id": str(chat_id),
                                          "name": chat.name, "is_primary": data["primary"]},
                          to=f"u{member}", namespace="/")
@@ -164,7 +161,7 @@ def create_chat():
 @mg.route("/pinned", methods=["POST"])
 def pinned():
     data = request.get_json()
-    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+    db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
     mess = db_sess.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
     mess.pinned.value = 1
     db_sess.update(mess)
@@ -201,7 +198,7 @@ def chat_unpinned():
 @mg.route("/un_pinned", methods=["POST"])
 def an_pinned():
     data = request.get_json()
-    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+    db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
     mess = db_sess.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
     mess.pinned.value = 0
     db_sess.update(mess)
@@ -224,7 +221,7 @@ def get_files_menu():
     files = db_sess.query(File).filter(File.chat_id == data["chat_id"]).all()
     json_res = []
     if str(data["chat_id"])[0] != "m":
-        sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+        sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
         for file in files:
             file: File
             mess = sess.query(MyMessage()).filter(f"message.img = {file.id}").first()
@@ -233,7 +230,7 @@ def get_files_menu():
             else:
                 pass
     else:
-        sess = SessionDB(f"db/my/{data["chat_id"]}.db")
+        sess = SessionDB(f"db/my/{data['chat_id']}.db")
         for file in files:
             file: File
             mess = sess.query(MyMessage()).filter(f"message.img = {file.id}").first()
@@ -250,14 +247,13 @@ def get_files_menu():
 @mg.route("/edit_message", methods=["POST"])
 def edit_mess():
     data = request.get_json()
-    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+    db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
     mess = db_sess.query(Message()).filter(f"message.id = {data["id"]}").first()
     if mess.id_sender.value == current_user.id:
         mess.message.value = data["new_text"]
         mess.read.value = 0
         db_sess.update(mess)
         db_sess.commit()
-        print("test")
     db_sess.close()
     return {"log": True}
 
@@ -363,15 +359,11 @@ def delete_mess():
     data = request.get_json()
     db_sess = SessionDB(f'db/chats/chat{data["chat_id"]}.db')
     mes = db_sess.query(Message()).filter(f'message.id = {data["id"]}').first()
-    print(mes)
     mes: Message
-    # print(data['id'], "delete id")
     if mes is None:
         return {"log": "bad id", "delete_id": data["id"]}
     if mes.type != 2:
-        print("emit")
         emit('delete_message', {"message_id": mes.id.value}, to=str(data["chat_id"]), namespace="/")
-        # emit('delete_message', {"message_id": mes.id}, to=mes.chat_id, namespace="/")
     else:
         emit('delete_emoji', {"message_id_on_emoji": mes.html_m.value,
                               "id_emoji": mes.message.value, "id_sender": mes.id_sender.value, "id_message_emoji": mes.id},
@@ -424,7 +416,6 @@ def block_chat():
         chat.status = 3
         if chat.primary_chat:
             bl_list = db_sess.query(Black).filter(Black.id_user == current_user.id).first()
-            print(bl_list)
             del mem[mem.index(str(current_user.id))]
             if bl_list is None:
                 bl_list = Black()
@@ -473,7 +464,6 @@ def edit_name_chat():
     db_sess = db_session.create_session()
     chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
     if str(current_user.id) in chat.members.split():
-        print(data["new_name"])
         chat.name = data["new_name"]
     db_sess.commit()
     db_sess.close()
@@ -519,10 +509,10 @@ def get_part_messages():
 def get_json_mess_my():
     if current_user.is_authenticated:
         data = request.get_json()
-        db_sess = SessionDB(f"db/my/my{data["chat_id"]}.db")
+        db_sess = SessionDB(f"db/my/my{data['chat_id']}.db")
         messages = db_sess.query(MyMessage()).all()
         sess = db_session.create_session()
-        js = {"messages": [], "files": get_files(f"my" + data["chat_id"], sess)}
+        js = {"messages": [], "files": get_files("my" + data["chat_id"], sess)}
         messages.sort(key=lambda x: x[8])
         for m in messages:
             js["messages"].append({"id": m[0], "read": m[1], "html_m": m[4], "text": m[2], 'time': m[8],
@@ -544,7 +534,7 @@ def get_json_message():
             db_sess.close()
             return {"log": "Permission error"}
         db_sess.close()
-        my_orm = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+        my_orm = SessionDB(f"db/chats/chat{data['chat_id']}.db")
         messages = my_orm.query(Message()).all()
         js = {"messages": [], "files": get_files(data["chat_id"], db_sess), "current_user": current_user.id}
         f = False
@@ -567,12 +557,12 @@ def get_json_message():
 def get_not_read():
     data = request.get_json()
     if current_user.is_authenticated:
-        db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+        db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
         m = db_sess.query(Message()).all()
         db_sess.close()
         le = 0
         for i in range(len(m) - 1, -1, -1):
-            if not m[i][0] and current_user.id != m[i][1]:
+            if not m[i][1] and current_user.id != m[i][7]:
                 le += 1
             else:
                 break
@@ -590,10 +580,10 @@ def mail():
             db_sess.close()
             return {"log": 'PermissionError'}
         if str(data["chat_id"])[0] != "m":
-            sess_my_chat = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+            sess_my_chat = SessionDB(f"db/chats/chat{data['chat_id']}.db")
         else:
-            sess_my_chat = SessionDB(f"db/my/{data["chat_id"]}.db")
-        sess_other_chat = SessionDB(f"db/chats/chat{data["mail_id_chat"]}.db")
+            sess_my_chat = SessionDB(f"db/my/{data['chat_id']}.db")
+        sess_other_chat = SessionDB(f"db/chats/chat{data['mail_id_chat']}.db")
         message = sess_my_chat.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
         new_mail = new_mess(message.message.value, message.id_sender.value, message.name_sender.value,
                             message.html_m.value, message.img.value)
@@ -611,9 +601,9 @@ def my_mail():
     if current_user.is_authenticated:
         data = request.get_json()
         db_sess = db_session.create_session()
-        sess_my_chat = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+        sess_my_chat = SessionDB(f"db/chats/chat{data['chat_id']}.db")
         # mail_id_chat id в формате my{number}
-        sess_other_chat = SessionDB(f"db/my/{data["mail_id_chat"]}.db")
+        sess_other_chat = SessionDB(f"db/my/{data['mail_id_chat']}.db")
         message = sess_my_chat.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
         new_mail = new_mess_my(message.message.value, message.id_sender.value, message.name_sender.value,
                                message.html_m.value, message.img.value)
@@ -683,7 +673,6 @@ def get_cnt_m_cast():
 @mg.route("/users_bg", methods=["POST"])
 def users_bg():
     file = request.files["file"]
-    print(file)
     file2 = open(f"static/img/bg_users/{current_user.id}.jpg", mode="wb+")
     file2.write(file.read())
     file2.close()
@@ -693,7 +682,7 @@ def users_bg():
 @mg.route("/set_read", methods=["POST"])
 def set_raed():
     data = request.get_json()
-    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+    db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
     mess = db_sess.query(Message()).filter("message.read = 0").all()
     f = False
     for m in mess:
@@ -712,7 +701,6 @@ def set_raed():
 @mg.route("/get_new_message_id/<id_mess>/<chat_id>")
 def get_new_message_id(id_mess, chat_id):
     if current_user.is_authenticated:
-        print(chat_id)
         db_sess = SessionDB(f"db/chats/chat{chat_id}.db")
         messages = db_sess.query(Message()).filter(f"message.id > {id_mess}").all()
         js = {"message": []}

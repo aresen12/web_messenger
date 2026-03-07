@@ -39,8 +39,7 @@ def android_base():
         db_sess = db_session.create_session()
         c_user = db_sess.query(User).filter(User.email == current_user.email).first()
         try:
-            int(request.form["chat_id"])
-            my_sess = SessionDB(f"db/chats/chat{request.form["chat_id"]}.db")
+            my_sess = SessionDB(f"db/chats/chat{request.form['chat_id']}.db")
             mess = new_mess(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
                             html=request.form["html_m"])
         except ValueError:
@@ -83,7 +82,7 @@ def android_base():
 @api.route("/search_in_chat", methods=["POST"])
 def search_response():
     data = request.get_json()
-    db_sess = SessionDB(f"db/chats/chat{data["chat_id"]}.db")
+    db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
     json_response = {"list_message": []}
     messages = db_sess.query(Message()).all()
     for message in messages:

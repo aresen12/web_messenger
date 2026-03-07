@@ -55,7 +55,6 @@ socket.on('create_chat', (data) => {
 
 //, html_m, other, text
 socket.on('emoji_client', (data) => {
-//    пока id не работает
     gener_emoji(data["id_emoji"], data["id_mess"], !(data["id_sender"] == id_user), data['value'])
 });
 
@@ -130,9 +129,18 @@ socket.on('disconnect', () => {
 
 socket.on('message_other', (data) => {
     var rn = document.getElementById("rn" + data["chat_id"]);
+    rn.style.display = "block";
     rn.innerText =  Number(rn.innerText) + 1;
     if (document.getElementById("chat_id").value != data["chat_id"]){
-        notification(data["text"], "");
+        notification(data["text"], data["name"]);
+        var  last_m = document.getElementById("last_m" + data["chat_id"]);
+        var  time = document.getElementById("last_time" + data["chat_id"]);
+        if (data["text"] && data["text"].length > 16){
+                last_m.textContent = data["text"].slice(0, 16) + "...";
+        } else {
+                last_m.textContent = data["text"];
+        }
+        time.textContent = data["time"].slice(0, 5);
 }
 });
 
