@@ -43,7 +43,7 @@ def android_base():
             mess = new_mess(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
                             html=request.form["html_m"])
         except ValueError:
-            my_sess = SessionDB(f"db/my/{request.form["chat_id"]}.db")
+            my_sess = SessionDB(f"db/my/{request.form['chat_id']}.db")
             mess = new_mess_my(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
                                html=request.form["html_m"])
         x = ""
