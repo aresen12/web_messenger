@@ -199,7 +199,7 @@ def chat_unpinned():
 def an_pinned():
     data = request.get_json()
     db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
-    mess = db_sess.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
+    mess = db_sess.query(Message()).filter(f"message.id = {data['mess_id']}").first()
     mess.pinned.value = 0
     db_sess.update(mess)
     db_sess.commit()
@@ -248,7 +248,7 @@ def get_files_menu():
 def edit_mess():
     data = request.get_json()
     db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
-    mess = db_sess.query(Message()).filter(f"message.id = {data["id"]}").first()
+    mess = db_sess.query(Message()).filter(f"message.id = {data['id']}").first()
     if mess.id_sender.value == current_user.id:
         mess.message.value = data["new_text"]
         mess.read.value = 0
@@ -368,7 +368,7 @@ def delete_mess():
         emit('delete_emoji', {"message_id_on_emoji": mes.html_m.value,
                               "id_emoji": mes.message.value, "id_sender": mes.id_sender.value, "id_message_emoji": mes.id},
              to=str(data["chat_id"]),  namespace="/")
-    list_emoji = db_sess.query(Message()).filter("message.type = 2").filter(f"message.html_m = {data["id"]}").all()
+    list_emoji = db_sess.query(Message()).filter("message.type = 2").filter(f"message.html_m = {data['id']}").all()
     for _ in list_emoji:
         mess = Message()
         mess.id.value = _[0]
@@ -584,7 +584,7 @@ def mail():
         else:
             sess_my_chat = SessionDB(f"db/my/{data['chat_id']}.db")
         sess_other_chat = SessionDB(f"db/chats/chat{data['mail_id_chat']}.db")
-        message = sess_my_chat.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
+        message = sess_my_chat.query(Message()).filter(f"message.id = {data['mess_id']}").first()
         new_mail = new_mess(message.message.value, message.id_sender.value, message.name_sender.value,
                             message.html_m.value, message.img.value)
         sess_other_chat.add(new_mail)
@@ -604,7 +604,7 @@ def my_mail():
         sess_my_chat = SessionDB(f"db/chats/chat{data['chat_id']}.db")
         # mail_id_chat id в формате my{number}
         sess_other_chat = SessionDB(f"db/my/{data['mail_id_chat']}.db")
-        message = sess_my_chat.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
+        message = sess_my_chat.query(Message()).filter(f"message.id = {data['mess_id']}").first()
         new_mail = new_mess_my(message.message.value, message.id_sender.value, message.name_sender.value,
                                message.html_m.value, message.img.value)
         sess_other_chat.add(new_mail)
