@@ -162,7 +162,7 @@ def create_chat():
 def pinned():
     data = request.get_json()
     db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
-    mess = db_sess.query(Message()).filter(f"message.id = {data["mess_id"]}").first()
+    mess = db_sess.query(Message()).filter(f"message.id = {data['mess_id']}").first()
     mess.pinned.value = 1
     db_sess.update(mess)
     db_sess.commit()
