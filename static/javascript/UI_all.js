@@ -725,7 +725,7 @@ function gener_my_chat(id_div, command, last_mess, chat_id){
     let last_time = document.createElement("div");
     if (last_mess["time"] != "2023-01-01 00:00:00.0"){
     last_time.textContent = last_mess["time"].slice(11, 16);;
-    last_time.classList = "time-in-chat";
+    last_time.classList = "rn-time time-in-chat";
     }
     if (last_mess["type"] == 2){
         last_mess_div.textContent = emoji[last_mess["text"]];
@@ -771,7 +771,8 @@ function open_menu_chat(chat_id){
     if (document.getElementById("menu_chat" + chat_id)){
         document.getElementById("menu_chat" + chat_id).style.display = "block";
     }else {
-        var div = document.createElement("ul");
+        var div = document.createElement("div");
+        var ul = document.createElement("ul")
         var btn = document.createElement("li")
         div.classList = "context-menu-open";
         div.id = "menu_chat" + chat_id;
@@ -783,7 +784,8 @@ function open_menu_chat(chat_id){
             btn.textContent = "открепить";
             btn.setAttribute("onclick", `unpin_chat(${chat_id})`);
         }
-        div.appendChild(btn)
+        ul.appendChild(btn)
+        div.appendChild(ul)
         document.getElementById("n_c" + chat_id).appendChild(div)
     }
 }

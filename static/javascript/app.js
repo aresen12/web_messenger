@@ -156,7 +156,7 @@ function set_recipient(id_chat, is_primary, name, status, pinned) {
         menu.innerHTML += '<li onclick="sing_out_of_chat()">Покинуть чат</li>';
     };
     if (!pinned) {
-        menu.innerHTML += `<li onclick="pin_chat(${id_chat})">Закрепить</li>`;
+        menu.innerHTML += `<li class="" onclick="pin_chat(${id_chat})">Закрепить</li>`;
     } else {
         menu.innerHTML += `<li onclick="unpin_chat(${id_chat})">Открепить</li>`;
     }
@@ -513,6 +513,7 @@ function block_user() {
 
 
 function answer(id_mess){
+    exit_menu();
     var la = document.getElementById("edit-label");
     var t = document.getElementById("text" + id_mess).textContent.trim();
      if (t == ""){
@@ -835,11 +836,11 @@ function get_black_list(){
 function get_chats_gl(id_div, id_m){
     var global_menu = document.getElementById(id_div);
     var div = document.createElement("div");
+    global_menu.innerHTML += '<b class="name-menu">Переслать</b> <button onclick="close_global_menu()" type="button"\
+                    class="btn-close gl-btn-close" aria-label="Close"></button>';
     div.id = "cont_user_send"
     global_menu.appendChild(div);
     get_chats("cont_user_send", id_m);
-    global_menu.innerHTML += '<button onclick="close_global_menu()" type="button"\
-                    class="btn-close gl-btn-close" aria-label="Close"></button>';
 }
 
 

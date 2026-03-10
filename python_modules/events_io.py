@@ -17,7 +17,9 @@ def on_join(data):
     db_sess = db_session.create_session()
     chat_members = db_sess.query(Chat.members).filter(Chat.id == data["room"]).first()
     db_sess.close()
-    if current_user.is_authenticated and str(current_user.id) in chat_members[0].split():
+    print(room)
+    if (current_user.is_authenticated
+            and (room == f"u{current_user.id}" or (room == f"my{current_user.id}") or (not (chat_members is None) and str(current_user.id) in chat_members[0].split()))):
         join_room(room)
         emit('join_event', {"id_user": current_user.id, "users": users}, to=room)
 

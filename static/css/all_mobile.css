@@ -24,7 +24,9 @@
     .name-user {
         width: 90vw;
     }
-
+    .div-name-menu{
+        width:90vw;
+    }
     .global-menu {
         position:relative;
         width:95vw;

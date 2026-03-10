@@ -357,7 +357,10 @@ def get_chat_user(id_):
 @mg.route("/delete", methods=["DELETE"])
 def delete_mess():
     data = request.get_json()
-    db_sess = SessionDB(f'db/chats/chat{data["chat_id"]}.db')
+    if str(data["chat_id"])[0] == "m":
+        db_sess = SessionDB(f"db/my/my{current_user.id}.db")
+    else:
+        db_sess = SessionDB(f'db/chats/chat{data["chat_id"]}.db')
     mes = db_sess.query(Message()).filter(f'message.id = {data["id"]}').first()
     mes: Message
     if mes is None:
