@@ -512,6 +512,64 @@ window.addEventListener('paste', e => {
             }
 });
 
+function gener_sticker(id_m, time, html_m, other, read, name_sender, pinned){
+     if (other && !read && !vis){
+                notification(text, document.getElementById('name_chat').innerText);
+            }
+     const messagesDiv = document.getElementById('content');
+     const messageItem = document.createElement('div');
+    if (other) {
+        messageItem.classList = 'message-other';
+    } else{
+        messageItem.classList = 'my-message';
+    };
+    const message_text = document.createElement('p');
+    message_text.classList = "text-in-mess";
+    message_text.id = 'text' + id_m;
+    const html_text = document.createElement('div');
+    html_text.innerHTML = html_m;
+    var em_div = document.createElement("div");
+    em_div.id = "em" + id_m;
+    messageItem.appendChild(html_text);
+    messageItem.appendChild(message_text);
+    messageItem.appendChild(em_div);
+    messageItem.role = "alert";
+    var onclick = "";
+    if (mobile){
+        messageItem.setAttribute("onclick", `open_menu_mess('m${id_m}')`);
+    }
+     const time_div = document.createElement('p');
+     time_div.classList = "time-mess";
+     if (other){
+        time_div.textContent = time + " " + name_sender;
+     }else{
+        time_div.textContent = time;
+     }
+     messageItem.appendChild(time_div);
+    if (read){
+        time_div.innerHTML += '<button type="button" class="info-btn "\
+         data-bs-toggle="tooltip" data-bs-placement="top" title="прочитано">ᨒ</button>';
+    } else{
+        time_div.innerHTML += '<button type="button" class="info-btn "\
+         data-bs-toggle="tooltip" data-bs-placement="top" title="доставлено">ᨈ</button>';
+    }
+    const menu_con = document.createElement("div");
+    menu_con.style.display = "none";
+    menu_con.classList.add("context-menu-open");
+    menu_con.id = "mm" + id_m;
+    messageItem.appendChild(menu_con);
+    messageItem.id = 'm' + id_m;
+    messageItem.style.background = "none";
+    messageItem.style.color = "white";
+    messagesDiv.appendChild(messageItem);
+     scrollToBottom("content");
+     if(pinned){
+        add_pinned(id_m);
+        messagesDiv.style.height = "100%";
+     }
+}
+
+
 
 function show_in_chat_search(){
     answer_color("m"+ mess_id);
@@ -612,7 +670,7 @@ function set_username_tg(){
     var input_tg = document.createElement("input");
     input_tg.id = "tg_input";
     var h1_tg = document.createElement("p");
-    h1_tg.classList = "emoji-button";
+    h1_tg.classList = "cont-ul";
     h1_tg.textContent = "Напишите свой username в текстовое поле ниже, а затем напишите нашему тг боту @Kazbek_messenger_bot";
     global_menu.appendChild(h1_tg);
     global_menu.appendChild(input_tg);

@@ -1,55 +1,132 @@
 @media screen and (width < 981px) and (pointer:none), (pointer:coarse) {
-    .cont-users{
-        width:85vw;
+    .menu-chat-div-all{
+        display:flex;
+    }
+    .log-img {height:10vh;}
+
+    .log-name {font-size:40px;}
+
+    .add-menu{width:100vw;}
+
+    .html {font-size: 20px;}
+    .btn-three-point{
+        top: 0px;
+        width: fit-content;
+        display:inline-block;
+    }
+    .info-btn {
+        border-radius:25px;
     }
 
+    .date {
+        text-align:center;
+    }
+
+    .a-email {
+        width:100vw;
+    }
+
+    .chat-header {
+        overflow:hidden;
+    }
+
+    .chat-cont{
+        overflow: hidden;
+        width:100%;
+        height:100%;
+    }
+    .content-div{
+        height: 70vh;
+    }
+    .content-email {
+        width:98vw;
+        }
+
+    .chat-btn {
+        display:block;
+        top:7vh;
+        border-radius:20px;
+    }
+
+    .mess-img {width:56vw;}
+
+    .message-other {
+        position:relative;
+        left:3vw;
+        width:60vw;
+
+        }
 
     .create-chats-plus-div{
-        right: 25vw;
-        left:auto;
-        bottom: 20vh;
+        left: 80vw;
     }
+
     .hew-chats-div-menu{
-    text-align:left;
-    left: -20vw;
-     width: 40vw;
-}
-    .name-menu{
-        width:85vw;
-    }
-    .name-new-chat{
-        width:85vw;
+    left: -40vw;
     }
 
-    .name-user {
-        width: 90vw;
-    }
-    .div-name-menu{
-        width:90vw;
-    }
-    .global-menu {
+    .my-message {
         position:relative;
-        width:95vw;
-        left: 2.5px;
-        margin-left:2.5vw;
+        max-width:60vw;
+        width:60vw;
+        left:30vw;
+        padding-left:6px;
+        }
+
+    .r-n{
+        bottom: 15px;
+        text-align:center;
     }
 
-    .form-group {width:100vw;}
+    .time-mess {
+        float:none;
+        margin:0px;
+    }
 
-    .text120{width:40vw;}
 
-    .mess {
-        width:90vw;
-        left:5vw;
+    .submit_btn{
+        height: 80px;
+        width:70px;
+    }
+    .download-img-a{
+        right: 15vw;
+    }
+    .big-close-on-mobile{
+        font-size: 7vw;
+        right: 2vw;
     }
 
     .settings {
-        width:100vw;
+        width: 100vw;
     }
 
-    .container-mess {
+
+    .mess-admin {
+        position:fixed;
         width:100vw;
+        height:80vh;
     }
 
-    .form2 {width:100vw;}
+    .global-menu{
+        width: 90vw;
+        height:90vh;
+    }
+
+    .background-img {
+        position:fixed;
+        left:0vw;
+        width:100%;
+        height:100%;
+    }
+
+    .context-menu-open{
+        width: 55vw;
+        border-radius: 30px;
+    }
+
+    .emoji-button {
+}
+    .form2{
+        width:100vw;
+    }
 }

@@ -38,6 +38,21 @@ def edit_event(data):
     emit("edit_mess", {"new_text": data["new_text"], "id_mess": data["id_m"], }, to=room)
 
 
+@socketio.on("send_sticker")
+def send_sticker(data):
+    if str(data["chat_id"])[0] != "m":
+        sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
+    else:
+        sess = SessionDB(f"db/my/{data['chat_id']}.db")
+    mess = new_mess("", current_user.id, current_user.name, type=3, html=data["html"])
+    sess.add(mess)
+    sess.commit()
+    sess.close()
+    emit('message', {"message": "", "time": mess.get_time(), "id_m": mess.id.value,
+                     "file2": "", "html": data["html"], "name": current_user.name,
+                     "read": 0, "id_sender": current_user.id, "pinned": mess.pinned.value}, to=data['chat_id'])
+
+
 def send_all2(db_sess, chat_members, text, c_id, name, prim, chat_id, time):
     db_sess: db_session
     if prim:

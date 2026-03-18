@@ -1,24 +1,4 @@
-var enter_flag = true;
-var answer_flag = false;
-var edit_flag = false;
-var edit_id = 0;
-var global_distans = 0;
-var menu_id = "";
-var mobile = false;
-var vis = true;
-var position = 0;
-
 random_colors = ["#59a83d", "#6495ed", "#fab700", "#ffb28b", "#b37fb3"]
-
-
-if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i .test(navigator.userAgent)){
-    var x = document.getElementById("background-img");
-    var y = document.getElementById("container-mess");
-    x.style.display = "none";
-    var button = document.getElementById("button").style.visibility = 'hidden';
-    y.style.display = "none";
-    globalThis.mobile = true;
-};
 
 
 function getCookie(name) {
@@ -174,6 +154,7 @@ function set_recipient(id_chat, is_primary, name, status, pinned) {
     globalThis.global_distans = distance;
     document.getElementById('chat_id').innerText = id_chat;
     document.getElementById("btn_down").style.display = 'block';
+    console.log(mobile);
     if (mobile){
         document.getElementById("chat_header").style.display = "flex";
         x.style.display = "block";
@@ -346,10 +327,12 @@ function show(path){
                 date = time[0];
                 cont.innerHTML += '<div class="date_k">' + time2[2]+ "." + time2[1] + "." + time2[0] + '</div>';
             };
-            if (c_m["type"] != 2){
-            gener_html(c_m["id"], c_m["text"], time[1].split(".")[0], c_m["html_m"], file, other, c_m['read'], c_m["name_sender"], c_m["pinned"]);
-        } else {
+            if (c_m["type"] == 3){
+            gener_sticker(c_m["id"], time[1].split(".")[0], c_m["html_m"], other, c_m['read'], c_m["name_sender"], c_m["pinned"]);
+        } else if (c_m["type"] == 2){
             gener_emoji(c_m["id"],  c_m["html_m"], other, c_m["text"]);
+        } else {
+            gener_html(c_m["id"], c_m["text"], time[1].split(".")[0], c_m["html_m"], file, other, c_m['read'], c_m["name_sender"], c_m["pinned"]);
         }
         }
         cont.innerHTML += '<div id="pos"><div id="pos2"></div></div>';

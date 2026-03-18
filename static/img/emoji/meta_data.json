@@ -1,0 +1,9 @@
+{ "groups": {
+  "smiles":[
+    {"smile": "\uD83D\uDE20", "path": "/smiles/angry_face_animated.png"},
+    {
+      "smile": "\uD83D\uDC7F", "path": "/smiles/angry_face_with_horns_animated.png"
+    }
+  ]
+}
+}

@@ -39,6 +39,11 @@ function send_io_mess() {
     }
 }
 
+
+function send_sticker(path){
+    socket.emit("send_sticker", {chat_id: document.getElementById("chat_id").value, html: `<img src="/static/img/emoji${path}" class="mess-img">`})
+}
+
             // Listen for messages from server
 socket.on('message', (data) => {
                 const messagesDiv = document.getElementById('content');

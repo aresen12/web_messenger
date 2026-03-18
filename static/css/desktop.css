@@ -4,6 +4,10 @@
 }
 
 
+.stiker-menu{
+    width: 30px;
+}
+
 .background-img {
     position:fixed;
     width:68vw;
@@ -64,7 +68,7 @@
     text-overflow:clip;
     background:#CFF4FC;
     color:#055160;
-    border-radius: 5px;
+    border-radius: 10px;
     padding-left: 4px;
     margin: 10px;
 }
@@ -128,7 +132,7 @@
     left:40vw;
     background-color: #D1E7DD;
     color:#0F5132;
-    border-radius: 5px;
+    border-radius: 10px;
     padding-left: 4px;
     margin: 10px;
 }

@@ -15,16 +15,24 @@ from python_modules.keys import room_name, jwt
 from data.admin import Admin
 from data.my_orm.message import Message, new_mess
 from data.my_orm.engine import SessionDB
+import json
 mg = Blueprint('messenger', __name__, url_prefix='/m')
 
 
+@mg.route("/<flag>")
 @mg.route("/", methods=["GET", "POST"])
-def m_st():
+def m_st(flag=1):
     if request.method == 'GET':
         if current_user.is_authenticated:
             chats = get_chats()
-            return render_template("messenger.html", device="",
-                                   title='Kazbek', chats=chats, my_bg=current_user.id, room_name=room_name, jwt_my=jwt)
+            file___ = open("static/img/emoji/meta_data.json", mode="r")
+            print(file___)
+            metadata = json.load(file___)
+            file___.close()
+            print(metadata)
+            return render_template("messenger.html", device="", meta_data=metadata,
+                                   title='Kazbek', chats=chats, my_bg=current_user.id, room_name=room_name, jwt_my=jwt,
+                                   flag=flag)
         return redirect("/login")
     else:
         if not current_user.is_authenticated:

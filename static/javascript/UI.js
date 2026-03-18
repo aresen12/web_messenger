@@ -1,24 +1,3 @@
-var f = document.getElementById("form").offsetHeight;
-var nav = document.getElementById("chat_header").offsetHeight;
-var m_c =   document.getElementById("container-mess");
-var email_cont = document.getElementById("email");
-var icon_size = 40;
-if (mobile){
-    globalThis.icon_size = 120;
-}
-//m_c.style.height =  window.innerHeight - f - nav + "px";
-m_c.style.top = nav;
-//email_cont.style.top = nav;
-//email_cont.style.height = window.innerHeight - f - nav + "px";
-if (nav == 0){
-    nav = 125;
-    m_c.style.top = nav;
-}
-//document.getElementById("background-img").style.height =  window.innerHeight - nav + "px";
-document.getElementById("background-img").style.top = nav + "px";
-document.getElementById("form").style.display = "none";
-
-
 function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, pinned) {
     document.getElementById("last_mess_id").value = id_m;
      if (other && !read && !vis){
@@ -141,8 +120,6 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
 
 // отрисовка под мобильный интерфейс
 if (mobile){
-    document.getElementById("about").style.fontSize = "50px";
-    document.getElementById("plus_svg").setAttribute("width", "100px");
     document.getElementById("chat_header").style.display = "none";
     document.getElementById("btn_settings_svg").setAttribute("width", "7vw");
     document.getElementById("svg_download_img_a").setAttribute("width", "7vw");
