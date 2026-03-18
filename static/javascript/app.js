@@ -255,48 +255,6 @@ function submit_form() {
 }
 
 
-document.querySelector('.form2').addEventListener('submit', function(e) {
-      e.preventDefault();
-      go();
-})
-document.querySelector('#bg_form').addEventListener('submit', function(e) {
-  event.preventDefault(); // Отмена стандартного поведения формы
-  const fileInput = document.getElementById('input');
-  const file = fileInput.files[0];
-  if (file) {
-  document.getElementById("progressBar").style.display = "block";
-    uploadFile(file); // Передаем файл в функцию для загрузки
-  } else {
-    alert('Пожалуйста, выберите файл.');
-  }
-
-
-})
-
-document.addEventListener('keydown', function(event) {
-    var x = document.querySelector('form');
-    var about = document.getElementById("about");
-    if (enter_flag && !mobile) {
-        if ((event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
-        globalThis.position = about.selectionStart + 1;
-        about.value = about.value + "\n";
-        go();
-        // add len text
-        };
-        if (event.keyCode == 13 && !(event.ctrlKey)) {
-         event.preventDefault();
-        submit_form();
-        }
-    }else {
-        if ( (event.keyCode == 10 || event.keyCode == 13) && event.ctrlKey) {
-         event.preventDefault();
-            submit_form();
-  }
-  }
-});
-
-
-
 function show(path){
     var chat_id = document.getElementById("chat_id").value;
     var request_url =  "/m/get_json_mess";
@@ -973,23 +931,6 @@ function copyToClipboard(id_m) {
   }
 
 
-$('#content').on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
-        e.preventDefault(); //Prevent defaults
-        open_menu_mess(this.id); //alert the id
-});
-
-
-window.onfocus = function() {
-    globalThis.vis = true;
-    if (document.getElementById("chat_id") && document.getElementById("chat_id").value != ""){
-    set_read(document.getElementById("chat_id").value);
-    }
-};
-
-window.onblur = function() {
-    globalThis.vis = false;
-};
-
 function injectEmojisToList(e) {
         document.getElementById("about").value += e.innerHTML;
         globalThis.position = document.getElementById("about").selectionStart;
@@ -1036,17 +977,6 @@ function pinned(id_mess){
         }
     });
 }
-
-
-document.addEventListener('DOMContentLoaded', () => {
- (async () => {
-    try {
-        await Notification.requestPermission();
-    } catch (error){
-        console.log(error);
-   }
-   })
-});
 
 
 function submit_username_tg(){
@@ -1209,7 +1139,6 @@ function search_in_message(){
             } else{
                 var btn_down = document.getElementById("btn_search_down");
                 var btn_up = document.getElementById("btn_search_up");
-
             }
             var input = document.getElementById("list_search_id_message");
             if (!input){
@@ -1236,5 +1165,4 @@ function search_in_message(){
             console.error(err);
         }
     });
-
 }

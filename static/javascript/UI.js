@@ -118,18 +118,6 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
 }
 
 
-// отрисовка под мобильный интерфейс
-if (mobile){
-    document.getElementById("chat_header").style.display = "none";
-    document.getElementById("btn_settings_svg").setAttribute("width", "7vw");
-    document.getElementById("svg_download_img_a").setAttribute("width", "7vw");
-    document.getElementById("exit_chat_svg").setAttribute("height", "6vh");
-//    document.getElementById("Capa_1").setAttribute("height", "9vw");
-    document.getElementById("Capa_1").setAttribute("width", "100vw");
-
-    };
-
-
 function set_bg(num) {
     if (mobile){
         document.getElementById("background-img").src = "/static/img/bg/mob_bg" + num + ".jpg";

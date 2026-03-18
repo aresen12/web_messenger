@@ -35,3 +35,14 @@ if (nav == 0){
 document.getElementById("background-img").style.top = nav + "px";
 document.getElementById("form").style.display = "none";
 
+// отрисовка под мобильный интерфейс
+if (mobile){
+    document.getElementById("chat_header").style.display = "none";
+    document.getElementById("btn_settings_svg").setAttribute("width", "7vw");
+    document.getElementById("svg_download_img_a").setAttribute("width", "7vw");
+    document.getElementById("exit_chat_svg").setAttribute("height", "6vh");
+//    document.getElementById("Capa_1").setAttribute("height", "9vw");
+    document.getElementById("Capa_1").setAttribute("width", "100vw");
+
+    };
+
