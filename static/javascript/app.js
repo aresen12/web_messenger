@@ -61,7 +61,7 @@ var chat_id = document.getElementById("chat_id").value;
 
 function sing_out_of_chat(){
     $.ajax({
-    url: '/m/sing_out_chat',
+    url: '/chats/sing_out_chat',
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
@@ -324,7 +324,7 @@ function notification (text, chat_name) {
 
 function create_chat(list_members, name, is_primary){
     $.ajax({
-    url: '/m/create_chat',
+    url: '/chats/create_chat',
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
@@ -414,7 +414,7 @@ function delete_chat() {
     let is_del = confirm("Вы действительно хотите удалить этот чат?");
     if (is_del){
         $.ajax({
-            url: '/m/delete_chat',
+            url: '/chats/delete_chat',
             type: 'DELETE',
             dataType: 'json',
             contentType:'application/json',
@@ -436,7 +436,7 @@ function block_user() {
     let is_block = confirm("Вы действительно хотите заблокировать чат?");
     if (is_block){
         $.ajax({
-            url: '/m/block_chat',
+            url: '/chats/block_chat',
             type: 'POST',
             dataType: 'json',
             contentType:'application/json',
@@ -612,7 +612,7 @@ function create_group (){
     }
 //    create_chat(name, list_members, is_primary);
       $.ajax({
-    url: '/m/create_chat',
+    url: '/chats/create_chat',
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
@@ -631,7 +631,7 @@ function create_group (){
 function submit_new_users(){
     var list_members = document.getElementById("list_of_new_u").value;
     $.ajax({
-        url: '/m/add_in_chat',
+        url: '/chats/add_in_chat',
         type: 'POST',
         dataType: 'json',
         contentType:'application/json',
@@ -708,7 +708,7 @@ function send_of(chat_id, id_m, name_chat){
 
 function get_chats(id_div, command){
     $.ajax({
-        url: '/m/get_chats',
+        url: '/chats/get_chats',
         type: 'GET',
         dataType: 'json',
         success: function(json){
@@ -1024,7 +1024,7 @@ function get_new_message_id(){
 function unpin_chat(chat_id){
     exit_menu();
     $.ajax({
-        url: '/m/unpin_chat',
+        url: '/chats/unpin_chat',
         type: 'POST',
         dataType: 'json',
         contentType:'application/json',
@@ -1050,7 +1050,7 @@ function exit_menu(){
 function pin_chat(chat_id){
     exit_menu();
     $.ajax({
-        url: '/m/pin_chat',
+        url: '/chats/pin_chat',
         type: 'POST',
         dataType: 'json',
         contentType:'application/json',

@@ -12,7 +12,6 @@ from flask_socketio import emit
 from data.bot_db import BotDB
 from data.my_orm.my_message import MyMessage, new_mess_my
 from python_modules.keys import room_name, jwt
-from data.admin import Admin
 from data.my_orm.message import Message, new_mess
 from data.my_orm.engine import SessionDB
 import json
@@ -26,10 +25,8 @@ def m_st(flag=1):
         if current_user.is_authenticated:
             chats = get_chats()
             file___ = open("static/img/emoji/meta_data.json", mode="r")
-            print(file___)
             metadata = json.load(file___)
             file___.close()
-            print(metadata)
             return render_template("messenger.html", device="", meta_data=metadata,
                                    title='Kazbek', chats=chats, my_bg=current_user.id, room_name=room_name, jwt_my=jwt,
                                    flag=flag)
@@ -117,55 +114,6 @@ def get_black():
     return json_response
 
 
-@mg.route("/create_chat", methods=["POST"])
-def create_chat():
-    data = request.get_json()
-    db_sess = db_session.create_session()
-    if data["primary"]:
-        mem = data["list_members"].split()
-        mem1 = db_sess.query(Black.list_b).filter(Black.id_user == mem[0]).first()
-        mem2 = db_sess.query(Black.list_b).filter(Black.id_user == mem[1]).first()
-        if (not (mem2 is None) and (mem[1] in mem2[0].split() or mem[0] in mem2[0].split())) or (
-                not (mem1 is None) and (mem[0] in mem1[0].split() or mem[1] in mem1[0].split())):
-            db_sess.close()
-            return {"log": 'PermissionError'}
-    chat = Chat()
-    chat.name = data["name"]
-    chat.members = data["list_members"]  # list of id users
-    chat.primary_chat = data["primary"]
-    db_sess.add(chat)
-    db_sess.commit()
-    chat_id = chat.id
-    my_sess = SessionDB(f"db/chats/chat{chat_id}.db")
-    my_sess.create_table(Message())
-    my_sess.commit()
-    my_sess.close()
-    admin_flag = False
-    name_user = data["name"]
-    if chat.primary_chat:
-        members = chat.members.split()
-        del members[members.index(str(current_user.id))]
-        if len(members) != 0:
-            admins = [_[0] for _ in db_sess.query(Admin.id_user).all()]
-            if int(members[0]) in admins:
-                admin_flag = True
-            name_user = db_sess.query(User.name).filter(User.id == members[0]).first()[0]
-            emit("create_chat", {"chat_id": str(chat_id),
-                                 "name": current_user.name, "is_primary": data["primary"]},
-                 to=f"u{members[0]}", namespace="/")
-
-    else:
-        members = chat.members.split()
-        for member in members:
-            if str(current_user.id) != member:
-                emit("create_chat", {"chat_id": str(chat_id),
-                                         "name": chat.name, "is_primary": data["primary"]},
-                         to=f"u{member}", namespace="/")
-
-        db_sess.close()
-    return {"chat_id": str(chat_id), "name": name_user, "is_primary": data["primary"], "admin": admin_flag}
-
-
 @mg.route("/pinned", methods=["POST"])
 def pinned():
     data = request.get_json()
@@ -177,31 +125,6 @@ def pinned():
     db_sess.close()
     # добавить socketio
     return {"log": True}
-
-
-@mg.route("/pin_chat", methods=["POST"])
-def chat_pinned():
-    data = request.get_json()
-    db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
-    chat.pinned = True
-    db_sess.commit()
-    db_sess.close()
-    # добавить socketio
-    return {"log": True}
-
-
-@mg.route("/unpin_chat", methods=["POST"])
-def chat_unpinned():
-    data = request.get_json()
-    db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
-    chat.pinned = False
-    db_sess.commit()
-    db_sess.close()
-    # добавить socketio
-    return {"log": True}
-
 
 @mg.route("/un_pinned", methods=["POST"])
 def an_pinned():
@@ -304,33 +227,6 @@ def send_voice(chat_id):
     return {"log": True}
 
 
-@mg.route("/sing_out_chat", methods=["POST"])
-def sing_out_chat():
-    data = request.get_json()
-    db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
-    ch_mem = chat.members.split()
-    if str(current_user.id) in ch_mem:
-        del ch_mem[ch_mem.index(str(current_user.id))]
-    chat.members = " ".join(ch_mem)
-    db_sess.commit()
-    db_sess.close()
-    return {"log": True}
-
-
-@mg.route("/add_in_chat", methods=["POST"])
-def add_in_chat():
-    data = request.get_json()
-    db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
-    ch_mem = chat.members.split()
-    if str(current_user.id) in ch_mem:
-        chat.members += data["list_members"]
-    db_sess.commit()
-    db_sess.close()
-    return {"log": True}
-
-
 @mg.route("/get_users")
 def get_users():
     if current_user.is_authenticated:
@@ -388,56 +284,6 @@ def delete_mess():
     db_sess.commit()
     db_sess.close()
     return {"log": "True"}
-
-
-@mg.route("/get_chats")
-def mg_get_chats():
-    return {"chats": get_chats()}
-
-
-@mg.route("/delete_chat", methods=["DELETE"])
-def del_chat():
-    try:
-        data = request.get_json()
-        db_sess = db_session.create_session()
-        chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
-        memebers = chat.members.split()
-        if str(current_user.id) in memebers:
-            chat.status = 2
-            for member in memebers:
-                if str(current_user.id) != member:
-                    emit("delete_chat", {"chat_id": data["id_chat"]}, to=f"u{member}", namespace="/")
-        else:
-            db_sess.close()
-            raise PermissionError
-        db_sess.commit()
-        db_sess.close()
-        return {"log": True}
-    except PermissionError:
-        return {"log": False, "error": "Permission error"}
-
-
-@mg.route("/block_chat", methods=["POST"])
-def block_chat():
-    data = request.get_json()  # нужно добавить в чёрный список у пользователя
-    db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).filter(Chat.id == data["id_chat"]).first()
-    mem = chat.members.split()
-    if str(current_user.id) in chat.members.split():
-        chat.status = 3
-        if chat.primary_chat:
-            bl_list = db_sess.query(Black).filter(Black.id_user == current_user.id).first()
-            del mem[mem.index(str(current_user.id))]
-            if bl_list is None:
-                bl_list = Black()
-                bl_list.id_user = current_user.id
-                bl_list.list_b = mem[0]
-                db_sess.add(bl_list)
-            else:
-                bl_list.list_b += mem[0]
-        db_sess.commit()
-    db_sess.close()
-    return {"log": True}
 
 
 @mg.route("/c_get_user")

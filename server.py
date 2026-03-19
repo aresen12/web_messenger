@@ -12,6 +12,7 @@ from flask_cors import CORS
 from python_modules.messanger import mg
 from python_modules.admin_panel import panel
 from python_modules.events_io import socketio
+from python_modules.chats_action import chats_server
 from python_modules.tg_bot.bot_def import send_random_key
 from data.alerts import Alert
 
@@ -41,6 +42,7 @@ db_session.global_init('db/master_paste.db')
 application.register_blueprint(mg)
 application.register_blueprint(api)
 application.register_blueprint(panel)
+application.register_blueprint(chats_server)
 socketio.init_app(application)
 CORS(application, supports_credentials=True)
 
