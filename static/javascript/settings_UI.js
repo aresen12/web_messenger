@@ -42,7 +42,7 @@ if (mobile){
     document.getElementById("svg_download_img_a").setAttribute("width", "7vw");
     document.getElementById("exit_chat_svg").setAttribute("height", "6vh");
 //    document.getElementById("Capa_1").setAttribute("height", "9vw");
-    document.getElementById("Capa_1").setAttribute("width", "100vw");
+//    document.getElementById("Capa_1").setAttribute("width", "100vw");
 
     };
 

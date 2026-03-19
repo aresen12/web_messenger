@@ -5,6 +5,10 @@
     .log-img {height:10vh;}
 
     .log-name {font-size:40px;}
+    .name-user {
+        width: 80vw;
+        overflow:auto;
+    }
 
     .add-menu{width:100vw;}
 
@@ -54,7 +58,6 @@
         position:relative;
         left:3vw;
         width:60vw;
-
         }
 
     .create-chats-plus-div{
@@ -124,8 +127,6 @@
         border-radius: 30px;
     }
 
-    .emoji-button {
-}
     .form2{
         width:100vw;
     }

@@ -139,6 +139,8 @@ h2 {
   padding: 25px 15px 10px 20px;
   border-radius: 20px 0px 20px 20px;
   background-color: rgba(0, 0, 0, .3);
+  max-height: 80vh;
+  overflow:auto;
 }
 
 .emojis2>img {

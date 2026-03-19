@@ -251,8 +251,8 @@
         <div id="sticker">
             {% for group in meta_data["groups"].keys() %}
                 {% for sticker in meta_data["groups"][group] %}
-                    <button onclick="send_sticker('{{sticker['path']}}')">
-                        <img class="info-btn stiker-menu" src="/static/img/emoji{{sticker['path']}}">
+                    <button class="info-btn" onclick="send_sticker('{{sticker['path']}}')">
+                        <img class="stiker-menu " src="/static/img/emoji{{sticker['path']}}">
                     </button>
                 {% endfor %}
             {% endfor %}
