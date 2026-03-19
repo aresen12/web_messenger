@@ -126,6 +126,7 @@ def pinned():
     # добавить socketio
     return {"log": True}
 
+
 @mg.route("/un_pinned", methods=["POST"])
 def an_pinned():
     data = request.get_json()

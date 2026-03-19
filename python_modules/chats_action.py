@@ -10,7 +10,7 @@ from flask_socketio import emit
 from data.admin import Admin
 from data.my_orm.message import Message
 from data.my_orm.engine import SessionDB
-
+from data.my_chat import MYChat
 
 chats_server = Blueprint('chat_sever', __name__, url_prefix='/chats')
 
@@ -94,9 +94,13 @@ def add_in_chat():
 
 @chats_server.route("/pin_chat", methods=["POST"])
 def chat_pinned():
+    print("test")
     data = request.get_json()
     db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
+    if str(data["chat_id"])[0] == "m":
+        chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
+    else:
+        chat = db_sess.query(MYChat).filter(MYChat.id == current_user.id).first()
     chat.pinned = True
     db_sess.commit()
     db_sess.close()
@@ -108,7 +112,10 @@ def chat_pinned():
 def chat_unpinned():
     data = request.get_json()
     db_sess = db_session.create_session()
-    chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
+    if str(data["chat_id"])[0] == "m":
+        chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
+    else:
+        chat = db_sess.query(MYChat).filter(MYChat.id == current_user.id).first()
     chat.pinned = False
     db_sess.commit()
     db_sess.close()

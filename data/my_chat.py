@@ -30,7 +30,7 @@ def get_my_chat():
         db_sess.close()
         my_sess.create_table(MyMessage())
         my_sess.commit()
-        return {"id": f"my{current_user.id}", "pinned": False,
+        return {"id": f"my{current_user.id}", "pinned": my_chat.pinned,
                 "last_message": {"text": "", "time": "2023-01-01 00:00:00.0", "name_sender": "", "type": ''}}
 
     mess2 = my_sess.query(MyMessage()).all()

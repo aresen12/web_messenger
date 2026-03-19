@@ -31,9 +31,6 @@ def get_chats():
     db_sess = db_session.create_session()
     chats = db_sess.query(Chat).filter(Chat.status == 1).all()
     my_chat = get_my_chat()
-    # my_chat = {"id": f"my{current_user.id}", "pinned": 0,
-    #         "last_message": {"text": "", "time": "2023-01-01 00:00:00.0",
-    #                          "name_sender": "", "type": ''}}
     new = []
     if my_chat["id"]:
         new.append(my_chat)
@@ -49,7 +46,6 @@ def get_chats():
                 name = db_sess.query(User.name).filter(User.id == id_user).first()[0]
                 if int(id_user) in admins:
                     admin_flag = True
-            print(i.id)
             my_sess = SessionDB(f"db/chats/chat{i.id}.db")
             mess2 = my_sess.query(Message()).all()
             if len(mess2) != 0:
