@@ -11,6 +11,7 @@ class File(SqlAlchemyBase, UserMixin, SerializerMixin):
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     status = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=1)  # 1 - current 2 - deleted 3 - blocked
     chat_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    list_messages = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     def __repr__(self):
         return f"{self.path} {self.name}"

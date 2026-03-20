@@ -84,7 +84,7 @@ def room_message(data):
             my_sess.close()
             chat_info = db_sess.query(Chat.members, Chat.name,
                                       Chat.primary_chat).filter(Chat.id == data["room"]).first()
-            send_all(db_sess, chat_info[0], data['message'], current_user.id, chat_info[1], chat_info[2])
+            # send_all(db_sess, chat_info[0], data['message'], current_user.id, chat_info[1], chat_info[2])
             send_all2(db_sess, chat_info[0], data['message'], current_user.id, chat_info[1], chat_info[2], data["room"],
                       mess.get_time())
             emit('message', {"message": data['message'], "time": mess.get_time(), "id_m": mess.id.value,

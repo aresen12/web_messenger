@@ -217,6 +217,8 @@ def send_voice(chat_id):
     sess_my.add(mess)
     sess_my.commit()
     db_sess.commit()
+    file_db.list_messages = mess.id.value
+    sess_my.commit()
     t_ = mess.get_time()
     name = file_db.name
     x = file_db.path
@@ -447,6 +449,10 @@ def mail():
                             message.html_m.value, message.img.value)
         sess_other_chat.add(new_mail)
         sess_other_chat.commit()
+        if message.img != "":
+            file = db_sess.query(File).filter(File.id == message.id).first()
+            file.list_messages += new_mail.id
+            db_sess.commit()
         sess_my_chat.close()
         sess_other_chat.close()
         db_sess.close()
