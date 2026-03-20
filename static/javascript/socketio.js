@@ -46,13 +46,19 @@ function send_sticker(path){
 
             // Listen for messages from server
 socket.on('message', (data) => {
-                const messagesDiv = document.getElementById('content');
-                var other = 1;
-                if (id_user == data["id_sender"]){
-                var other = 0;
-            }
-                gener_html(data["id_m"], data["message"], data["time"], data["html"], data["file2"], other, data["read"], data["name"], data["pinned"])
+    const messagesDiv = document.getElementById('content');
+    var other = 1;
+    if (id_user == data["id_sender"]){
+        var other = 0;
+    }
+    if (data["type"] == 3){
+        gener_sticker(data["id_m"], data["time"].split(".")[0], data["html"], other, 0, data["name"], 0);
+    } else{
+        gener_html(data["id_m"], data["message"], data["time"], data["html"], data["file2"], other, data["read"],
+         data["name"], data["pinned"])
+    }
 });
+
 
 socket.on('create_chat', (data) => {
     gener_chat("email", data["chat_id"], data["name"], 1, data["is_primary"], "set_recipient", {"time" : "2023-01-01 00:00:00.0"});
