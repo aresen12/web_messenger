@@ -19,7 +19,8 @@ function set_enter(key) {
 }
 
 
-function edit (id_mess){
+function edit(id_mess){
+    exit_menu();
     globalThis.edit_flag = true;
     globalThis.edit_id = id_mess;
     var t = document.getElementById("text" + id_mess).textContent.trim();
@@ -463,7 +464,8 @@ function answer(id_mess){
     la.innerHTML = t;
     la.innerHTML += '<button type="button" onclick="close_edit()" class="btn-close edit-btn-close" aria-label="Close"></button>'
     la.style.display = "block";
-    document.getElementById("html_m").value = '<button class="answer-a" onclick="answer_color(' + "'" + 'm' + id_mess +"'"+ ')">' + t + '</button>';
+    document.getElementById("html_m").value = `<script>document.getElementById().style.background = get_color()</script><button id="answer" class="answer-a"
+      onclick="answer_color(m${id_mess}')">${t}</button>`;
 }
 
 
@@ -928,6 +930,7 @@ function show_users(){
 function copyToClipboard(id_m) {
     var t = document.getElementById("text" + id_m).textContent.trim();
     navigator.clipboard.writeText(t);
+    exit_menu();
   }
 
 
@@ -963,6 +966,7 @@ function set_read(chat_id){
 
 function pinned(id_mess){
     chat_id = document.getElementById("chat_id").value;
+    exit_menu();
     $.ajax({
         url: '/m/pinned',
         type: 'POST',

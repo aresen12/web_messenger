@@ -142,10 +142,10 @@ def send_number(data):
 def send_my_message(data):
     if current_user.is_authenticated:
         db_sess = SessionDB(f"db/my/my{current_user.id}.db")
-        mess = new_mess_my(data['message'], current_user.id, current_user.name, data["room"], data["html"])
+        mess = new_mess_my(data['message'], current_user.id, current_user.name, data["html"])
         db_sess.add(mess)
         db_sess.commit()
         emit('message', {"message": data['message'], "time": mess.get_time(), "id_m": mess.id.value,
                          "file2": mess.img.value, "html": data["html"], "name": current_user.name,
-                             "read": 0, "id_sender": current_user.id, "pinned": 0}, to=f"my{data['room']}")
+                         "read": 0, "id_sender": current_user.id, "pinned": 0}, to=f"my{data['room']}")
         db_sess.close()

@@ -781,3 +781,11 @@ function open_menu_chat(chat_id){
         document.getElementById("n_c" + chat_id).appendChild(div)
     }
 }
+
+
+function get_color(id_mess){
+    if (document.getElementById().classList == "my-message"){
+        return "cfe7e1";
+    }
+    return "";
+}
