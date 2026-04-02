@@ -464,8 +464,7 @@ function answer(id_mess){
     la.innerHTML = t;
     la.innerHTML += '<button type="button" onclick="close_edit()" class="btn-close edit-btn-close" aria-label="Close"></button>'
     la.style.display = "block";
-    document.getElementById("html_m").value = `<script>document.getElementById().style.background = get_color()</script><button id="answer" class="answer-a"
-      onclick="answer_color(m${id_mess}')">${t}</button>`;
+    document.getElementById("html_m").value = `<button id="answer" class="answer-a" onclick="answer_color(m${id_mess}')">${t}</button>`;
 }
 
 

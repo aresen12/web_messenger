@@ -84,4 +84,5 @@ class SessionDB:
         self.connection.execute(table.create_table())
 
     def update(self, table: Table):
-        self.connection.execute(table.update())
+        k = table.update()
+        self.connection.execute(k[0], k[1])

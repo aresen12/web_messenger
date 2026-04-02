@@ -7,6 +7,23 @@
 .stiker-menu{
     width: 30px;
 }
+.answer-a {
+    width: 100%;
+    color:rgba(1,1,1,1);
+    text-decoration: none;
+    border:none;
+    text-align: left;
+    margin-top:7px;
+}
+div.my-message button.answer-a{
+    background-color: #99e699;
+    border-left: 3px solid #1d7a1d;
+}
+div.message-other button.answer-a{
+    background-color: #b3deff;
+    border-left: 3px solid #6495ed;
+}
+
 
 .background-img {
     position:fixed;
@@ -103,13 +120,7 @@
     width:18vw;
 }
 
-.answer-a {
-    border: 1px solid gray;
-    background-color: rgba(0, 0, 0, 0.2);
-    color:rgba(1,1,1,1);
-    text-decoration: none;
 
-}
 
 .z-d {
     position: absolute;

@@ -548,16 +548,16 @@ def set_raed():
     data = request.get_json()
     db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
     mess = db_sess.query(Message()).filter("message.read = 0").all()
-    f = False
-    for m in mess:
-        if current_user.id != m[7]:
-            mess = new_mess(m[2], m[7], m[6], m[4], m[3], 1, m[5], m[9])
-            mess.id.value = m[0]
-            mess.time.value = m[8]
-            db_sess.update(mess)
-            f = True
-    if f:
-        db_sess.commit()
+    try:
+        for m in mess:
+            if current_user.id != m[7]:
+                mess = new_mess(m[2], m[7], m[6], m[4], m[3], 1, m[5], m[9])
+                mess.id.value = m[0]
+                mess.time.value = m[8]
+                db_sess.update(mess)
+                db_sess.commit()
+    except Exception:
+        print("error")
     db_sess.close()
     return {"log": 200}
 

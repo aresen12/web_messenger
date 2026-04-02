@@ -26,13 +26,9 @@ class Table:
         column = [names[key] for key in names.keys() if not (
                 "__" in key or names[key] is None or isinstance(names[key], str) or isinstance(names[key], tuple))]
         del column[0]
-        sp = []
-        for c in column:
-            if c.type_ == "TEXT":
-                sp.append(f'{c.name} = "{c.value}"')
-            else:
-                sp.append(f'{c.name} = {c.value}')
-        return f'''UPDATE {self.table_name} SET {", ".join(sp)} WHERE {self.table_name}.id = {self.id.value}'''
+        sp = [f'{c.name} = ?' for c in column]
+        return (f'''UPDATE {self.table_name} SET {", ".join(sp)} WHERE {self.table_name}.id = {self.id.value}''',
+                [c.value for c in column])
 
     def __hash__(self):
         return hash(self.id)
