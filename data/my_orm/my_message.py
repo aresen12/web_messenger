@@ -1,6 +1,5 @@
-# from data.my_orm.tables import Table
-from data.my_orm.column import BoolColumn, TextColumn, IDColumn, INEGERColumn, DataTime
 from data.my_orm.message import Message
+import datetime
 
 
 class MyMessage(Message):
@@ -17,4 +16,5 @@ def new_mess_my(message, id_sender, name_sender, html, file_id="", read=False, p
     mess.read.value = read
     mess.img.value = file_id
     mess.html_m.value = html
+    mess.time.value = datetime.datetime.now()
     return mess

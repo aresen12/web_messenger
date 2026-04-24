@@ -1,3 +1,5 @@
+import datetime
+
 from data.my_orm.tables import Table
 from data.my_orm.column import BoolColumn, TextColumn, INEGERColumn, DataTime
 
@@ -34,6 +36,7 @@ def new_mess(message, id_sender, name_sender, html="", file_id="", read=False, p
     mess.img.value = file_id
     mess.html_m.value = html
     mess.type.value = type
+    mess.time.value = datetime.datetime.now()
     return mess
 
 
@@ -44,4 +47,5 @@ def new_emoji(text, id_mess, id_sender, name_sender):
     mess.html_m.value = id_mess
     mess.id_sender.value = id_sender
     mess.name_sender.value = name_sender
+    mess.time.value = datetime.datetime.now()
     return mess

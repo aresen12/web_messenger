@@ -58,8 +58,7 @@ class TextColumn(Column):
 
 
 class DataTime(Column):
-    def __init__(self, name, default=datetime.datetime.now()):
+    def __init__(self, name, default=""):
         super().__init__(name)
         self.sql = f"{self.name} TEXT"
-        self.value = default
 

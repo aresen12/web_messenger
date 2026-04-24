@@ -283,6 +283,17 @@ def delete_mess():
         mess = Message()
         mess.id.value = _[0]
         db_sess.delete(mess)
+    if mes.img.value != "" and not (mes.img.value is None):
+        db_sess_2 = db_session.create_session()
+        file = db_sess_2.query(File).filter(File.id == mes.img.value).first()
+        if file.list_messages is None or file.list_messages.strip() == str(mes.img.value):
+            os.remove("static/img/" + file.path)
+        else:
+            l = file.list_messages.split()
+            del l[l.index(str(mes.img.value))]
+            file.list_messages = " ".join(l)
+        db_sess_2.commit()
+        db_sess_2.close()
     db_sess.delete(mes)
     db_sess.commit()
     db_sess.close()
@@ -451,7 +462,7 @@ def mail():
         sess_other_chat.commit()
         if message.img != "":
             file = db_sess.query(File).filter(File.id == message.id).first()
-            file.list_messages += new_mail.id
+            file.list_messages += f" {new_mail.id}"
             db_sess.commit()
         sess_my_chat.close()
         sess_other_chat.close()

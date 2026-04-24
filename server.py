@@ -18,7 +18,6 @@ from data.alerts import Alert
 
 application = Flask(__name__)
 application.config['SECRET_KEY'] = 'certificate'
-hash_password = '7cb8fa366d774761d198d3dc6244740c'
 login_manager = LoginManager()
 login_manager.init_app(application)
 
