@@ -192,7 +192,7 @@ def send_voice(chat_id):
     else:
         sess_my = SessionDB(f"db/chats/chat{chat_id}.db")
     f = request.files['voice']
-    path = f"data/{get_unique_file_name("voting.mps3", db_sess)}"
+    path = f"data/{get_unique_file_name('voting.mps3', db_sess)}"
     file = open(f"static/img/{path}", mode="wb")
     file.write(f.read())
     file.close()
