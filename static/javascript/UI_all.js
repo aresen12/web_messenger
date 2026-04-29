@@ -442,7 +442,7 @@ function uploadFile(file) {
 
 function gener_sticker(id_m, time, html_m, other, read, name_sender, pinned){
      if (other && !read && !vis){
-                notification(text, document.getElementById('name_chat').innerText);
+                notification("стикер", document.getElementById('name_chat').innerText);
             }
      const messagesDiv = document.getElementById('content');
      const messageItem = document.createElement('div');

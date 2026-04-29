@@ -47,6 +47,7 @@ function send_sticker(path){
             // Listen for messages from server
 socket.on('message', (data) => {
     const messagesDiv = document.getElementById('content');
+    document.getElementById("last_mess_id").value = data["id_m"];
     var other = 1;
     if (id_user == data["id_sender"]){
         var other = 0;
@@ -125,7 +126,7 @@ socket.on('edit_mess', (data) => {
 });
 
 socket.on('connect', () => {
-    chat_id = document.getElementById("chat_id");
+    var chat_id = document.getElementById("chat_id");
     if (chat_id.value != ""){
         socket.emit('join', {room: chat_id.value});
         get_new_message_id();

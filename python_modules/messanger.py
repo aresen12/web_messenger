@@ -6,7 +6,7 @@ from data import db_session
 from data.user import User
 from flask_login import current_user
 from data.chat import Chat, get_chats
-from data.File import File, get_files
+from data.File import File, get_files, get_unique_file_name
 from data.black_list import Black
 from flask_socketio import emit
 from data.bot_db import BotDB
@@ -35,7 +35,7 @@ def m_st(flag=1):
         if not current_user.is_authenticated:
             return redirect("/login")
         f = request.files["img"]
-        if request.form["about"].strip() == "" and f.filename == ""  and request.form["html_m"] == "":
+        if request.form["about"].strip() == "" and f.filename == "" and request.form["html_m"] == "":
             return redirect('/m')
         db_sess = db_session.create_session()
         c_user = db_sess.query(User).filter(User.email == current_user.email).first()
@@ -48,22 +48,16 @@ def m_st(flag=1):
             my_sess = SessionDB(f"db/my/{request.form['chat_id']}.db")
             mess = new_mess_my(name_sender=c_user.name, message=request.form["about"], id_sender=c_user.id,
                                html=request.form["html_m"])
-        x = ""
+        path = ""
         name = ""
         if f.filename != "":
             file_db = File()
             file_db.name = f.filename
-            ex = f.filename.split(".")[-1]
-            os.chdir('static/img/data')
-            dd = len(os.listdir())
-            os.chdir("..")
-            os.chdir("..")
-            os.chdir("..")
-            file = open(f"static/img/data/{dd}.{ex}", mode="wb")
+            path = f"data/{get_unique_file_name(f.filename, db_sess)}"
+            file = open(f"static/img/{path}", mode="wb")
             file.write(f.read())
             file.close()
-            file_db.path = f"data/{dd}.{ex}"
-            x = file_db.path
+            file_db.path = path
             name = file_db.name
             db_sess.add(file_db)
             db_sess.commit()
@@ -76,7 +70,7 @@ def m_st(flag=1):
         t_ = mess.get_time()
         db_sess.close()
         emit('message', {"message": mess.message.value, "time": t_, "id_m": mess.id.value,
-                         "file2": [name, x], "html": request.form["html_m"], "name": mess.name_sender.value,
+                         "file2": [name, path], "html": request.form["html_m"], "name": mess.name_sender.value,
                          "read": 0, "id_sender": mess.id_sender.value}, to=request.form["chat_id"], namespace="/")
         return {"log": True}
 
@@ -198,17 +192,13 @@ def send_voice(chat_id):
     else:
         sess_my = SessionDB(f"db/chats/chat{chat_id}.db")
     f = request.files['voice']
-    os.chdir('static/img/data')
-    dd = len(os.listdir())
-    os.chdir("..")
-    os.chdir("..")
-    os.chdir("..")
-    file = open(f"static/img/data/{dd}.mp3", mode="wb")
+    path = f"data/{get_unique_file_name("voting.mps3", db_sess)}"
+    file = open(f"static/img/{path}", mode="wb")
     file.write(f.read())
     file.close()
     file_db = File()
     file_db.chat_id = chat_id
-    file_db.path = f"data/{dd}.mp3"
+    file_db.path = path
     file_db.name = "voice.mp3"
     mess = new_mess("", current_user.id, current_user.name)
     db_sess.add(file_db)
@@ -221,11 +211,10 @@ def send_voice(chat_id):
     sess_my.commit()
     t_ = mess.get_time()
     name = file_db.name
-    x = file_db.path
     db_sess.close()
     sess_my.close()
     emit('message', {"message": mess.message.value, "time": t_, "id_m": mess.id.value,
-                     "file2": [name, x], "html": "", "name": mess.name_sender.value,
+                     "file2": [name, path], "html": "", "name": mess.name_sender.value,
                      "read": 0, "id_sender": mess.id_sender.value}, to=chat_id, namespace="/")
     return {"log": True}
 
@@ -583,6 +572,6 @@ def get_new_message_id(id_mess, chat_id):
             js["message"].append({"id": message[0], "id_sender": message[7],
                                   "html": message[4], "read": message[1], "text": message[2],
                                   "time": message[8], "pinned": message[5],
-                                  "name_sender": message[6]})
+                                  "name_sender": message[6], "type": message[9]})
         db_sess.close()
         return js

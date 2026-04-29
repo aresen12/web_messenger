@@ -464,7 +464,8 @@ function answer(id_mess){
     la.innerHTML = t;
     la.innerHTML += '<button type="button" onclick="close_edit()" class="btn-close edit-btn-close" aria-label="Close"></button>'
     la.style.display = "block";
-    document.getElementById("html_m").value = `<button id="answer" class="answer-a" onclick="answer_color(m${id_mess}')">${t}</button>`;
+    document.getElementById("html_m").value = `<button id="answer" class="answer-a"
+    onclick="answer_color('m${id_mess}')">${t}</button>`;
 }
 
 
@@ -1012,7 +1013,13 @@ function get_new_message_id(){
             for (var j = 0; j < json["message"].length; j++){
                 var mess = json["message"][j];
                 let other = !(mess["id_sender"] == id_user);
-                gener_html(mess[j], mess["text"], mess["time"], mess["html"], mess["file"], other);
+                if (mess["type"] == 3){
+                    gener_sticker(mess[j], mess["time"], mess["html"], other, 0, mess["name_sender"], 0);
+                } else if (c_m["type"] == 2){
+                    gener_emoji(mess[j],  mess["html"], other, mess["text"]);
+                } else {
+                    gener_html(mess[j], mess["text"], mess["time"], mess["html"], mess["file"], other);
+                }
             }
 //id, text, time, html_m, file, other
             },

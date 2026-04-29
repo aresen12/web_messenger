@@ -5,7 +5,7 @@ from data.chat import Chat
 from data.my_orm.message import new_emoji, new_mess
 from data.user import User
 from python_modules.tg_bot.bot_def import send_all
-from data.my_orm.my_message import new_mess_my
+from data.my_orm.my_message import new_mess_my, new_emoji_my
 from data.my_orm.engine import SessionDB
 socketio = SocketIO(cors_allowed_origins="*")
 
@@ -108,8 +108,12 @@ def handle_disconnect():
 
 @socketio.on("emoji")
 def send_emoji(data):
-    db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
-    mess = new_emoji(data["value"], data["id_mess"], current_user.id, current_user.name)
+    if str(data["chat_id"])[0] == "m":
+        db_sess = SessionDB(f"db/my/{data['chat_id']}.db")
+        mess = new_emoji_my(data["value"], data["id_mess"], current_user.id, current_user.name)
+    else:
+        db_sess = SessionDB(f"db/chats/chat{data['chat_id']}.db")
+        mess = new_emoji(data["value"], data["id_mess"], current_user.id, current_user.name)
     db_sess.add(mess)
     db_sess.commit()
     emit('emoji_client', {"id_emoji": mess.id.value, "id_mess": data["id_mess"], "name": mess.name_sender.value,
