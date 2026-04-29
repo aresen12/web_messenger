@@ -37,5 +37,5 @@ def get_unique_file_name(name, db_sess):
                 k = 15 - lent
             else:
                 k = 0
-            return f"{name[0:15 - k]}{"kazbek_messenge"[0:k]}{file_names[-1][1] + 1}.{rashirenie}"
+            return f"{name[0:15 - k]}{'kazbek_messenge'[0:k]}{file_names[-1][1] + 1}.{rashirenie}"
     return name
