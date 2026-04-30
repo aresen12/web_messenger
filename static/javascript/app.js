@@ -137,9 +137,9 @@ function set_recipient(id_chat, is_primary, name, status, pinned) {
         menu.innerHTML += '<li onclick="sing_out_of_chat()">Покинуть чат</li>';
     };
     if (!pinned) {
-        menu.innerHTML += `<li class="" onclick="pin_chat(${id_chat})">Закрепить</li>`;
+        menu.innerHTML += `<li class="" onclick="pin_chat('${id_chat}')">Закрепить</li>`;
     } else {
-        menu.innerHTML += `<li onclick="unpin_chat(${id_chat})">Открепить</li>`;
+        menu.innerHTML += `<li onclick="unpin_chat('${id_chat}')">Открепить</li>`;
     }
     document.getElementById("chat_id").value = id_chat;
     document.getElementById('name_chat').textContent = name;
@@ -868,6 +868,7 @@ function show_users(){
             users_div.classList = "cont-users";
             const con_users = document.createElement("div");
             con_users.id = "con_users";
+//            con_users.classList = "list-group";
             const user_btn = document.createElement('button');
             user_btn.textContent = "Участники";
             user_btn.id = "border_btn1";
@@ -1076,6 +1077,7 @@ function pin_chat(chat_id){
 
 
 function set_my_recipient(id_chat){
+    document.getElementById("menu-chat-ul").innerHTML = "";
     document.getElementById("pinned").innerHTML = "";
     document.getElementById("ident").textContent = "";
     document.getElementById("menu_chat_div_all").style.display = "block";

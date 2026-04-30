@@ -4,7 +4,6 @@ from data.db_session import SqlAlchemyBase
 from sqlalchemy_serializer import SerializerMixin
 from data import db_session
 from flask_login import current_user
-# from data.message import Message
 from data.user import User
 from data.my_chat import get_my_chat
 from data.admin import Admin

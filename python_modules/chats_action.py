@@ -94,10 +94,9 @@ def add_in_chat():
 
 @chats_server.route("/pin_chat", methods=["POST"])
 def chat_pinned():
-    print("test")
     data = request.get_json()
     db_sess = db_session.create_session()
-    if str(data["chat_id"])[0] == "m":
+    if str(data["chat_id"])[0] != "m":
         chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
     else:
         chat = db_sess.query(MYChat).filter(MYChat.id == current_user.id).first()
@@ -112,7 +111,7 @@ def chat_pinned():
 def chat_unpinned():
     data = request.get_json()
     db_sess = db_session.create_session()
-    if str(data["chat_id"])[0] == "m":
+    if str(data["chat_id"])[0] != "m":
         chat = db_sess.query(Chat).filter(Chat.id == data["chat_id"]).first()
     else:
         chat = db_sess.query(MYChat).filter(MYChat.id == current_user.id).first()

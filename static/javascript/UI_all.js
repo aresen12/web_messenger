@@ -771,10 +771,10 @@ function open_menu_chat(chat_id){
         div.style.display = "block";
         if (!document.getElementById("chat_pinned" + chat_id)){
             btn.textContent = "Закрепить";
-            btn.setAttribute("onclick", `pin_chat(${chat_id})`);
+            btn.setAttribute("onclick", `pin_chat('${chat_id}')`);
         } else {
             btn.textContent = "открепить";
-            btn.setAttribute("onclick", `unpin_chat(${chat_id})`);
+            btn.setAttribute("onclick", `unpin_chat('${chat_id}')`);
         }
         ul.appendChild(btn)
         div.appendChild(ul)

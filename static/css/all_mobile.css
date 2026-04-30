@@ -30,6 +30,15 @@
         width:100vw;
     }
 
+    .cont-users{
+        width:90vw;
+        left:2vw;
+    }
+
+    .name-new-chat{
+        width:90vw;
+    }
+
     .chat-header {
         overflow:hidden;
     }
@@ -66,6 +75,10 @@
 
     .hew-chats-div-menu{
     left: -40vw;
+    }
+
+    .div-name-menu {
+        width:90vw;
     }
 
     .my-message {

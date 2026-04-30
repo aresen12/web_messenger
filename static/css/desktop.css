@@ -326,10 +326,11 @@ bottom: 0px;
 .content-email {
     position:relative;
     top:1;
+    height:80vh;
     max-height:80vh;
     width:30vw;
     min-width: 160px;
-     overflow-x: hidden;
+    overflow-x: hidden;
     overflow-y:auto;
     scrollbar-width: thin;
     scrollbar-color: hsl(0 0% 50%);
