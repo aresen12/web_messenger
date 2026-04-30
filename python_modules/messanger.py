@@ -276,11 +276,15 @@ def delete_mess():
         db_sess_2 = db_session.create_session()
         file = db_sess_2.query(File).filter(File.id == mes.img.value).first()
         if file.list_messages is None or file.list_messages.strip() == str(mes.img.value):
-            os.remove("static/img/" + file.path)
+            db_sess_2.delete(file)
+            try:
+                os.remove("static/img/" + file.path)
+            except FileNotFoundError:
+                pass
         else:
-            l = file.list_messages.split()
-            del l[l.index(str(mes.img.value))]
-            file.list_messages = " ".join(l)
+            l_ = file.list_messages.split()
+            del l_[l_.index(str(mes.img.value))]
+            file.list_messages = " ".join(l_)
         db_sess_2.commit()
         db_sess_2.close()
     db_sess.delete(mes)
