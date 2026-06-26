@@ -145,6 +145,14 @@ socket.on('message_other', (data) => {
     rn.innerText =  Number(rn.innerText) + 1;
     if (document.getElementById("chat_id").value != data["chat_id"]){
         notification(data["text"], data["name"]);
+        if (mobile){
+            try {
+                android.send_my_alert(`${data["name"]}
+                ${data["text"]}`);
+            } catch(error){
+//                console.log("Не приложение")
+            }
+        }
         var  last_m = document.getElementById("last_m" + data["chat_id"]);
         var  time = document.getElementById("last_time" + data["chat_id"]);
         if (data["text"] && data["text"].length > 16){

@@ -155,6 +155,11 @@ def main():
     return render_template("main.html", title='главная', alerts=alerts)
 
 
+@application.route("/test")
+def test():
+    return render_template("test.html")
+
+
 if __name__ == "__main__":
     socketio.run(application, host='0.0.0.0', debug=True, allow_unsafe_werkzeug=True)
 

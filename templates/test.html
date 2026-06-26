@@ -1,103 +1,104 @@
+<!--&lt;!&ndash;<html>&ndash;&gt;-->
+<!--&lt;!&ndash;<body>&ndash;&gt;-->
+<!--&lt;!&ndash;<h3 id="show-peer"></h3>&ndash;&gt;-->
+<!--&lt;!&ndash;<div style="display: flex;justify-content: space-around;margin: 10px;">&ndash;&gt;-->
+<!--&lt;!&ndash;<div style="width: 400px; height:300px;border: 2px solid;" id="ourVideo">Our Video</div>&ndash;&gt;-->
+<!--&lt;!&ndash;<div style="width: 400px; height:300px;border: 2px solid;" id="remoteVideo">Remote Video</div> </div>&ndash;&gt;-->
+<!--&lt;!&ndash;<input id="peerID" placeholder="Peer ID">&ndash;&gt;-->
+<!--&lt;!&ndash;<button onclick="callPeer()">Call Peer</button>&ndash;&gt;-->
+<!--&lt;!&ndash;<br>&ndash;&gt;-->
+<!--&lt;!&ndash;<button onclick="shareScreen()">Share Screen</button>&ndash;&gt;-->
+<!--&lt;!&ndash;</body>&ndash;&gt;-->
+<!--&lt;!&ndash;<script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>&ndash;&gt;-->
+<!--&lt;!&ndash;<script>&ndash;&gt;-->
+<!--&lt;!&ndash;	window.addEventListener('load', (event) => {&ndash;&gt;-->
+<!--&lt;!&ndash;	var peer = new Peer()&ndash;&gt;-->
+<!--&lt;!&ndash;	peer.on('open', function(id) {&ndash;&gt;-->
+<!--&lt;!&ndash;	console.log("id is " + id)&ndash;&gt;-->
+<!--&lt;!&ndash;	})&ndash;&gt;-->
+<!--&lt;!&ndash;		})&ndash;&gt;-->
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
+<!--&lt;!&ndash;</html>&ndash;&gt;-->
+
+<!--<!DOCTYPE html>-->
 <!--<html>-->
+<!--<head>-->
+<!--    <meta charset="utf-8" />-->
+<!--    <title>Peer</title>-->
+<!--   <script src="/static/javascript/peerjs.min.js"></script>-->
+<!--</head>-->
 <!--<body>-->
-<!--<h3 id="show-peer"></h3>-->
-<!--<div style="display: flex;justify-content: space-around;margin: 10px;">-->
-<!--<div style="width: 400px; height:300px;border: 2px solid;" id="ourVideo">Our Video</div>-->
-<!--<div style="width: 400px; height:300px;border: 2px solid;" id="remoteVideo">Remote Video</div> </div>-->
-<!--<input id="peerID" placeholder="Peer ID">-->
-<!--<button onclick="callPeer()">Call Peer</button>-->
-<!--<br>-->
-<!--<button onclick="shareScreen()">Share Screen</button>-->
-<!--</body>-->
-<!--<script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>-->
-<!--<script>-->
-<!--	window.addEventListener('load', (event) => {-->
-<!--	var peer = new Peer()-->
-<!--	peer.on('open', function(id) {-->
-<!--	console.log("id is " + id)-->
-<!--	})-->
-<!--		})-->
+<!--	<p><h3>Мой ID: </h3><span id=myid ></span></p>-->
+<!--	<input id=otherPeerId type=text placeholder="otherPeerId" > <button onclick="callToNode(document.getElementById('otherPeerId').value)">Вызов</button>-->
+
+<!--	<br>-->
+<!--	<video id=myVideo muted="muted" width="400px" height="auto" ></video>-->
+<!--	<div id=callinfo ></div>-->
+<!--	<video id=remVideo width="400px" height="auto" ></video>-->
+<!--<script >-->
+<!--	var callOptions={'iceServers': [-->
+<!--		{url: 'stun:95.xxx.xx.x9:3479',-->
+<!--		username: "user",-->
+<!--		credential: "xxxxxxxxxx"},-->
+<!--		{ url: "turn:95.xxx.xx.x9:3478",-->
+<!--		username: "user",-->
+<!--		credential: "xxxxxxxx"}]-->
+<!--	};-->
+<!--peer= new Peer({-->
+<!--		host: "kaz-m.ru",-->
+<!--		port: 9000,-->
+<!--		path: "/myapp",-->
+<!--	});-->
+<!--peer.on('open', function(peerID) {-->
+<!--			document.getElementById('myid').innerHTML=peerID;-->
+<!--		});-->
+<!--var peercall;-->
+<!--peer.on('call', function(call) {-->
+<!--		  // Answer the call, providing our mediaStream-->
+<!--			peercall=call;-->
+<!--			document.getElementById('callinfo').innerHTML="Входящий звонок <button onclick='callanswer()' >Принять</button><button onclick='callcancel()' >Отклонить</button>";-->
+<!--		});-->
+<!--function callanswer() {-->
+<!--			navigator.mediaDevices.getUserMedia ({ audio: true, video: true }).then(function(mediaStream) {-->
+<!--		    var video = document.getElementById('myVideo');-->
+<!--		  peercall.answer(mediaStream); // отвечаем на звонок и передаем свой медиапоток собеседнику-->
+<!--		  //peercall.on ('close', onCallClose); //можно обработать закрытие-обрыв звонка-->
+<!--		  video.srcObject = mediaStream; //помещаем собственный медиапоток в объект видео (чтоб видеть себя)-->
+<!--		  document.getElementById('callinfo').innerHTML="Звонок начат... <button onclick='callclose()' >Завершить звонок</button>"; //информируем, что звонок начат, и выводим кнопку Завершить-->
+<!--		  video.onloadedmetadata = function(e) {//запускаем воспроизведение, когда объект загружен-->
+<!--			video.play();-->
+<!--		  };-->
+<!--		  setTimeout(function() {-->
+<!--                          //входящий стрим помещаем в объект видео для отображения-->
+<!--			  document.getElementById('remVideo').srcObject = peercall.remoteStream;-->
+<!--			  document.getElementById('remVideo').onloadedmetadata= function(e) {-->
+<!--// и запускаем воспроизведение когда объект загружен-->
+<!--						document.getElementById('remVideo').play();-->
+<!--					  };-->
+<!--					  },1500);-->
+
+
+<!--			}).catch(function(err) { console.log(err.name + ": " + err.message); });-->
+<!--		}-->
+<!--function callToNode(peerId) { //вызов-->
+<!--		  navigator.mediaDevices.getUserMedia ({ audio: true, video: true }).then(function(mediaStream) {-->
+<!--		  var video = document.getElementById('myVideo');-->
+<!--		  peercall = peer.call(peerId,mediaStream);-->
+<!--		  peercall.on('stream', function (stream) { //нам ответили, получим стрим-->
+<!--				  setTimeout(function() {-->
+<!--				  document.getElementById('remVideo').srcObject = peercall.remoteStream;-->
+<!--					  document.getElementById('remVideo').onloadedmetadata= function(e) {-->
+<!--						document.getElementById('remVideo').play();-->
+<!--					  };-->
+<!--					  },1500);-->
+<!--				  });-->
+<!--				//  peercall.on('close', onCallClose);-->
+<!--				  video.srcObject = mediaStream;-->
+<!--				  video.onloadedmetadata = function(e) {-->
+<!--					video.play();-->
+<!--				  };-->
+<!--			}).catch(function(err) { console.log(err.name + ": " + err.message); });-->
+<!--		}-->
 <!--</script>-->
-<!--</html>-->
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Peer</title>
-   <script src="/static/javascript/peerjs.min.js"></script>
-</head>
-<body>
-	<p><h3>Мой ID: </h3><span id=myid ></span></p>
-	<input id=otherPeerId type=text placeholder="otherPeerId" > <button onclick="callToNode(document.getElementById('otherPeerId').value)">Вызов</button>
-
-	<br>
-	<video id=myVideo muted="muted" width="400px" height="auto" ></video>
-	<div id=callinfo ></div>
-	<video id=remVideo width="400px" height="auto" ></video>
-<script >
-	var callOptions={'iceServers': [
-		{url: 'stun:95.xxx.xx.x9:3479',
-		username: "user",
-		credential: "xxxxxxxxxx"},
-		{ url: "turn:95.xxx.xx.x9:3478",
-		username: "user",
-		credential: "xxxxxxxx"}]
-	};
-peer= new Peer({
-		host: "kaz-m.ru",
-		port: 9000,
-		path: "/myapp",
-	});
-peer.on('open', function(peerID) {
-			document.getElementById('myid').innerHTML=peerID;
-		});
-var peercall;
-peer.on('call', function(call) {
-		  // Answer the call, providing our mediaStream
-			peercall=call;
-			document.getElementById('callinfo').innerHTML="Входящий звонок <button onclick='callanswer()' >Принять</button><button onclick='callcancel()' >Отклонить</button>";
-		});
-function callanswer() {
-			navigator.mediaDevices.getUserMedia ({ audio: true, video: true }).then(function(mediaStream) {
-		    var video = document.getElementById('myVideo');
-		  peercall.answer(mediaStream); // отвечаем на звонок и передаем свой медиапоток собеседнику
-		  //peercall.on ('close', onCallClose); //можно обработать закрытие-обрыв звонка
-		  video.srcObject = mediaStream; //помещаем собственный медиапоток в объект видео (чтоб видеть себя)
-		  document.getElementById('callinfo').innerHTML="Звонок начат... <button onclick='callclose()' >Завершить звонок</button>"; //информируем, что звонок начат, и выводим кнопку Завершить
-		  video.onloadedmetadata = function(e) {//запускаем воспроизведение, когда объект загружен
-			video.play();
-		  };
-		  setTimeout(function() {
-                          //входящий стрим помещаем в объект видео для отображения
-			  document.getElementById('remVideo').srcObject = peercall.remoteStream;
-			  document.getElementById('remVideo').onloadedmetadata= function(e) {
-// и запускаем воспроизведение когда объект загружен
-						document.getElementById('remVideo').play();
-					  };
-					  },1500);
-
-
-			}).catch(function(err) { console.log(err.name + ": " + err.message); });
-		}
-function callToNode(peerId) { //вызов
-		  navigator.mediaDevices.getUserMedia ({ audio: true, video: true }).then(function(mediaStream) {
-		  var video = document.getElementById('myVideo');
-		  peercall = peer.call(peerId,mediaStream);
-		  peercall.on('stream', function (stream) { //нам ответили, получим стрим
-				  setTimeout(function() {
-				  document.getElementById('remVideo').srcObject = peercall.remoteStream;
-					  document.getElementById('remVideo').onloadedmetadata= function(e) {
-						document.getElementById('remVideo').play();
-					  };
-					  },1500);
-				  });
-				//  peercall.on('close', onCallClose);
-				  video.srcObject = mediaStream;
-				  video.onloadedmetadata = function(e) {
-					video.play();
-				  };
-			}).catch(function(err) { console.log(err.name + ": " + err.message); });
-		}
-</script>
-</body>
+<!--</body>-->
+<button onclick="android.send_my_alert('уведомление!!!')">test</button>
