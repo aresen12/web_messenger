@@ -39,7 +39,8 @@ def del_chat():
 
 @chats_server.route("/get_chats")
 def mg_get_chats():
-    return {"chats": get_chats()}
+    c = get_chats()
+    return {"chats": c[0], "official": c[1]}
 
 
 @chats_server.route("/edit_name_chat", methods=["POST"])
@@ -71,7 +72,9 @@ def block_chat():
                 bl_list.list_b = mem[0]
                 db_sess.add(bl_list)
             else:
-                bl_list.list_b += mem[0]
+                l2 = bl_list.list_b.split()
+                l2.append(mem[0])
+                bl_list.list_b = " ".join(l2)
         db_sess.commit()
     db_sess.close()
     return {"log": True}

@@ -3,7 +3,7 @@ function send_call(primary){
     gener_jitsi();
 //    для первичного чата
     if (primary){
-        socket.emit('send_call_to_user', {chat_id: chat_id, user_id: id_user});
+        socket.emit('send_call_to_user', {chat_id: chat_id, user_id: app.id_user});
     }
 }
 

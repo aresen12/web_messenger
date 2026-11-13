@@ -26,10 +26,16 @@
         text-align:center;
     }
 
+    .sticker-button{
+        display: none;
+    }
+
     .a-email {
         width:100vw;
     }
-
+    .voting-cont{
+        width:85vw;
+    }
     .cont-users{
         width:90vw;
         left:2vw;

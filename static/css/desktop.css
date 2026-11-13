@@ -15,6 +15,8 @@
     text-align: left;
     margin-top:7px;
 }
+
+
 div.my-message button.answer-a{
     background-color: #99e699;
     border-left: 3px solid #1d7a1d;
@@ -101,7 +103,7 @@ div.message-other button.answer-a{
     color:#6495ed;
     border-left: 6px solid #6495ed;
     margin-left: 6px;
-    border-radius:3px;
+    border-radius:6px;
     margin-top:2px;
     margin-bottom:3px;
     margin-right:0px;
@@ -149,7 +151,9 @@ div.message-other button.answer-a{
 }
 
 .name-chat-div {width:90%;}
-.kazbek-logo {}
+.kazbek-logo {
+    height: 70px;
+}
 .chat-header {
 
     display:flex;
@@ -512,4 +516,15 @@ width:100vw;
 
 .voting-item {
     display:flex;
+}
+
+
+.short-menu{
+    position:relative;
+    display:flex;
+    width: 100vw;
+    border-radius: 10px;
+    background:white;
+    height: 20vh;
+    top:79vh;
 }

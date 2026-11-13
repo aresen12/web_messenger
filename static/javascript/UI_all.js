@@ -33,12 +33,13 @@ function showdiv1(Div) {
 
 function show_emoji_module(){
     var flag = showdiv1("emojis_menu");
-//    document.getElementById("emojis_menu").style.display = "block";
-    if (mobile){
-        if (flag){
-            globalThis.menu_id = "emojis_menu";
+    if (app.ui.mobile){
+        if (!flag){
+            setTimeout(function() {
+                app.ui.menu_id = "emojis_menu";
+            }, 10);
         } else {
-            globalThis.menu_id = "";
+            app.ui.menu_id = "";
         }
     }
 }
@@ -87,6 +88,7 @@ if (document.cookie){
 function scroll_carousel(number_img){
     var list_Img = document.getElementById("images_list").value.split(" ");
     document.getElementById("watch_img").src = "/static/img/" + list_Img[number_img];
+    document.getElementById("download-img-a").href = "/static/img/" + list_Img[number_img];
     var right_index = number_img + 1;
     var left_index = number_img - 1;
     if (left_index <= 0) {
@@ -144,7 +146,7 @@ function show_more_emoji(id_mess){
     const emoji_div2 = document.createElement("div");
     for (let i = 0; i < emoji.length; i++){
         var btn_emoji = document.createElement("button");
-        btn_emoji.classList = "info-btn emoji-button";
+        btn_emoji.classList = "btn emoji-button";
         btn_emoji.textContent = emoji[i];
         btn_emoji.setAttribute("onclick", `set_emoji(${id_mess}, ${i})`);
         emoji_div2.appendChild(btn_emoji);
@@ -154,7 +156,7 @@ function show_more_emoji(id_mess){
 
 
 function set_bg(num) {
-    if (mobile){
+    if (app.ui.mobile){
         document.getElementById("background-img").src = "/static/img/bg/mob_bg" + num + ".jpg";
     } else {
     document.getElementById("background-img").src = "/static/img/bg/bg" + num + ".jpg";
@@ -234,8 +236,6 @@ function edit_prof_html(){
             password_btn.setAttribute('onclick', `showDiv('p_group', 'edit_cont')`);
             edit_cont.appendChild(save_btn);
             edit_cont.appendChild(password_btn);
-//            <button class= onclick=""></button>\
-//            <button class="edit-btn" onclick=""></button>';
             p_group.innerHTML = 'Для смены пародя введите старый пароль<br><input name="password_old" id="password_old"\
              type="password"><br><label for="password_new">Новый пароль</label><br><input name="password_new"\
               id="password_new" type="password">';
@@ -295,7 +295,7 @@ function add_files_label(files_div){
         type: 'POST',
         dataType: 'json',
         contentType:'application/json',
-        data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
+        data: JSON.stringify({"chat_id":  app.c_chat.chat_id}),
         success: function(json_data){
             if (json_data.length == 0){
                 files_div.textContent = "Файлы не найдены";
@@ -320,7 +320,7 @@ function search_text(){
     document.getElementById("search_text_div").style.display = "block";
     cont.style.display = "block";
     document.getElementById("menu-chat-ul").style.display = "none";
-    globalThis.menu_id = "search_text_div";
+    app.ui.menu_id = "search_text_div";
 }
 
 
@@ -359,17 +359,18 @@ function set_username_tg(){
 
 function leave_chat(chat_id){
     socket.emit('leave', {room: chat_id});
+    console.log(chat_id);
         if (Number(chat_id)){
             document.getElementById("chat" + chat_id).style.background =  "white";
         } else {
-            document.getElementById("my_chat" + id_user).style.background =  "white";
+            document.getElementById("my_chat" + app.id_user).style.background =  "white";
         }
 }
 
 
 function close_edit() {
-    globalThis.edit_id = "";
-    globalThis.edit_flag = false;
+    app.edit_id = "";
+    app.ui.edit_flag = false;
     document.getElementById("edit-label").style.display = "none";
 }
 
@@ -384,13 +385,14 @@ function exit_watch_menu(){
 
 function open_menu_chat(chat_id){
     exit_menu();
-    globalThis.menu_id = "menu_chat" + chat_id;
+    app.ui.menu_id = "menu_chat" + chat_id;
     if (document.getElementById("menu_chat" + chat_id)){
         document.getElementById("menu_chat" + chat_id).style.display = "block";
     }else {
         var div = document.createElement("div");
         var ul = document.createElement("ul")
         var btn = document.createElement("li")
+        ul.innerHTML = `<li onclick="block_user(${chat_id})">Заблокировать</li><li onclick="delete_chat(${chat_id})">Удалить чат</li>`;
         div.classList = "context-menu-open";
         div.id = "menu_chat" + chat_id;
         div.style.display = "block";
@@ -409,16 +411,17 @@ function open_menu_chat(chat_id){
 
 
 function exit_menu(){
-    if (globalThis.menu_id != ""){
+    if (app.ui.menu_id != ""){
         try{
-            document.getElementById(globalThis.menu_id).style.display = "none";
+            document.getElementById(app.ui.menu_id).style.display = "none";
         } catch (error){}
-        globalThis.menu_id = "";
+        app.ui.menu_id = "";
     }
 }
 
 
 function exit_chat(){
+    app.c_chat = new CurrentChat(-1, -1);
     var st_chat = document.getElementById("chat_id").value;
     try {
         document.getElementById("menu_chat_div_all").style.display = "none";
@@ -441,7 +444,7 @@ function exit_chat(){
     document.getElementById('chat_id').value = "";
     document.getElementById('form').style.display = "none";
     document.getElementById("btn_down").style.display = 'none';
-    if (globalThis.mobile) {
+    if (app.ui.mobile) {
         document.getElementById("plus_btn").style.display = "block";
         document.getElementById("background-img").style.display = "none";
         document.getElementById("container-mess").style.display = "none";

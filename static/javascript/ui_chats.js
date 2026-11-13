@@ -109,7 +109,7 @@ function gener_chat(id_div, chat_id, name_chat, status, primary, command, last_m
 function gener_my_chat(id_div, command, last_mess, chat_id, pinned){
     const cont = document.getElementById(id_div);
     const btn = document.createElement('button');
-    btn.id = 'my_chat' + id_user;
+    btn.id = 'my_chat' + app.id_user;
     btn.classList = "a-email";
     if (command == "set_recipient"){
         btn.setAttribute("onclick",`set_my_recipient('${chat_id}')`);
@@ -143,6 +143,16 @@ function gener_my_chat(id_div, command, last_mess, chat_id, pinned){
     last_mess_div.classList = "last-mess";
     const icon_chat = document.createElement('div');
     icon_chat.id = "icon_chat" + command + chat_id;
+    icon_chat.innerHTML = `<svg fill="#000000" height="40px" width="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"
+     enable-background="new 0 0 50 50" xml:space="preserve">
+    <g id="SVGRepo_bgCarrier" >
+        <circle r="25" cx="25" cy="25" fill="#7b68ee"></circle>
+    </g>
+    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+    <g id="SVGRepo_iconCarrier">
+    <path fill="white" d="M35.75,41.75c0.097,0,0.194-0.014,0.29-0.043c0.422-0.128,0.71-0.517,0.71-0.957v-30c0-0.553-0.447-1-1-1h-20 c-0.553,0-1,0.447-1,1v30c0,0.44,0.288,0.829,0.71,0.957c0.421,0.129,0.878-0.036,1.122-0.402l9.168-13.752l9.168,13.752 C35.106,41.588,35.422,41.75,35.75,41.75z M34.75,37.447l-8.168-12.252c-0.186-0.278-0.498-0.445-0.832-0.445 s-0.646,0.167-0.832,0.445L16.75,37.447V11.75h18V37.447z"></path>
+    </g>
+</svg>`;
     const name_chat_div = document.createElement('div');
     name_chat_div.id = "n_c" + chat_id;
     name_chat_div.textContent = "Избранное";
@@ -152,8 +162,7 @@ function gener_my_chat(id_div, command, last_mess, chat_id, pinned){
     btn.appendChild(icon_chat);
     btn.appendChild(name_chat_div);
     cont.appendChild(btn);
-    gener_icon_chat("И", chat_id, "icon_chat" + command + chat_id, "#7b68ee")
-     $(`#my_chat${id_user}`).on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
+     $(`#my_chat${app.id_user}`).on('contextmenu','div', function(e) { //Get li under ul and invoke on contextmenu
 //        alert("Для избранного в разработке!")
         e.preventDefault(); //Preventdefaults
         open_menu_chat(`${chat_id}`); //alert the id

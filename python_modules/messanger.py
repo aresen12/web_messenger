@@ -137,10 +137,12 @@ def get_black():
         return json_response
     for user_id in black_list[0].split():
         user = db_sess.query(User.id, User.email, User.name).filter(User.id == int(user_id)).first()
-        json_response["black_list"].append(
-          [user[0], user[1], user[2]]
-        )
+        if not (user is None):
+            json_response["black_list"].append(
+              [user[0], user[1], user[2]]
+            )
     db_sess.close()
+    print(json_response)
     return json_response
 
 

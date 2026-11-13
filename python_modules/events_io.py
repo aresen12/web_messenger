@@ -48,7 +48,7 @@ def send_sticker(data):
     sess.close()
     emit('message', {"message": "", "time": mess.get_time(), "id_m": mess.id.value,
                      "file2": "", "html": data["html"], "name": current_user.name,
-                     "read": 0, "id_sender": current_user.id, "pinned": mess.pinned.value, "type": mess.type.value}, to=data['chat_id'])
+                     "read": 0, "id_sender": current_user.id, "type": mess.type.value}, to=data['chat_id'])
 
 
 def send_all2(db_sess, chat_members, text, c_id, name, prim, chat_id, time):

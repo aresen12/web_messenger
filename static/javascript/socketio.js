@@ -6,17 +6,17 @@ function set_emoji(id_mess, id_emoji){
     var div = document.getElementById(id_mess + "emoji_btn_id" + id_emoji);
     if (div) {
         if (div.style.background == "#6699cc"){
-            document.getElementById(menu_id).style.display = "none";
-            globalThis.menu_id = '';
+            document.getElementById(app.ui.menu_id).style.display = "none";
+            app.ui.menu_id = '';
             alert(500);
             return 500;
         }
     }
     var chat_id =  document.getElementById("chat_id").value;
     socket.emit('emoji', {chat_id: chat_id, id_mess: id_mess, value: id_emoji});
-    if (menu_id){
-        document.getElementById(menu_id).style.display = "none";
-        globalThis.menu_id = '';
+    if (app.ui.menu_id){
+        document.getElementById(app.ui.menu_id).style.display = "none";
+        app.ui.menu_id = '';
     }
 }
 
@@ -53,7 +53,7 @@ socket.on('message', (data) => {
     document.getElementById("last_mess_id").value = data["id_m"];
     set_read(document.getElementById("chat_id").value);
     var other = 1;
-    if (id_user == data["id_sender"]){
+    if (app.id_user == data["id_sender"]){
         var other = 0;
     }
     if (data["type"] == 3){
@@ -71,7 +71,7 @@ socket.on('create_chat', (data) => {
 
 //, html_m, other, text
 socket.on('emoji_client', (data) => {
-    gener_emoji(data["id_emoji"], data["id_mess"], !(data["id_sender"] == id_user), data['value'])
+    gener_emoji(data["id_emoji"], data["id_mess"], !(data["id_sender"] == app.id_user), data['value'])
 });
 
 
@@ -85,7 +85,6 @@ socket.on('delete_chat', (data) => {
 
 socket.on('delete_message', (data) => {
     document.getElementById("m" + data["message_id"]).remove();
-    console.log("m" + data["message_id"]);
 });
 
 
@@ -100,7 +99,7 @@ socket.on('voting', (data) => {
 
 
 socket.on('new_voting', (data) => {
-    let other = !(id_user == data["id_sender"]);
+    let other = !(app.id_user == data["id_sender"]);
     gener_voting(data["id_mess"], data["text"], data["voting"], other, 0, data["name_sender"], data["time"]);
 });
 
@@ -113,7 +112,7 @@ socket.on('pinned_message', (data) => {
 socket.on('delete_emoji', (data) => {
     document.getElementById(`${data["message_id_on_emoji"]}emoji_btn_id${data["id_emoji"]}`);
     var btn = document.getElementById(data["message_id_on_emoji"] + "emoji_btn_id" + data["id_emoji"]);
-    if (data['id_sender'] == id_user){
+    if (data['id_sender'] == app.id_user){
         btn.style.background = "#91b3f2";
         btn.setAttribute("onclick", `set_emoji(${data["message_id_on_emoji"]}, ${data["id_emoji"]})`);
     }
@@ -129,7 +128,7 @@ socket.on('delete_emoji', (data) => {
 
 
 socket.on('join_event', (data) => {
-    if (id_user != data["id_user"]){
+    if (app.id_user != data["id_user"]){
         const div_ = document.getElementById("ident");
         div_.textContent = "(в сети)";
     }
@@ -138,7 +137,7 @@ socket.on('join_event', (data) => {
 });
 
 socket.on('leave_event', (data) => {
-    if (id_user != data["id_user"]){
+    if (app.id_user != data["id_user"]){
         const div_ = document.getElementById("ident");
         div_.textContent = "";
     }
@@ -174,7 +173,7 @@ socket.on('message_other', (data) => {
     rn.innerText =  Number(rn.innerText) + 1;
     if (document.getElementById("chat_id").value != data["chat_id"]){
         notification(data["text"], data["chat_name"]);
-        if (mobile){
+        if (app.ui.mobile){
             try {
                 android.send_my_alert(`${data["chat_name"]}
                 ${data["text"]}`);
@@ -197,7 +196,7 @@ socket.on('message_other', (data) => {
 socket.on('send_call', (data) => {
 //    убирает повторный вызов для инициатора звонка
     console.log(data);
-    if (data["user_id"] != id_user){
+    if (data["user_id"] != app.id_user){
         gener_UI_call(2, data["name_call"], data["chat_id"]);
         playAudio();
     }
@@ -205,7 +204,7 @@ socket.on('send_call', (data) => {
 
 
 socket.on("send_call_by_number", data => {
-//    if (data["current_user"] != id_user){
+//    if (data["current_user"] != app.id_user){
     callToNode(data["data"]["number"]);
 //    }
 })

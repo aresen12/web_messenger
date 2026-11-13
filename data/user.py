@@ -47,3 +47,4 @@ def check_username(username, db_sess):
     for user in users:
         if user.email.lower() == lower_u:
             return False
+    return True

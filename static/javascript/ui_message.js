@@ -19,24 +19,24 @@ function add_pinned(id_mess, first=false){
         btn_close.setAttribute("aria-label", "Close");
         btn_close.setAttribute("onclick", `un_pinned("${id_mess}")`);
         btn_close.id = "close_pin";
-        document.getElementById("list_pin").value = id_mess;
         pin_div.appendChild(btn_close);
     } else {
-        if (first){
             let list_pin = document.getElementById("list_pin");
             let v = list_pin.value;
-            list_pin.value = id_mess + " " + v;
+//            list_pin.value = id_mess + " " + v;
             btn = document.getElementById("pin_btn");
             btn.textContent = document.getElementById("text" + id_mess).textContent.trim();
             let btn_close = document.getElementById("close_pin");
             btn_close.setAttribute("onclick", `un_pinned("${id_mess}")`);
             btn.setAttribute("onclick", `go_pin('${id_mess}')`);
-        } else{
-            document.getElementById("list_pin").value += " " + id_mess;
         }
-
+        if (first){
+            app.c_chat.pinned_list.unshift(id_mess);
+        } else {
+            app.c_chat.pinned_list.push(id_mess);
+        }
     }
-}
+
 
 
 function delete_pin_message(mess_id){
@@ -94,10 +94,10 @@ function open_menu_mess(id_mess){
     var ul = document.createElement("ul");
     ul.id = "ul_on_menu"  + id_mess.slice(1);
     const curr_m = document.getElementById("m" + id_mess);
-    if (mobile && curr_m.style.display == "block") {
+    if (app.ui.mobile && curr_m.style.display == "block") {
         return 200;
     }
-    if (globalThis.menu_id != ""){
+    if (app.ui.menu_id != ""){
         try{
         exit_menu();
         } catch(err) {}
@@ -135,7 +135,7 @@ function open_menu_mess(id_mess){
     curr_m.innerHTML = "";
     curr_m.appendChild(emoji_div2);
     curr_m.appendChild(ul);
-    globalThis.menu_id = "m" + id_mess;
+    app.ui.menu_id = "m" + id_mess;
     showdiv1("m" + id_mess);
     window.location.hash = "#m" + id_mess;
     return false;
@@ -165,7 +165,7 @@ function gener_sticker(id_m, time, html_m, other, read, name_sender){
     messageItem.appendChild(em_div);
     messageItem.role = "alert";
     var onclick = "";
-    if (mobile){
+    if (app.ui.mobile){
         messageItem.setAttribute("onclick", `open_menu_mess('m${id_m}')`);
     }
      const time_div = document.createElement('p');
@@ -260,7 +260,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
     messageItem.appendChild(em_div);
     messageItem.role = "alert";
     var onclick = "";
-    if (mobile){
+    if (app.ui.mobile){
         messageItem.setAttribute("onclick", `open_menu_mess('m${id_m}')`);
     }
     if (file_){
@@ -284,7 +284,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
         } else {
              if (audio.includes(ras)){
                  var w = window.innerWidth * 0.187;
-                 if (mobile){
+                 if (app.ui.mobile){
                         w = window.innerWidth * 0.57;
                  };
                  const audio2 = document.createElement("audio");
@@ -297,7 +297,7 @@ function gener_html(id_m, text, time, html_m, file_, other, read, name_sender, p
             }else {
                 if (video.includes(ras)){
                     var w = window.innerWidth * 0.18;
-                    if (mobile){
+                    if (app.ui.mobile){
                         w = window.innerWidth * 0.57;
                     };
                     const video = document.createElement("video");
@@ -359,19 +359,18 @@ function go_pin(id_mess){
         }
     }, 2000);
     window.location.hash = "#m" + id_mess;
-    var list_pin = document.getElementById("list_pin").value.trim().split(" ");
-    for (let i = 0; i < list_pin.length; i++){
-        if (list_pin[i] == id_mess){
+    for (let i = 0; i < app.c_chat.pinned_list.length; i++){
+        if (app.c_chat.pinned_list[i] == id_mess){
             const btn = document.getElementById('pin_btn');
             var btn_close = document.getElementById("close_pin");
-            if (i + 1 < list_pin.length){
-                btn.textContent = document.getElementById('text' + list_pin[i + 1]).textContent;
-                btn.setAttribute('onclick', `go_pin('${list_pin[i + 1]}')`);
-                btn_close.setAttribute('onclick', `un_pinned('${list_pin[i + 1]}')`);
+            if (i + 1 < app.c_chat.pinned_list.length){
+                btn.textContent = document.getElementById('text' + app.c_chat.pinned_list[i + 1]).textContent;
+                btn.setAttribute('onclick', `go_pin('${app.c_chat.pinned_list[i + 1]}')`);
+                btn_close.setAttribute('onclick', `un_pinned('${app.c_chat.pinned_list[i + 1]}')`);
             } else {
-                btn.textContent = document.getElementById('text' + list_pin[0]).textContent;
-                btn.setAttribute('onclick', `go_pin('${list_pin[0]}')`);
-                btn_close.setAttribute('onclick', `un_pinned('${list_pin[0]}')`);
+                btn.textContent = document.getElementById('text' + app.c_chat.pinned_list[0]).textContent;
+                btn.setAttribute('onclick', `go_pin('${app.c_chat.pinned_list[0]}')`);
+                btn_close.setAttribute('onclick', `un_pinned('${app.c_chat.pinned_list[0]}')`);
             }
         }
     }
@@ -422,7 +421,7 @@ function voting_show(id_mess, data){
     let all_cnt = 0;
     for (let i = 0; i < data["voting"].length; i++){
         all_cnt += data["voting"][i]["cnt"].length;
-        if (data["voting"][i]["cnt"].includes(id_user)){
+        if (data["voting"][i]["cnt"].includes(app.id_user)){
             in_voting = true;
         }
     }
@@ -460,7 +459,7 @@ function gener_voting(id_mess, text, data, other, read, name_sender, time){
     let all_cnt = 0;
     for (let i = 0; i < data["voting"].length; i++){
         all_cnt += data["voting"][i]["cnt"].length;
-        if (data["voting"][i]["cnt"].includes(id_user)){
+        if (data["voting"][i]["cnt"].includes(app.id_user)){
             in_voting = true;
         }
     }

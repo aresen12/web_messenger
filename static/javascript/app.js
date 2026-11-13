@@ -8,20 +8,10 @@ function getCookie(name) {
 
 // 1 - send by enter 2 - send by ctrl + enter
 
-function set_enter(key) {
-    if(key == 2) {
-        document.cookie = "enter=2";
-        globalThis.enter_flag = false;
-    } else {
-        globalThis.enter_flag = true;
-        document.cookie = "enter=1";
-    }
-}
-
 
 function edit(id_mess){
     exit_menu();
-    globalThis.edit_flag = true;
+    app.ui.edit_flag = true;
     globalThis.edit_id = id_mess;
     var t = document.getElementById("text" + id_mess).textContent.trim();
     document.getElementById("about").value = t;
@@ -35,16 +25,16 @@ function edit(id_mess){
 
 
 function edit_post(id_mess, text){
-var chat_id = document.getElementById("chat_id").value;
-globalThis.edit_id = "";
-    globalThis .edit_flag = false;
+    var chat_id =  app.c_chat.chat_id;
+    globalThis.edit_id = "";
+    app.ui.edit_flag = false;
     document.getElementById("edit-label").style.display = "none";
     $.ajax({
     url: '/m/edit_message',
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"id":id_mess, "new_text": text, "chat_id": chat_id}),
+    data: JSON.stringify({"id":id_mess, "new_text": text, "chat_id": app.c_chat.chat_id}),
     success: function(json){
         close_edit();
     },
@@ -61,7 +51,7 @@ function sing_out_of_chat(){
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"chat_id": document.getElementById("chat_id").value}),
+    data: JSON.stringify({"chat_id": app.c_chat.chat_id}),
     success: function(json){
         get_chats('email', "set_recipient");
         exit_chat();
@@ -79,7 +69,7 @@ function un_pinned(mess_id){
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"mess_id": mess_id, "chat_id": document.getElementById("chat_id").value}),
+    data: JSON.stringify({"mess_id": mess_id, "chat_id": app.c_chat.chat_id}),
     success: function(json){},
     error: function(err) {
         console.error(err);
@@ -97,10 +87,10 @@ function set_recipient(id_chat, is_primary, name, status, pinned) {
     document.getElementById("ident").textContent = "";
     document.getElementById("pinned").innerHTML = "";
     document.getElementById("menu_chat_div_all").style.display = "block";
-    var st_chat = document.getElementById("chat_id").value;
-    if (st_chat){
-        leave_chat(st_chat);
+    if (app.c_chat.chat_id != -1){
+        leave_chat(app.c_chat.chat_id);
     }
+    app.c_chat = new CurrentChat(id_chat, status);
     try{
 // что то мудрёно надо потом разобраться
         document.getElementById("chat"+ id_chat).style.background =  "#6699cc";
@@ -141,8 +131,7 @@ function set_recipient(id_chat, is_primary, name, status, pinned) {
     globalThis.global_distans = distance;
     document.getElementById('chat_id').innerText = id_chat;
     document.getElementById("btn_down").style.display = 'block';
-    console.log(mobile);
-    if (mobile){
+    if (app.ui.mobile){
         document.getElementById("chat_header").style.display = "flex";
         x.style.display = "block";
         var button = document.getElementById("button").style.visibility = 'visible';
@@ -166,7 +155,7 @@ function voting(id_voting, i){
     type: 'POST',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"mess_id": id_voting, "chat_id": document.getElementById("chat_id").value, "i" : i}),
+    data: JSON.stringify({"mess_id": id_voting, "chat_id": app.c_chat.chat_id, "i" : i}),
     success: function(json){
 
     },
@@ -201,8 +190,8 @@ function go(){
 
 function submit_form() {
     var x = document.querySelector('.form2');
-    if (edit_flag){
-        globalThis.edit_flag = false;
+    if (app.ui.edit_flag){
+        app.ui.edit_flag = false;
         var about = document.getElementById("about");
         edit_post(edit_id, about.value);
         about.value = "";
@@ -225,7 +214,7 @@ function submit_form() {
 
 
 function show(path){
-    var chat_id = document.getElementById("chat_id").value;
+    var chat_id = app.c_chat.chat_id;
     var request_url =  "/m/get_json_mess";
     if (path){
         request_url =  "/m/get_json_mess_my";
@@ -243,7 +232,7 @@ function show(path){
         cont.innerHTML = "";
         for (let i = 0; i < json_mess["messages"].length; i++){
             var c_m = json_mess["messages"][i];
-            var other = !(id_user == c_m["id_sender"]);
+            var other = !(app.id_user == c_m["id_sender"]);
             var file = "";
             if (c_m["file"]){
                 file = json_mess["files"][c_m["file"]];
@@ -264,12 +253,6 @@ function show(path){
             gener_html(c_m["id"], c_m["text"], time[1].split(".")[0],
             c_m["html_m"], file, other, c_m['read'], c_m["name_sender"]);
         }
-//             console.log(`m${c_m["id"]}`, $(`#m${c_m["id"]}`))
-//             $(`#m${c_m["id"]}`).on('contextmenu','div', function(e) {  //Get li under ul and invoke on contextmenu
-////        e.preventDefault(); //Prevent defaults
-//        alert("test")
-//        open_menu_mess(`m${c_m["id"]}`); //alert the id
-//});
         }
         for (let i = 0;i < json_mess["pinned_message"].length; i++){
             add_pinned(json_mess["pinned_message"][i]);
@@ -277,7 +260,7 @@ function show(path){
         cont.style.height = "100%";
         cont.innerHTML += '<div id="pos"><div id="pos2"></div></div>';
         go();
-        set_read(document.getElementById("chat_id").value);
+        set_read(app.c_chat.chat_id);
         },
     error: function(err) {
         console.error(err);
@@ -363,7 +346,7 @@ function delete_mess(id_mess){
     type: 'DELETE',
     dataType: 'json',
     contentType:'application/json',
-    data: JSON.stringify({"id":id_mess, "chat_id": document.getElementById("chat_id").value}),
+    data: JSON.stringify({"id":id_mess, "chat_id": app.c_chat.chat_id}),
     error: function(err) {
         console.error(err);
     }
@@ -397,7 +380,7 @@ $.ajax({
 
 
 
-function delete_chat() {
+function delete_chat(chat_id=app.c_chat.chat_id) {
     showdiv1('menu-chat');
     let is_del = confirm("Вы действительно хотите удалить этот чат?");
     if (is_del){
@@ -406,10 +389,12 @@ function delete_chat() {
             type: 'DELETE',
             dataType: 'json',
             contentType:'application/json',
-            data: JSON.stringify({"id_chat": document.getElementById("chat_id").value}),
+            data: JSON.stringify({"id_chat": chat_id}),
             success: function(html){
-                  get_chats('email', "set_recipient");
-                  exit_chat();
+                get_chats('email', "set_recipient");
+                if (app.c_chat.chat_id == chat_id){
+                    exit_chat();
+                }
                 },
             error: function(err) {
                 console.error(err);
@@ -419,7 +404,7 @@ function delete_chat() {
 }
 
 
-function block_user() {
+function block_user(chat_id=app.c_chat.chat_id) {
     showdiv1('menu-chat');
     let is_block = confirm("Вы действительно хотите заблокировать чат?");
     if (is_block){
@@ -428,10 +413,12 @@ function block_user() {
             type: 'POST',
             dataType: 'json',
             contentType:'application/json',
-            data: JSON.stringify({"id_chat": document.getElementById("chat_id").value}),
+            data: JSON.stringify({"id_chat": chat_id}),
             success: function(html){
-                  get_chats('email', "set_recipient");
-                  exit_chat();
+                get_chats('email', "set_recipient");
+                if (app.c_chat.chat_id == chat_id){
+                    exit_chat();
+                }
                 },
             error: function(err) {
                 console.error(err);
@@ -492,10 +479,10 @@ function get_users(primary){
             ul.style.height = "50vh";
         }
         for (let i = 0; i < json["users"].length; i++){
-            if (id_user == json["users"][i][2]) continue;
+            if (app.id_user == json["users"][i][2]) continue;
             var li_user = document.createElement("li");
             if (primary){
-                li_user.setAttribute("onclick",  `create_chat('${json["users"][i][2]} ${id_user}', '', 1)`);
+                li_user.setAttribute("onclick",  `create_chat('${json["users"][i][2]} ${app.id_user}', '', 1)`);
             } else {
                 var my_input = document.createElement("input");
                 my_input.type = "checkbox";
@@ -523,7 +510,7 @@ function get_users(primary){
             var input_members = document.createElement("input");
             input_members.id = "list_members";
             input_members.style.display = "none";
-            input_members.value = id_user;
+            input_members.value = app.id_user;
             div.appendChild(label);
             div.appendChild(input_name_chat)
             global_menu.appendChild(button);
@@ -618,7 +605,7 @@ function submit_new_users(){
         type: 'POST',
         dataType: 'json',
         contentType:'application/json',
-        data: JSON.stringify({"chat_id":document.getElementById("chat_id").value, "list_members": list_members}),
+        data: JSON.stringify({"chat_id":app.c_chat.chat_id, "list_members": list_members}),
         success: function(json){
             show_users();
             },
@@ -657,11 +644,11 @@ function my_send_of(chat_id, id_m){
         type: 'POST',
         dataType: 'json',
         contentType:'application/json',
-        data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m, "chat_id": document.getElementById("chat_id").value}),
+        data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m, "chat_id": app.c_chat.chat_id}),
         success: function(json){
             document.getElementById("global_menu_d").style.display = "none";
             document.getElementById("global_menu").innerHTML = "";
-            set_my_recipient('my' + id_user);
+            set_my_recipient('my' + app.id_user);
             },
         error: function(err) {
             console.error(err);
@@ -681,7 +668,7 @@ function send_create_voting(){
         type: 'POST',
         dataType: 'json',
         contentType:'application/json',
-        data: JSON.stringify({"chat_id": document.getElementById("chat_id").value, "voting": voting,
+        data: JSON.stringify({"chat_id": app.c_chat.chat_id, "voting": voting,
         "title_voting": document.getElementById("title_voting").value}),
         success: function(json){
             close_global_menu();
@@ -698,7 +685,7 @@ function send_of(chat_id, id_m, name_chat){
         type: 'POST',
         dataType: 'json',
         contentType:'application/json',
-        data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m, "chat_id": document.getElementById("chat_id").value}),
+        data: JSON.stringify({"mail_id_chat":chat_id, "mess_id":id_m, "chat_id": app.c_chat.chat_id}),
         success: function(json){
             document.getElementById("global_menu_d").style.display = "none";
             document.getElementById("global_menu").innerHTML = "";
@@ -717,17 +704,21 @@ function get_chats(id_div, command){
         type: 'GET',
         dataType: 'json',
         success: function(json){
-            if (json["chats"].length == 0){
-                document.getElementById(id_div).innerHTML = '<h2>Для того чтобы создать чат нажмите на синий плюс.</h2>'
+             app.chat_list = [];
+            if (json["chats"].length == 1){
+                document.getElementById(id_div).innerHTML += '<h2>Для того чтобы создать чат нажмите на синий плюс.</h2>'
                 return 0;
             } else {
                 document.getElementById(id_div).innerHTML = "";
             }
+            console.log(json["chats"]);
            for (let i = 0; i < json["chats"].length; i++){
-                if (json["chats"][i]["id"] == "my" + id_user){
+                if (json["chats"][i]["id"] == "my" + app.id_user){
                      gener_my_chat(id_div, command, json["chats"][i]["last_message"],
                       json["chats"][i]["id"],  json["chats"][i]["pinned"]);
+                      app.chat_list.push(new Chat(json["chats"][i]["id"], 1, "Избранное"));
                 } else{
+                    app.chat_list.push(new Chat(json["chats"][i]["id"], json["chats"][i]["status"], json["chats"][i]["name"]));
                     gener_chat(id_div, json["chats"][i]["id"], json["chats"][i]["name"],
                      json["chats"][i]["status"], json["chats"][i]["primary_chat"], command,
                       json["chats"][i]["last_message"],  json["chats"][i]["pinned"], json["chats"][i]["admin"]);
@@ -755,17 +746,17 @@ function get_black_list(){
         type: 'GET',
         dataType: 'json',
         success: function(json_data){
-            var user_div = document.createElement("div");
-            var btn = document.createElement("button");
-            btn.textContent = "Разблокировать";
-            btn.classList = "btn btn-danger";
-            var label = document.createElement("label");
-            label.classList = 'label-block';
             for (let i = 0; i < json_data["black_list"].length; i++){
-                btn.setAttribute("onclick", `unblock_user(${json_data["black_list"][i][0]})`)
+                 var user_div = document.createElement("div");
+                var btn = document.createElement("button");
+                btn.textContent = "Разблокировать";
+                btn.classList = "btn btn-danger";
+                var label = document.createElement("label");
+                label.classList = 'label-block';
+                label.textContent = `${json_data["black_list"][i][1]}(${json_data["black_list"][i][2]})`;
+                user_div.appendChild(label);
+                btn.setAttribute("onclick", `unblock_user(${json_data["black_list"][i][0]})`);
                 user_div.appendChild(btn);
-                label.textContent = `${json_data["black_list"][i][1]}(${json_data["black_list"][i][2]})`
-                user_div.appendChild(label)
                 safety_div.appendChild(user_div);
             }
             if (json_data["black_list"].length == 0){
@@ -823,7 +814,7 @@ function add_in_chat_new(){
     success: function(json){
             var sp = document.getElementById("list_c_u").value.split(" ");
             for (let i = 0; i < json["users"].length; i++){
-                if (json["users"][i][2] in sp || id_user == json["users"][i][2]){
+                if (json["users"][i][2] in sp || app.id_user == json["users"][i][2]){
                 } else{
                 add_new_users.innerHTML += '<li class="list-group-item">' + '<input type="checkbox" onclick="add_chat(' + json["users"][i][2]+ ", 'list_of_new_u'" + ')">' + json["users"][i][0] + '</label><br>';
             }
@@ -861,7 +852,7 @@ function add_users_label(users, con_users){
 
 function show_users(){
     var global_menu = document.getElementById("global_menu");
-    if (document.getElementById("chat_id").value != ""){
+    if (app.c_chat.chat_id != -1){
         global_menu.innerHTML = `<div class="div-name-menu"><b class="name-menu">Управление чатом</b>
         <button onclick="close_global_menu()" type="button"
          class="btn-close gl-btn-close" aria-label="Close"></button></div>`;
@@ -893,9 +884,9 @@ function show_users(){
                 files_div.style.display = 'none';
          global_menu.appendChild(files_div);
          add_files_label(files_div);
-         if (Number(document.getElementById("chat_id").value)){
+         if (Number(app.c_chat.chat_id)){
             $.ajax({
-            url: '/m/get_chat_user/' + document.getElementById("chat_id").value,
+            url: '/m/get_chat_user/' + app.c_chat.chat_id,
             type: 'GET',
             dataType: 'json',
             success: function(json){
@@ -974,7 +965,7 @@ function set_read(chat_id){
 
 
 function pinned(id_mess){
-    chat_id = document.getElementById("chat_id").value;
+    chat_id = app.c_chat.chat_id;
     exit_menu();
     $.ajax({
         url: '/m/pinned',
@@ -1012,7 +1003,7 @@ function submit_username_tg(){
 // "/get_new_message_id/<id_mess>/<chat_id>"
 function get_new_message_id(){
     let mess_id = document.getElementById("last_mess_id").value;
-    let chat_id = document.getElementById("chat_id").value;
+    let chat_id = app.c_chat.chat_id;
     if (chat_id){
     $.ajax({
         url: `/m/get_new_message_id/${mess_id}/${chat_id}`,
@@ -1021,7 +1012,7 @@ function get_new_message_id(){
         success: function(json){
             for (var j = 0; j < json["message"].length; j++){
                 var mess = json["message"][j];
-                let other = !(mess["id_sender"] == id_user);
+                let other = !(mess["id_sender"] == app.id_user);
                 if (mess["type"] == 4){
 //                потом
 //                    gener_voting(mess[j], mess["time"], mess["html"], other, 0, mess["name_sender"], 0);
@@ -1084,11 +1075,11 @@ function set_my_recipient(id_chat){
     document.getElementById("pinned").innerHTML = "";
     document.getElementById("ident").textContent = "";
     document.getElementById("menu_chat_div_all").style.display = "block";
-    var st_chat = document.getElementById("chat_id").value
     document.getElementById("btn_down").style.display = 'block';
-    if (st_chat){
-        leave_chat(st_chat);
+    if (app.c_chat.chat_id != -1){
+        leave_chat(app.c_chat.chat_id);
     }
+    app.c_chat.chat_id = id_chat;
     try{
         document.getElementById("my_chat"+ id_chat.slice(2)).style.background =  "#6699cc";
     } catch (error) {
@@ -1113,7 +1104,7 @@ function set_my_recipient(id_chat){
     distance = (elementOffset - scrollTop);
     globalThis.global_distans = distance;
     document.getElementById('chat_id').innerText = id_chat;
-    if (mobile){
+    if (app.ui.mobile){
         document.getElementById("chat_header").style.display = "flex";
         x.style.display = "block";
         var button = document.getElementById("button").style.visibility = 'visible';
@@ -1132,7 +1123,7 @@ function compareNumbers(a, b) {
 
 
 function search_in_message(){
-    var chat_id = document.getElementById("chat_id").value;
+    var chat_id = app.c_chat.chat_id;
     text = document.getElementById("search_text").value;
     search_div = document.getElementById("search_text_div");
     $.ajax({

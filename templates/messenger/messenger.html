@@ -36,7 +36,24 @@
         </button>
             <img class="log-img" src="/static/img/main.png">
             <b class="log-name">Казбек</b>
-        </div>
+            <button class="btn">
+                <svg width="40px" height="40px" viewBox="0 0 64 64" id="Layer_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+    <g
+       stroke-linecap="round" stroke-linejoin="round">
+    </g><g >
+        <style type="text/css"> .st0{fill:#687037;} .st1{fill:#80D4C4;} .st2{fill:#8b9448;}}
+            </style> <g> <path  fill="#80D4C4" d="M37.24,40.04l2.87-2.94l0,0c2.38-3.05,3.67-6.89,3.82-11.06c0.33-9.51-7.81-17.67-18-18 c-9.94-0.32-18,8.06-18,18s8.06,18,18,18C30.21,44.04,34.15,42.54,37.24,40.04L37.24,40.04z"></path>
+        <g>
+            <circle fill="#FFFFFF"
+                    cx="25.93" cy="26.04" r="13.76"></circle> <g>
+            <path fill="#80D4C4" d="M16.16,27.04c-0.55,0-1-0.45-1-1c0-5.94,4.83-10.76,10.76-10.76c0.55,0,1,0.45,1,1c0,0.55-0.45,1-1,1 c-4.83,0-8.76,3.93-8.76,8.76C17.16,26.6,16.71,27.04,16.16,27.04z"></path> </g>
+        </g>
+        <path class="st10" d="M54.46,48.03L42.33,37.96l-0.68,0.68l-1.54-1.54l-2.87,2.94l1.51,1.51l-0.68,0.68l10.08,12.12 c1.69,2.03,4.75,2.17,6.62,0.31C56.63,52.79,56.49,49.72,54.46,48.03z"></path>
+    </g>
+    </g>
+</svg>
+</svg>
+            </button>        </div>
     <div id="email" class="content-email">
         </div>
     <div class="create-chats-plus-div" id="menu_create_div">
@@ -119,11 +136,11 @@
                 <label onclick="showdiv1('settings_fieldset')">Settings</label>
         <fieldset id="settings_fieldset" style="display:none;">
             <div>
-                <input onclick="set_enter(1)" type="radio" id="E1" name="drone" checked/>
+                <input onclick="app.ui.set_enter(1)" type="radio" id="E1" name="drone" checked/>
                 <label for="E1">Send by Enter</label>
             </div>
             <div>
-                <input type="radio" onclick="set_enter(2)" id="E2" name="drone"/>
+                <input type="radio" onclick="app.ui.set_enter(2)" id="E2" name="drone"/>
                 <label for="E2">Send by Ctrl + Enter</label>
             </div>
         </fieldset>
@@ -215,7 +232,7 @@
                 15.3013 15.728 15.4001C15.4877 15.512 15.2854 15.7143 14.8807 16.119L11.8274 19.1733M12.9997 7C13.9765
                 7.19057 14.8741 7.66826 15.5778 8.37194C16.2815 9.07561 16.7592 9.97326 16.9497 10.95M12.9997 3C15.029
                  3.22544 16.9213 4.13417 18.366 5.57701C19.8106 7.01984 20.7217 8.91101 20.9497 10.94" stroke="#52c7bf"
-                                                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                   stroke-width="2" s app.c_chat.chat_idtroke-linecap="round" stroke-linejoin="round">
                 </path> </g></svg></button>
             <button class="info-btn btn-three-point" onclick="open_menu_in_chat()">
                 <svg width="30px" height="50px" viewBox="0 0 24 24" id="three-dots" xmlns="http://www.w3.org/2000/svg" fill="#ffff" stroke="#ffff">
@@ -325,22 +342,19 @@
                      style="enable-background:new 0 0 466.897 466.897;" xml:space="preserve"><g><g>
                     <polygon style="fill:#010002;" points="374.105,73.807 203.974,318.03 203.974,432.042 259.801,358.275
                      410.505,466.897 441.012,0 25.885,189.672 143.823,274.681 "/></g></g></svg>
-            </button>
-            <div style="margin:0px;">
-                <label class="file-label" for="inputTag">
-                    <svg width="30px" height="30px" id="object" viewBox="0 0 512 512"
+            </button><svg onclick="showdiv1('short_menu_d')" width="30px" height="30px" id="object" viewBox="0 0 512 512"
                          xmlns="http://www.w3.org/2000/svg">
                         <g id="_16" data-name="16">
                             <path d="m144.407 507.882a116.583 116.583 0 0 1 -82.436-199.018l205.329-205.329a83.054 83.054 0 0 1 117.457 117.457l-181.621 181.622a16 16 0 0 1 -22.628-22.627l181.622-181.623a51.054 51.054 0 1 0 -72.2-72.2l-205.33 205.328a84.581 84.581 0 1 0 119.615 119.616l213.367-213.366a118.109 118.109 0 1 0 -167.032-167.03l-189.658 189.658a16 16 0 0 1 -22.627-22.627l189.658-189.659c58.528-58.527 153.76-58.526 212.285 0a150.109 150.109 0 0 1 0 212.286l-213.366 213.365a115.815 115.815 0 0 1 -82.435 34.147z"/>
                         </g>
                     </svg>
-                    <input name="img" id="inputTag" type="file"/>
-                    <span id="imageName"></span>
-                </label>
+            <input name="img" id="inputTag" type="file"/>
+            <div style="margin:0px;">
+                <span id="imageName"></span>
+                <label class="file-label" for="inputTag"></label>
             </div>
-            <button class="btn" onclick="gener_voting_create()">+</button>
             {% if device != "android" %}
-            <button id="btn_emoji_menu_show" class="info-btn" onclick="show_emoji_module();">😃</button>
+            <button id="btn_emoji_menu_show" class="info-btn sticker-button" onclick="show_emoji_module();">😃</button>
             {% endif %}
             <button class="info-btn" id="stop" style="display:none;"><?xml version="1.0" encoding="utf-8"?>
 <svg width="40px" height="40px" viewBox="-1 0 24 24" id="meteor-icon-kit__solid-microphone-slash" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 0C8.23858 0 6 2.23858 6 5V13C6 13.7566 6.16807 14.474 6.46891 15.1169L5.60408 15.9817C5.21557 15.2688 5 14.4738 5 13.647V11.5882C5 11.0359 4.55229 10.5882 4 10.5882C3.44772 10.5882 3 11.0359 3 11.5882V13.647C3 15.0496 3.4198 16.344 4.14261
@@ -384,22 +398,71 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer">
     </script>
+    <script src="/static/javascript/classes/app_class.js"></script>
+<script src="/static/javascript/classes/ui_class.js"></script>
+<script src="/static/javascript/classes/chat_class.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-            const id_user = {{current_user.id}};
-            const jwt_my = "{{jwt_my}}";
-            const room_name = "{{room_name}}";
-            const server_name = "{{server_name}}";
-
     {% if flag == 2 %}
         var mobile = false;
         var auto = 2;
     {% else %}
         var auto = 1;
     {% endif%}
+    var app = new Application({{current_user.id}});
+    const jwt_my = "{{jwt_my}}";
+    const room_name = "{{room_name}}";
+    const server_name = "{{server_name}}";
 </script>
 <div class="z-d" id="global_menu_d" style="display:none;">
     <div id="global_menu" class="global-menu">
+    </div>
+</div>
+    <div class="z-d" id="short_menu_d" style="display:none;" onclick="showdiv1('short_menu_d')">
+    <div id="short_menu" class="short-menu">
+        <button onclick="gener_voting_create()" class="btn"><svg height="60px" width="60px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 297 297" xml:space="preserve" fill="#000000">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                              stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier"> <g> <g> <g> <g> <circle style="fill:#3085baba;" cx="148.5" cy="148.5" r="148.5">
+            </circle> </g> </g>
+            </g>
+                <path style="fill:#3085ba;" d="M200.023,71.022L74.25,247.5l46.995,46.995c8.836,1.639,17.944,2.505,27.255,2.505 c75.794,0,138.32-56.785,147.369-130.131L200.023,71.022z"></path> <g> <polygon style="fill:#ECF0F1;" points="178.5,49.5 74.25,49.5 74.25,247.5 222.75,247.5 222.75,93.75 "></polygon> </g>
+                <g> <polygon style="fill:#3085babaDC3C7;" points="178.5,93.75 222.75,93.75 178.5,49.5 "></polygon> </g>
+                <g> <path style="fill:#3085babaDC3C7;" d="M127.25,110.75H95.5V79h31.75V110.75z M102.5,103.75h17.75V86H102.5V103.75z"></path> </g> <g>
+                    <path style="fill:#3085babaDC3C7;" d="M127.25,164.375H95.5v-31.75h31.75V164.375z M102.5,157.375h17.75v-17.75H102.5V157.375z"></path> </g> <g> <path style="fill:#3085babaDC3C7;" d="M127.25,218H95.5v-31.75h31.75V218z M102.5,211h17.75v-17.75H102.5V211z"></path> </g> <g>
+                    <polygon style="fill:#32373B;" points="110.333,157.198 97.803,144.666 104.168,138.303 110.333,144.47 131.542,123.261 137.906,129.625 ">
+
+        </polygon> </g> </g> </g></svg>
+        <div>Опрос</div></button>
+        <button class="btn" onclick="document.getElementById('inputTag').click()">
+          <svg width="60px" height="60px" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+          </g><g id="SVGRepo_iconCarrier">
+              <path d="M850.903995 414.630553h-0.974739V367.987457c0-65.413986-62.100693-126.406834-95.553074-159.147615l-7.470267-7.406787C648.55661 103.086822 607.179356 94.83533 573.138241 94.83533l-11.235094-0.06348H293.947238c-23.191003 0-39.365319 15.91425-39.365319 38.717199v129.78668h-82.302974c-42.09295 0-76.392084 34.233606-76.392084 76.392084V851.08727c0 41.251316 32.869791 74.769226 73.794487 76.196522 0.585662 0 0.974739 0.263139 1.559377 0.263139H850.902971c42.158478 0 76.455565-34.300158 76.455565-76.458637V491.022637c0.001024-42.096021-34.296063-76.392084-76.454541-76.392084z"
+                                                                                                                                                                                                                                                                                                                 fill="#27323A"></path><path d="M711.632041 236.707953l7.795863 7.72931c11.368199 11.171613 27.99712 27.671525 43.263251 46.316477-29.360936-9.029645-60.996944-11.108132-89.513175-12.279457-1.103748-20.331291-4.612603-57.358056-15.980802-91.850705 15.26613 12.601981 33.128834 28.775273 54.434863 50.084375z" fill="#F4CE73"></path>
+              <path d="M304.469707 144.660662h257.301359l11.238165 0.063481c5.783928 0 13.316653 0.066553 24.62137 4.094517l3.312269 3.442303c29.101893 28.775273 39.55781 100.687859 39.55781 142.065112 0 8.963092 7.01771 16.303326 15.980802 16.629946l6.106452 0.259043c44.237989 1.689411 99.320972 3.831379 132.449806 33.844529l0.652215 0.585663c2.597597 7.792791 4.546051 15.588654 4.546051 23.058921 0 0-0.066553 25.596109-0.066553 45.9274H565.474459c-39.950981 0-74.117011 54.238277-88.994065 54.238278H304.469707V144.660662z" fill="#FFFFFF">
+
+          </path><path d="M188.323228 545.260915v306.541027c0 13.383205-5.325228 24.751404-21.695106 24.881437-14.421425-0.130033-20.853472-11.108132-20.853473-25.596109V339.667813c0-14.616987 11.89038-26.504296 26.504296-26.504295h82.302974v156.74558c-37.286832 5.066185-66.258691 36.702193-66.258691 75.351817z" fill="#79CCBF"></path><path d="M877.470747 851.08727c0 14.616987-11.949766 26.570848-26.566752 26.570848H234.250628c0.063481-0.325596 0.130033-0.522182 0.196586-0.781224 1.427296-7.403715 3.764826-14.032348 3.764826-22.539812V545.260915c0-14.613915 11.952837-26.504296 26.570848-26.504296h211.699554c25.203961 0 42.029469-15.588654 58.399347-30.724751 7.792791-7.2102 23.970179-22.217288 31.113827-23.51455h284.909403c14.616987 0 26.566753 11.886285 26.566752 26.504296V851.08727z" fill="#F4CE73"></path>
+              <path d="M776.719407 589.954533H571.775449c-11.949766 0-21.631625 9.678788-21.631625 21.631625 0 12.016318 9.68186 21.695106 21.631625 21.695106h204.944982c11.89038 0 21.568144-9.678788 21.568145-21.695106 0-11.953861-9.678788-21.631625-21.569169-21.631625zM776.719407 685.57416H571.775449c-11.949766 0-21.631625 9.678788-21.631625 21.631625 0 11.949766 9.68186 21.628554 21.631625 21.628554h204.944982c11.89038 0 21.568144-9.678788 21.568145-21.628554 0-11.953861-9.678788-21.631625-21.569169-21.631625z" fill="#27323A"></path></g></svg>
+        <div>Файл</div>
+        </button>
+         <button class="info-btn" onclick="show_emoji_module();">
+             <svg viewBox="0 0 24 24" width="60px" height="60px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path opacity="0.5" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#1C274C"></path>
+             <path d="M8.39747 15.5534C8.64413 15.2206 9.11385 15.1508 9.44661 15.3975C10.175 15.9373 11.0541 16.25 12 16.25C12.9459 16.25 13.825 15.9373 14.5534 15.3975C14.8862 15.1508 15.3559 15.2206 15.6025 15.5534C15.8492 15.8862 15.7794 16.3559 15.4466 16.6025C14.4742 17.3233 13.285 17.75 12 17.75C10.715 17.75 9.5258 17.3233 8.55339 16.6025C8.22062 16.3559 8.15082 15.8862 8.39747 15.5534Z" fill="#1C274C"></path> <path d="M15 12C15.5523 12 16 11.3284 16 10.5C16 9.67157 15.5523 9 15 9C14.4477 9 14 9.67157 14 10.5C14 11.3284 14.4477 12 15 12Z" fill="#1C274C"></path> <path d="M9 12C9.55228 12 10 11.3284 10 10.5C10 9.67157 9.55228 9 9 9C8.44772 9 8 9.67157 8 10.5C8 11.3284 8.44772 12 9 12Z" fill="#1C274C"></path> </g></svg>
+             <div>Стикер</div></button>
+        <button class="btn">
+            <svg version="1.1"  width="60px" height="60px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:#C75C5C;} .st1{opacity:0.2;} .st2{fill:#231F20;} .st3{fill:#77B3D4;} .st4{fill:#FFFFFF;} .st5{fill:#76C2AF;} .st6{fill:#E0995E;} .st7{fill:#4F5D73;} .st8{fill:#E0E0D1;} .st9{fill:#F5CF87;} </style>
+                <g id="Layer_1"> <g> <circle class="st0" cx="32" cy="32" r="32"></circle> </g> <g> <g class="st1"> <path class="st2" d="M49,26c-1.1,0-2-0.9-2-2v-3c0-1.1,0.9-2,2-2l0,0c1.1,0,2,0.9,2,2v3C51,25.1,50.1,26,49,26L49,26z"></path> </g> <g class="st1"> <path class="st2" d="M49,35c-1.1,0-2-0.9-2-2v-3c0-1.1,0.9-2,2-2l0,0c1.1,0,2,0.9,2,2v3C51,34.1,50.1,35,49,35L49,35z"></path> </g> <g class="st1"> <path class="st2" d="M49,44c-1.1,0-2-0.9-2-2v-3c0-1.1,0.9-2,2-2l0,0c1.1,0,2,0.9,2,2v3C51,43.1,50.1,44,49,44L49,44z"></path> </g> <g> <path class="st3" d="M49,24c-1.1,0-2-0.9-2-2v-3c0-1.1,0.9-2,2-2l0,0c1.1,0,2,0.9,2,2v3C51,23.1,50.1,24,49,24L49,24z"></path>
+                </g> <g> <path class="st4" d="M49,33c-1.1,0-2-0.9-2-2v-3c0-1.1,0.9-2,2-2l0,0c1.1,0,2,0.9,2,2v3C51,32.1,50.1,33,49,33L49,33z"></path>
+                </g> <g> <path class="st5" d="M49,42c-1.1,0-2-0.9-2-2v-3c0-1.1,0.9-2,2-2l0,0c1.1,0,2,0.9,2,2v3C51,41.1,50.1,42,49,42L49,42z"></path>
+            </g> <g class="st1"> <path class="st2" d="M49,50c0,2.2-1.8,4-4,4H21c-2.2,0-4-1.8-4-4V18c0-2.2,1.8-4,4-4h24c2.2,0,4,1.8,4,4V50z"></path> </g> <g> <path class="st6" d="M48,48c0,2.2-1.8,4-4,4H20c-2.2,0-4-1.8-4-4V16c0-2.2,1.8-4,4-4h24c2.2,0,4,1.8,4,4V48z"></path> </g> <g> <rect x="22" y="12" class="st7" width="3" height="40"></rect> </g> <g class="st1"> <g> <path class="st2" d="M20,22c0,1.1-0.9,2-2,2h-3c-1.1,0-2-0.9-2-2l0,0c0-1.1,0.9-2,2-2h3C19.1,20,20,20.9,20,22L20,22z"></path> </g> <g> <path class="st2" d="M20,30c0,1.1-0.9,2-2,2h-3c-1.1,0-2-0.9-2-2l0,0c0-1.1,0.9-2,2-2h3C19.1,28,20,28.9,20,30L20,30z">
+                </path> </g> <g> <path class="st2" d="M20,38c0,1.1-0.9,2-2,2h-3c-1.1,0-2-0.9-2-2l0,0c0-1.1,0.9-2,2-2h3C19.1,36,20,36.9,20,38L20,38z"></path> </g> <g> <path class="st2" d="M20,46c0,1.1-0.9,2-2,2h-3c-1.1,0-2-0.9-2-2l0,0c0-1.1,0.9-2,2-2h3C19.1,44,20,44.9,20,46L20,46z"></path> </g> </g> <g> <g> <path class="st8" d="M20,20c0,1.1-0.9,2-2,2h-3c-1.1,0-2-0.9-2-2l0,0c0-1.1,0.9-2,2-2h3C19.1,18,20,18.9,20,20L20,20z"></path> </g> <g> <path class="st8" d="M20,28c0,1.1-0.9,2-2,2h-3c-1.1,0-2-0.9-2-2l0,0c0-1.1,0.9-2,2-2h3C19.1,26,20,26.9,20,28L20,28z"></path> </g> <g> <path class="st8" d="M20,36c0,1.1-0.9,2-2,2h-3c-1.1,0-2-0.9-2-2l0,0c0-1.1,0.9-2,2-2h3C19.1,34,20,34.9,20,36L20,36z"></path>
+                </g> <g> <path class="st8" d="M20,44c0,1.1-0.9,2-2,2h-3c-1.1,0-2-0.9-2-2l0,0c0-1.1,0.9-2,2-2h3C19.1,42,20,42.9,20,44L20,44z">
+                </path> </g> </g> <g> <circle class="st9" cx="36" cy="27" r="4"></circle>
+                </g> <g> <path class="st9" d="M42,39.3c0,3-2.7,2.7-6,2.7s-6,0.3-6-2.7c0-3,2.7-7.3,6-7.3S42,36.2,42,39.3z"></path> </g> </g> </g> <g id="Layer_2"> </g> </g></svg>
+        <div>Отправить контакт</div>
+        </button>
+
     </div>
 </div>
 <a href="#pos" class="btn_down" id="btn_down">
@@ -447,6 +510,7 @@
 <script src="/static/javascript/settings_UI.js"></script>
 <script src="/static/javascript/events.js"></script>
 <script src="/static/javascript/app.js"></script>
+
     <script src="/static/javascript/UI_all.js"></script>
 <script src="/static/javascript/ui_message.js"></script>
 <script src="/static/javascript/ui_chats.js"></script>
